@@ -43,6 +43,7 @@ if (!string.Equals(Environment.GetEnvironmentVariable("DISABLE_HTTPS_REDIRECTION
     app.UseHttpsRedirection();
 }
 
+app.UseStaticFiles();
 app.UseRouting();
 app.UseAuthorization();
 app.MapStaticAssets();

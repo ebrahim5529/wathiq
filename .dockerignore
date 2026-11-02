@@ -2,7 +2,9 @@
 **/.gitignore
 **/bin
 **/obj
-**/adminite
+# قالب المصدر فقط — لا تستبعد wwwroot/adminite
+/adminite
+/adminite/**
 **/.vs
 **/.vscode
 **/Docs
