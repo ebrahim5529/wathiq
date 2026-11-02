@@ -5,56 +5,8 @@ on:
     branches: [main]
   workflow_dispatch:
 
-env:
-  IMAGE_NAME: wathiq
-
 jobs:
-  build-and-push:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: write
-    outputs:
-      image: ${{ steps.meta.outputs.image }}
-      tag: ${{ steps.meta.outputs.tag }}
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Set image metadata
-        id: meta
-        run: |
-          OWNER_LC=$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')
-          REPO_LC=$(echo "${{ github.event.repository.name }}" | tr '[:upper:]' '[:lower:]')
-          IMAGE="ghcr.io/${OWNER_LC}/${REPO_LC}"
-          TAG="${{ github.sha }}"
-          echo "image=${IMAGE}" >> "$GITHUB_OUTPUT"
-          echo "tag=${TAG}" >> "$GITHUB_OUTPUT"
-
-      - name: Login to GHCR
-        uses: docker/login-action@v3
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
-      - name: Build and push
-        uses: docker/build-push-action@v6
-        with:
-          context: .
-          file: ./Dockerfile
-          push: true
-          tags: |
-            ${{ steps.meta.outputs.image }}:${{ steps.meta.outputs.tag }}
-            ${{ steps.meta.outputs.image }}:latest
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
-
   deploy:
-    needs: build-and-push
     runs-on: ubuntu-latest
     steps:
       - name: Verify deploy secrets exist
@@ -65,19 +17,17 @@ jobs:
           VPS_APP_DIR: ${{ secrets.VPS_APP_DIR }}
         run: |
           ok=1
-          [ -n "$VPS_HOST" ] || { echo "ERROR: Repository secret VPS_HOST is missing/empty"; ok=0; }
-          [ -n "$VPS_USER" ] || { echo "ERROR: Repository secret VPS_USER is missing/empty"; ok=0; }
-          [ -n "$VPS_PASSWORD" ] || { echo "ERROR: Repository secret VPS_PASSWORD is missing/empty"; ok=0; }
-          [ -n "$VPS_APP_DIR" ] || { echo "ERROR: Repository secret VPS_APP_DIR is missing/empty"; ok=0; }
-          if [ "$ok" -eq 1 ]; then
-            echo "All required repository secrets are present."
-          else
-            echo "Add them at: Settings → Secrets and variables → Actions → Repository secrets"
-            echo "Exact name required: VPS_PASSWORD"
+          [ -n "$VPS_HOST" ] || { echo "ERROR: missing VPS_HOST"; ok=0; }
+          [ -n "$VPS_USER" ] || { echo "ERROR: missing VPS_USER"; ok=0; }
+          [ -n "$VPS_PASSWORD" ] || { echo "ERROR: missing VPS_PASSWORD"; ok=0; }
+          [ -n "$VPS_APP_DIR" ] || { echo "ERROR: missing VPS_APP_DIR"; ok=0; }
+          if [ "$ok" -ne 1 ]; then
+            echo "Add Repository secrets at Settings → Secrets and variables → Actions"
             exit 1
           fi
+          echo "Required secrets are present."
 
-      - name: Deploy to VPS over SSH
+      - name: Deploy to VPS (git pull + docker build)
         uses: appleboy/ssh-action@v1.2.0
         with:
           host: ${{ secrets.VPS_HOST }}
@@ -85,17 +35,39 @@ jobs:
           password: ${{ secrets.VPS_PASSWORD }}
           port: 22
           timeout: 60s
-          command_timeout: 10m
+          command_timeout: 30m
           script: |
-            set -e
+            set -euo pipefail
             APP_DIR="${{ secrets.VPS_APP_DIR }}"
-            cd "$APP_DIR"
 
-            if [ -n "${{ secrets.GHCR_TOKEN }}" ]; then
-              echo "${{ secrets.GHCR_TOKEN }}" | docker login ghcr.io -u "${{ secrets.GHCR_USER }}" --password-stdin
+            if [ ! -d "$APP_DIR/.git" ]; then
+              echo "Cloning repository into $APP_DIR"
+              mkdir -p "$(dirname "$APP_DIR")"
+              git clone https://github.com/ebrahim5529/wathiq.git "$APP_DIR"
             fi
 
-            export WEB_IMAGE="${{ needs.build-and-push.outputs.image }}:${{ needs.build-and-push.outputs.tag }}"
-            docker compose pull web || true
+            cd "$APP_DIR"
+            git fetch origin main
+            git reset --hard origin/main
+
+            if [ ! -f .env ]; then
+              if [ -f .env.example ]; then
+                cp .env.example .env
+                echo "Created .env from .env.example — update passwords on the server if needed."
+              else
+                echo "ERROR: .env missing in $APP_DIR"
+                exit 1
+              fi
+            fi
+
+            # Ensure image name works for local builds
+            if ! grep -q '^WEB_IMAGE=' .env; then
+              echo 'WEB_IMAGE=wathiq-web:local' >> .env
+            else
+              sed -i 's|^WEB_IMAGE=.*|WEB_IMAGE=wathiq-web:local|' .env
+            fi
+
+            docker compose build web
             docker compose up -d --remove-orphans
+            docker compose ps
             docker image prune -f

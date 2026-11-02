@@ -76,7 +76,7 @@ echo YOUR_GITHUB_PAT | docker login ghcr.io -u YOUR_GITHUB_USER --password-stdin
 | `VPS_USER` | `root` أو `ubuntu` |
 | `VPS_PASSWORD` | كلمة مرور SSH للسيرفر |
 | `VPS_PORT` | `22` (اختياري) |
-| `VPS_APP_DIR` | `/opt/wathiq` |
+| `VPS_APP_DIR` | `/opt/wathiq-src` (مجلد فيه git clone كامل للمشروع) |
 | `GHCR_USER` | `ebrahim5529` |
 | `GHCR_TOKEN` | GitHub PAT (ليس كلمة مرور الحساب) بصلاحية `read:packages` |
 
@@ -93,12 +93,14 @@ echo YOUR_GITHUB_PAT | docker login ghcr.io -u YOUR_GITHUB_USER --password-stdin
 
 ---
 
-## 4) تدفق CI/CD
+## 4) تدفق CI/CD (الحالي)
 
 1. دفع إلى فرع `main`
-2. بناء صورة Docker ودفعها إلى GitHub Container Registry
-3. الاتصال بالـ VPS عبر SSH
-4. `docker compose pull web && docker compose up -d`
+2. الاتصال بالـ VPS عبر SSH
+3. `git pull` داخل `VPS_APP_DIR`
+4. `docker compose build web && docker compose up -d`
+
+> لا يعتمد النشر الآن على GHCR (لتجنب خطأ `denied`). ضع `VPS_APP_DIR=/opt/wathiq-src`.
 
 يمكن أيضاً تشغيل الـ workflow يدوياً من تبويب Actions → **Build and Deploy** → Run workflow.
 
