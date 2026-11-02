@@ -57,21 +57,45 @@ jobs:
     needs: build-and-push
     runs-on: ubuntu-latest
     steps:
+      - name: Verify deploy secrets exist
+        env:
+          VPS_HOST: ${{ secrets.VPS_HOST }}
+          VPS_USER: ${{ secrets.VPS_USER }}
+          VPS_PASSWORD: ${{ secrets.VPS_PASSWORD }}
+          VPS_APP_DIR: ${{ secrets.VPS_APP_DIR }}
+        run: |
+          ok=1
+          [ -n "$VPS_HOST" ] || { echo "ERROR: Repository secret VPS_HOST is missing/empty"; ok=0; }
+          [ -n "$VPS_USER" ] || { echo "ERROR: Repository secret VPS_USER is missing/empty"; ok=0; }
+          [ -n "$VPS_PASSWORD" ] || { echo "ERROR: Repository secret VPS_PASSWORD is missing/empty"; ok=0; }
+          [ -n "$VPS_APP_DIR" ] || { echo "ERROR: Repository secret VPS_APP_DIR is missing/empty"; ok=0; }
+          if [ "$ok" -eq 1 ]; then
+            echo "All required repository secrets are present."
+          else
+            echo "Add them at: Settings → Secrets and variables → Actions → Repository secrets"
+            echo "Exact name required: VPS_PASSWORD"
+            exit 1
+          fi
+
       - name: Deploy to VPS over SSH
         uses: appleboy/ssh-action@v1.2.0
         with:
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USER }}
           password: ${{ secrets.VPS_PASSWORD }}
-          port: ${{ secrets.VPS_PORT }}
+          port: 22
+          timeout: 60s
+          command_timeout: 10m
           script: |
             set -e
             APP_DIR="${{ secrets.VPS_APP_DIR }}"
             cd "$APP_DIR"
 
-            echo "${{ secrets.GHCR_TOKEN }}" | docker login ghcr.io -u "${{ secrets.GHCR_USER }}" --password-stdin
+            if [ -n "${{ secrets.GHCR_TOKEN }}" ]; then
+              echo "${{ secrets.GHCR_TOKEN }}" | docker login ghcr.io -u "${{ secrets.GHCR_USER }}" --password-stdin
+            fi
 
             export WEB_IMAGE="${{ needs.build-and-push.outputs.image }}:${{ needs.build-and-push.outputs.tag }}"
-            docker compose pull web
+            docker compose pull web || true
             docker compose up -d --remove-orphans
             docker image prune -f
