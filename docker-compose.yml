@@ -10,6 +10,9 @@ services:
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
     volumes:
       - wathiq_mysql_data:/var/lib/mysql
+    # متاح فقط على localhost السيرفر — اتصل عبر SSH Tunnel
+    ports:
+      - "127.0.0.1:3307:3306"
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-uroot", "-p${MYSQL_ROOT_PASSWORD}"]
       interval: 10s
