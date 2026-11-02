@@ -68,17 +68,28 @@ echo YOUR_GITHUB_PAT | docker login ghcr.io -u YOUR_GITHUB_USER --password-stdin
 
 ## 3) أسرار GitHub Actions (Settings → Secrets and variables → Actions)
 
-| Secret | القيمة |
-|--------|--------|
-| `VPS_HOST` | IP أو دومين السيرفر |
-| `VPS_USER` | مستخدم SSH (مثل `root` أو `ubuntu`) |
-| `VPS_SSH_KEY` | المفتاح الخاص SSH كاملاً |
-| `VPS_PORT` | اختياري، افتراضي 22 |
-| `VPS_APP_DIR` | مسار المشروع على السيرفر مثل `/opt/wathiq` |
-| `GHCR_USER` | اسم مستخدم GitHub |
-| `GHCR_TOKEN` | PAT بصلاحية `read:packages` |
+المسار: المستودع → **Settings** → **Secrets and variables** → **Actions** → **New repository secret**
 
-> ملاحظة: حزمة الصورة تُرفع إلى `ghcr.io/<owner>/<repo>`. إن كان المستودع خاصاً، اجعل الحزمة قابلة للقراءة من حساب النشر أو استخدم نفس الـ PAT.
+| Secret | مثال / القيمة |
+|--------|----------------|
+| `VPS_HOST` | `123.45.67.89` أو `archive.example.com` |
+| `VPS_USER` | `root` أو `ubuntu` |
+| `VPS_PASSWORD` | كلمة مرور SSH للسيرفر |
+| `VPS_PORT` | `22` (اختياري) |
+| `VPS_APP_DIR` | `/opt/wathiq` |
+| `GHCR_USER` | `ebrahim5529` |
+| `GHCR_TOKEN` | GitHub PAT (ليس كلمة مرور الحساب) بصلاحية `read:packages` |
+
+### إنشاء GHCR_TOKEN (مهم)
+
+كلمة مرور GitHub العادية **لا تعمل** مع Docker/GHCR. أنشئ Personal Access Token:
+
+1. GitHub → Settings → Developer settings → Personal access tokens  
+2. Fine-grained أو Classic  
+3. صلاحية: `read:packages` (وإن لزم `write:packages`)  
+4. انسخ الـ Token وضعه في `GHCR_TOKEN`
+
+> النشر يعتمد على **كلمة مرور SSH** (`VPS_PASSWORD`) وليس مفتاح SSH.
 
 ---
 
