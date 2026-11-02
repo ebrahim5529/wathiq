@@ -10,7 +10,7 @@ services:
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
     volumes:
       - wathiq_mysql_data:/var/lib/mysql
-    # لا نفتح 3306 على الهوست لتجنب التعارض مع MySQL أخرى على السيرفر
+    # لا نفتح 3306 على الهوست لتجنب التعارض مع MySQL أخرى
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-uroot", "-p${MYSQL_ROOT_PASSWORD}"]
       interval: 10s
@@ -22,6 +22,10 @@ services:
 
   web:
     image: ${WEB_IMAGE:-ghcr.io/ebrahim5529/wathiq:latest}
+    build:
+      context: .
+      dockerfile: Dockerfile
+    pull_policy: missing
     container_name: wathiq-web
     restart: unless-stopped
     depends_on:
