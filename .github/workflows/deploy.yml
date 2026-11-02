@@ -77,6 +77,16 @@ jobs:
             fi
 
             docker compose build web
-            docker compose up -d --remove-orphans
+
+            # أزل الحاويات القديمة إن وُجدت من مسار نشر سابق
+            docker rm -f wathiq-db wathiq-web 2>/dev/null || true
+            if [ -d /opt/wathiq-src ] && [ "$APP_DIR" != "/opt/wathiq-src" ]; then
+              (cd /opt/wathiq-src && docker compose down --remove-orphans) || true
+            fi
+            if [ -d /opt/wathiq ] && [ "$APP_DIR" != "/opt/wathiq" ]; then
+              (cd /opt/wathiq && docker compose down --remove-orphans) || true
+            fi
+
+            docker compose up -d --remove-orphans --force-recreate
             docker compose ps
             docker image prune -f
