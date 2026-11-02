@@ -10,7 +10,6 @@ services:
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
     volumes:
       - wathiq_mysql_data:/var/lib/mysql
-    # لا نفتح 3306 على الهوست لتجنب التعارض مع MySQL أخرى
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-uroot", "-p${MYSQL_ROOT_PASSWORD}"]
       interval: 10s
@@ -21,7 +20,7 @@ services:
       - wathiq-net
 
   web:
-    image: ${WEB_IMAGE:-ghcr.io/ebrahim5529/wathiq:latest}
+    image: ${WEB_IMAGE:-wathiq-web:local}
     build:
       context: .
       dockerfile: Dockerfile
@@ -37,12 +36,22 @@ services:
       ConnectionStrings__DefaultConnection: "Server=db;Port=3306;Database=${MYSQL_DATABASE:-HR_Archive};User=${MYSQL_USER:-wathiq};Password=${MYSQL_PASSWORD};"
       APPLY_MIGRATIONS: "true"
       DISABLE_HTTPS_REDIRECTION: "true"
+    # مع Traefik يمكن إغلاق نشر المنفذ بوضع WEB_PUBLISH_PORT فارغ
     ports:
-      - "${WEB_PORT:-8080}:8080"
+      - "${WEB_PUBLISH_PORT:-8080}:8080"
     volumes:
       - wathiq_uploads:/app/uploads
+    labels:
+      - traefik.enable=true
+      - traefik.docker.network=${TRAEFIK_NETWORK:-proxy}
+      - traefik.http.routers.wathiq.rule=Host(`${WATHIQ_DOMAIN:-archive.example.com}`)
+      - traefik.http.routers.wathiq.entrypoints=${TRAEFIK_ENTRYPOINT:-websecure}
+      - traefik.http.routers.wathiq.tls=true
+      - traefik.http.routers.wathiq.tls.certresolver=${TRAEFIK_CERT_RESOLVER:-letsencrypt}
+      - traefik.http.services.wathiq.loadbalancer.server.port=8080
     networks:
       - wathiq-net
+      - traefik
 
 volumes:
   wathiq_mysql_data:
@@ -51,3 +60,6 @@ volumes:
 networks:
   wathiq-net:
     driver: bridge
+  traefik:
+    external: true
+    name: ${TRAEFIK_NETWORK:-proxy}
