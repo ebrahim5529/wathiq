@@ -1,0 +1,28 @@
+## Template source only (keep wwwroot/adminite)
+/adminite/
+
+## .NET
+bin/
+obj/
+*.user
+*.suo
+.vs/
+.vscode/
+*.swp
+
+## Secrets / env
+.env
+appsettings.Development.json
+appsettings.*.local.json
+**/secrets.json
+
+## OS
+.DS_Store
+Thumbs.db
+
+## Uploads / runtime
+uploads/
+wwwroot/uploads/
+
+## Logs
+*.log

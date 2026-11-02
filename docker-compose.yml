@@ -1,0 +1,53 @@
+services:
+  db:
+    image: mysql:8.4
+    container_name: wathiq-db
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-HR_Archive}
+      MYSQL_USER: ${MYSQL_USER:-wathiq}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    volumes:
+      - wathiq_mysql_data:/var/lib/mysql
+    ports:
+      - "${MYSQL_PORT:-3306}:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-uroot", "-p${MYSQL_ROOT_PASSWORD}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+    networks:
+      - wathiq-net
+
+  web:
+    image: ${WEB_IMAGE:-ghcr.io/OWNER/wathiq:latest}
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: wathiq-web
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      ASPNETCORE_ENVIRONMENT: Production
+      ASPNETCORE_URLS: http://+:8080
+      ConnectionStrings__DefaultConnection: "Server=db;Port=3306;Database=${MYSQL_DATABASE:-HR_Archive};User=${MYSQL_USER:-wathiq};Password=${MYSQL_PASSWORD};"
+      APPLY_MIGRATIONS: "true"
+      DISABLE_HTTPS_REDIRECTION: "true"
+    ports:
+      - "${WEB_PORT:-8080}:8080"
+    volumes:
+      - wathiq_uploads:/app/uploads
+    networks:
+      - wathiq-net
+
+volumes:
+  wathiq_mysql_data:
+  wathiq_uploads:
+
+networks:
+  wathiq-net:
+    driver: bridge

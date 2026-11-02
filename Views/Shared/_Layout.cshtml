@@ -1,0 +1,274 @@
+﻿<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="utf-8" />
+    <title>@ViewData["Title"] - نظام الأرشفة</title>
+    <script>
+        (() => {
+            'use strict';
+            const root = document.documentElement;
+            if (root.getAttribute('data-lte-color-mode') === 'off') return;
+            const STORAGE_KEY = 'lte-theme';
+            let stored = null;
+            try { stored = localStorage.getItem(STORAGE_KEY); } catch { }
+            const authored = root.getAttribute('data-bs-theme');
+            let resolved = 'light';
+            if (stored === 'dark' || stored === 'light') resolved = stored;
+            else if (authored === 'dark' || authored === 'light') resolved = authored;
+            else if (globalThis.matchMedia('(prefers-color-scheme: dark)').matches) resolved = 'dark';
+            root.setAttribute('data-bs-theme', resolved);
+            root.style.colorScheme = resolved;
+            if (resolved !== authored) root.setAttribute('data-lte-theme-resolved', '');
+        })();
+    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+    <meta name="color-scheme" content="light dark" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@@fontsource/source-sans-3@5.3.0/index.css" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.16.0/styles/overlayscrollbars.min.css" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css" crossorigin="anonymous" />
+    <link rel="stylesheet" href="~/adminite/css/adminlte.rtl.min.css" asp-append-version="true" />
+</head>
+<body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
+    <div class="app-wrapper">
+        <nav class="app-header navbar navbar-expand bg-body">
+            <div class="container-fluid">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" data-lte-toggle="sidebar" href="#" role="button" aria-label="القائمة">
+                            <i class="bi bi-list"></i>
+                        </a>
+                    </li>
+                    <li class="nav-item d-none d-md-block">
+                        <a asp-controller="Home" asp-action="Index" class="nav-link">الأرشيف</a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" data-lte-toggle="fullscreen" aria-label="ملء الشاشة">
+                            <i data-lte-icon="maximize" class="bi bi-arrows-fullscreen"></i>
+                            <i data-lte-icon="minimize" class="bi bi-fullscreen-exit d-none"></i>
+                        </a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link" href="#" id="bd-theme" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="bi bi-sun-fill" data-lte-theme-icon="light"></i>
+                            <i class="bi bi-moon-fill d-none" data-lte-theme-icon="dark"></i>
+                            <i class="bi bi-circle-half d-none" data-lte-theme-icon="auto"></i>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="bd-theme" style="--bs-dropdown-min-width: 8rem">
+                            <li>
+                                <button type="button" class="dropdown-item d-flex align-items-center" data-bs-theme-value="light">
+                                    <i class="bi bi-sun-fill me-2"></i> فاتح
+                                </button>
+                            </li>
+                            <li>
+                                <button type="button" class="dropdown-item d-flex align-items-center" data-bs-theme-value="dark">
+                                    <i class="bi bi-moon-fill me-2"></i> داكن
+                                </button>
+                            </li>
+                            <li>
+                                <button type="button" class="dropdown-item d-flex align-items-center active" data-bs-theme-value="auto">
+                                    <i class="bi bi-circle-half me-2"></i> تلقائي
+                                </button>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+        <aside class="app-sidebar bg-body-secondary shadow" data-bs-theme="dark">
+            <div class="sidebar-brand">
+                <a asp-controller="Home" asp-action="Index" class="brand-link justify-content-center py-2">
+                    <img src="~/adminite/assets/img/wathiq-logo.jpg"
+                         alt="وثيق - WATHIQ"
+                         class="brand-image-xl opacity-100 shadow-none"
+                         style="max-height: 56px; width: auto; max-width: 90%; object-fit: contain; border-radius: .35rem;" />
+                </a>
+            </div>
+            <div class="sidebar-wrapper">
+                <nav class="mt-2" aria-label="القائمة الرئيسية">
+                    <ul class="nav sidebar-menu flex-column" data-lte-toggle="treeview" data-accordion="false" id="navigation">
+
+                        <li class="nav-header">الرئيسي</li>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link">
+                                <i class="nav-icon bi bi-speedometer2"></i>
+                                <p>لوحة التحكم</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a asp-controller="Home" asp-action="Index" class="nav-link active">
+                                <i class="nav-icon bi bi-folder2-open"></i>
+                                <p>مدير الملفات</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link">
+                                <i class="nav-icon bi bi-search"></i>
+                                <p>بحث متقدم</p>
+                            </a>
+                        </li>
+
+                        <li class="nav-header">الأرشيف</li>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link">
+                                <i class="nav-icon bi bi-inbox"></i>
+                                <p>
+                                    الأرشيف
+                                    <i class="nav-arrow bi bi-chevron-left"></i>
+                                </p>
+                            </a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item">
+                                    <a href="#" class="nav-link">
+                                        <i class="nav-icon bi bi-circle"></i>
+                                        <p>كل الملفات</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="#" class="nav-link">
+                                        <i class="nav-icon bi bi-circle"></i>
+                                        <p>المستندات الرسمية</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="#" class="nav-link">
+                                        <i class="nav-icon bi bi-circle"></i>
+                                        <p>العقود</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="#" class="nav-link">
+                                        <i class="nav-icon bi bi-circle"></i>
+                                        <p>المراسلات</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="#" class="nav-link">
+                                        <i class="nav-icon bi bi-circle"></i>
+                                        <p>الفواتير</p>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link">
+                                <i class="nav-icon bi bi-tags"></i>
+                                <p>التصنيفات</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link">
+                                <i class="nav-icon bi bi-building"></i>
+                                <p>الأقسام</p>
+                            </a>
+                        </li>
+
+                        <li class="nav-header">الوصول السريع</li>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link">
+                                <i class="nav-icon bi bi-star"></i>
+                                <p>المفضلة</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link">
+                                <i class="nav-icon bi bi-clock-history"></i>
+                                <p>الملفات الأخيرة</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link">
+                                <i class="nav-icon bi bi-share"></i>
+                                <p>المشاركة معي</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link">
+                                <i class="nav-icon bi bi-trash"></i>
+                                <p>سلة المحذوفات</p>
+                            </a>
+                        </li>
+
+                        <li class="nav-header">التقارير والإدارة</li>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link">
+                                <i class="nav-icon bi bi-bar-chart"></i>
+                                <p>
+                                    التقارير
+                                    <i class="nav-arrow bi bi-chevron-left"></i>
+                                </p>
+                            </a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item">
+                                    <a href="#" class="nav-link">
+                                        <i class="nav-icon bi bi-circle"></i>
+                                        <p>إحصائيات الأرشيف</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="#" class="nav-link">
+                                        <i class="nav-icon bi bi-circle"></i>
+                                        <p>سجل النشاط</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="#" class="nav-link">
+                                        <i class="nav-icon bi bi-circle"></i>
+                                        <p>التخزين المستخدم</p>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link">
+                                <i class="nav-icon bi bi-people"></i>
+                                <p>المستخدمون</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link">
+                                <i class="nav-icon bi bi-shield-lock"></i>
+                                <p>الصلاحيات</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link">
+                                <i class="nav-icon bi bi-gear"></i>
+                                <p>الإعدادات</p>
+                            </a>
+                        </li>
+
+                    </ul>
+                </nav>
+            </div>
+        </aside>
+
+        <main class="app-main">
+            @RenderBody()
+        </main>
+
+        <footer class="app-footer">
+            <strong>نظام الأرشفة &copy; @DateTime.Now.Year</strong>
+        </footer>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.16.0/browser/overlayscrollbars.browser.es6.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@@popperjs/core@2.11.8/dist/umd/popper.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.min.js" crossorigin="anonymous"></script>
+    <script src="~/adminite/js/adminlte.min.js" asp-append-version="true"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const sidebarWrapper = document.querySelector('.sidebar-wrapper');
+            const isMobile = window.innerWidth <= 992;
+            if (sidebarWrapper && globalThis.OverlayScrollbarsGlobal?.OverlayScrollbars && !isMobile) {
+                OverlayScrollbarsGlobal.OverlayScrollbars(sidebarWrapper, {
+                    scrollbars: { theme: 'os-theme-light', autoHide: 'leave', clickScroll: true }
+                });
+            }
+        });
+    </script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
