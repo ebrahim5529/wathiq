@@ -22,9 +22,6 @@ services:
 
   web:
     image: ${WEB_IMAGE:-ghcr.io/ebrahim5529/wathiq:latest}
-    build:
-      context: .
-      dockerfile: Dockerfile
     container_name: wathiq-web
     restart: unless-stopped
     depends_on:
