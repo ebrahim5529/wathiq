@@ -22,7 +22,7 @@ services:
       - wathiq-net
 
   web:
-    image: ${WEB_IMAGE:-ghcr.io/OWNER/wathiq:latest}
+    image: ${WEB_IMAGE:-ghcr.io/ebrahim5529/wathiq:latest}
     build:
       context: .
       dockerfile: Dockerfile
