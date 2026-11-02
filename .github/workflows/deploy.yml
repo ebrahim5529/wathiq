@@ -39,32 +39,41 @@ jobs:
           script: |
             set -euo pipefail
             APP_DIR="${{ secrets.VPS_APP_DIR }}"
+            REPO_URL="https://github.com/ebrahim5529/wathiq.git"
 
-            if [ ! -d "$APP_DIR/.git" ]; then
-              echo "Cloning repository into $APP_DIR"
-              mkdir -p "$(dirname "$APP_DIR")"
-              git clone https://github.com/ebrahim5529/wathiq.git "$APP_DIR"
-            fi
+            mkdir -p "$(dirname "$APP_DIR")"
 
-            cd "$APP_DIR"
-            git fetch origin main
-            git reset --hard origin/main
-
-            if [ ! -f .env ]; then
-              if [ -f .env.example ]; then
-                cp .env.example .env
-                echo "Created .env from .env.example — update passwords on the server if needed."
-              else
-                echo "ERROR: .env missing in $APP_DIR"
-                exit 1
+            if [ -d "$APP_DIR/.git" ]; then
+              echo "Updating existing git repository in $APP_DIR"
+              cd "$APP_DIR"
+              git remote set-url origin "$REPO_URL" || true
+              git fetch origin main
+              git reset --hard origin/main
+            else
+              echo "Preparing clean git checkout in $APP_DIR"
+              if [ -f "$APP_DIR/.env" ]; then
+                cp "$APP_DIR/.env" /tmp/wathiq.env.bak
+              fi
+              rm -rf "$APP_DIR"
+              git clone --branch main "$REPO_URL" "$APP_DIR"
+              cd "$APP_DIR"
+              if [ -f /tmp/wathiq.env.bak ]; then
+                mv /tmp/wathiq.env.bak .env
               fi
             fi
 
-            # Ensure image name works for local builds
-            if ! grep -q '^WEB_IMAGE=' .env; then
-              echo 'WEB_IMAGE=wathiq-web:local' >> .env
-            else
+            cd "$APP_DIR"
+
+            if [ ! -f .env ]; then
+              cp .env.example .env
+              echo "Created .env from example — edit DB passwords on the server if needed."
+            fi
+
+            # Force local image name so compose builds instead of pulling GHCR
+            if grep -q '^WEB_IMAGE=' .env; then
               sed -i 's|^WEB_IMAGE=.*|WEB_IMAGE=wathiq-web:local|' .env
+            else
+              echo 'WEB_IMAGE=wathiq-web:local' >> .env
             fi
 
             docker compose build web
