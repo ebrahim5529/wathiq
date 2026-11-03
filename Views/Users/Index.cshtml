@@ -1,0 +1,200 @@
+@{
+    ViewData["Title"] = "المستخدمون";
+    ViewData["Nav"] = "users";
+}
+@await Html.PartialAsync("_PageHeader", "المستخدمون")
+
+<div class="app-content">
+    <div class="container-fluid">
+        <div class="card">
+            <div class="card-header d-flex flex-wrap gap-2 justify-content-between align-items-center">
+                <h3 class="card-title"><i class="bi bi-people me-2"></i>حسابات المستخدمين</h3>
+                <div class="d-flex gap-2">
+                    <div class="input-group input-group-sm" style="width: 14rem">
+                        <span class="input-group-text"><i class="bi bi-search"></i></span>
+                        <input type="search" class="form-control" placeholder="بحث عن مستخدم…" aria-label="بحث" />
+                    </div>
+                    <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#user-modal">
+                        <i class="bi bi-person-plus me-1"></i> مستخدم جديد
+                    </button>
+                </div>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-striped align-middle mb-0">
+                        <thead>
+                            <tr>
+                                <th>الاسم الكامل</th>
+                                <th>البريد / اسم الدخول</th>
+                                <th>القسم</th>
+                                <th>الأدوار</th>
+                                <th>الحالة</th>
+                                <th>آخر دخول</th>
+                                <th class="text-end">إجراءات</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <div class="d-flex align-items-center gap-2">
+                                        <span class="badge rounded-circle text-bg-primary p-2">أ</span>
+                                        أحمد العلي
+                                    </div>
+                                </td>
+                                <td>ahmed@hr.local</td>
+                                <td>المشتريات</td>
+                                <td><span class="badge text-bg-danger">مدير النظام</span></td>
+                                <td><span class="badge text-bg-success">نشط</span></td>
+                                <td>اليوم 10:42 ص</td>
+                                <td class="text-end">
+                                    <div class="d-inline-flex gap-1">
+                                        <button class="btn btn-sm btn-outline-secondary" title="تعديل" data-bs-toggle="modal" data-bs-target="#user-modal"><i class="bi bi-pencil"></i></button>
+                                        <button class="btn btn-sm btn-outline-warning" title="إعادة تعيين كلمة المرور"><i class="bi bi-key"></i></button>
+                                        <button class="btn btn-sm btn-outline-danger" title="تعطيل"><i class="bi bi-lock"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="d-flex align-items-center gap-2">
+                                        <span class="badge rounded-circle text-bg-success p-2">س</span>
+                                        سارة محمد
+                                    </div>
+                                </td>
+                                <td>sara@hr.local</td>
+                                <td>الموارد البشرية</td>
+                                <td><span class="badge text-bg-primary">أمين الأرشيف</span></td>
+                                <td><span class="badge text-bg-success">نشط</span></td>
+                                <td>اليوم 10:38 ص</td>
+                                <td class="text-end">
+                                    <div class="d-inline-flex gap-1">
+                                        <button class="btn btn-sm btn-outline-secondary" title="تعديل" data-bs-toggle="modal" data-bs-target="#user-modal"><i class="bi bi-pencil"></i></button>
+                                        <button class="btn btn-sm btn-outline-warning" title="إعادة تعيين كلمة المرور"><i class="bi bi-key"></i></button>
+                                        <button class="btn btn-sm btn-outline-danger" title="تعطيل"><i class="bi bi-lock"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="d-flex align-items-center gap-2">
+                                        <span class="badge rounded-circle text-bg-info p-2">خ</span>
+                                        خالد يوسف
+                                    </div>
+                                </td>
+                                <td>khaled@hr.local</td>
+                                <td>المالية</td>
+                                <td><span class="badge text-bg-info">مشرف قسم</span></td>
+                                <td><span class="badge text-bg-success">نشط</span></td>
+                                <td>اليوم 09:55 ص</td>
+                                <td class="text-end">
+                                    <div class="d-inline-flex gap-1">
+                                        <button class="btn btn-sm btn-outline-secondary" title="تعديل" data-bs-toggle="modal" data-bs-target="#user-modal"><i class="bi bi-pencil"></i></button>
+                                        <button class="btn btn-sm btn-outline-warning" title="إعادة تعيين كلمة المرور"><i class="bi bi-key"></i></button>
+                                        <button class="btn btn-sm btn-outline-danger" title="تعطيل"><i class="bi bi-lock"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="d-flex align-items-center gap-2">
+                                        <span class="badge rounded-circle text-bg-warning p-2">ل</span>
+                                        ليلى حسن
+                                    </div>
+                                </td>
+                                <td>laila@hr.local</td>
+                                <td>تقنية المعلومات</td>
+                                <td><span class="badge text-bg-secondary">مستخدم</span></td>
+                                <td><span class="badge text-bg-success">نشط</span></td>
+                                <td>أمس 04:20 م</td>
+                                <td class="text-end">
+                                    <div class="d-inline-flex gap-1">
+                                        <button class="btn btn-sm btn-outline-secondary" title="تعديل" data-bs-toggle="modal" data-bs-target="#user-modal"><i class="bi bi-pencil"></i></button>
+                                        <button class="btn btn-sm btn-outline-warning" title="إعادة تعيين كلمة المرور"><i class="bi bi-key"></i></button>
+                                        <button class="btn btn-sm btn-outline-danger" title="تعطيل"><i class="bi bi-lock"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="d-flex align-items-center gap-2">
+                                        <span class="badge rounded-circle text-bg-secondary p-2">ع</span>
+                                        عمر سالم
+                                    </div>
+                                </td>
+                                <td>omar@hr.local</td>
+                                <td>الإدارة العليا</td>
+                                <td><span class="badge text-bg-dark">ضيف / قراءة فقط</span></td>
+                                <td><span class="badge text-bg-secondary">معطّل</span></td>
+                                <td>2026/10/12</td>
+                                <td class="text-end">
+                                    <div class="d-inline-flex gap-1">
+                                        <button class="btn btn-sm btn-outline-secondary" title="تعديل" data-bs-toggle="modal" data-bs-target="#user-modal"><i class="bi bi-pencil"></i></button>
+                                        <button class="btn btn-sm btn-outline-success" title="تفعيل"><i class="bi bi-unlock"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="card-footer text-secondary small">5 مستخدمين · آخر تحديث للقائمة اليوم</div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="user-modal" tabindex="-1" aria-labelledby="user-modal-title" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="user-modal-title"><i class="bi bi-person-gear me-2"></i>بيانات المستخدم</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="إغلاق"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label class="form-label" for="user-name">الاسم الكامل <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="user-name" placeholder="الاسم الكامل" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label" for="user-email">البريد / اسم الدخول <span class="text-danger">*</span></label>
+                        <input type="email" class="form-control" id="user-email" placeholder="name@hr.local" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label" for="user-dept">القسم</label>
+                        <select class="form-select" id="user-dept">
+                            <option value="">بدون قسم</option>
+                            <option>الموارد البشرية</option>
+                            <option>المالية</option>
+                            <option>المشتريات</option>
+                            <option>تقنية المعلومات</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label" for="user-role">الأدوار</label>
+                        <select class="form-select" id="user-role" multiple size="4">
+                            <option>مدير النظام</option>
+                            <option>أمين الأرشيف</option>
+                            <option>مشرف قسم</option>
+                            <option selected>مستخدم</option>
+                            <option>ضيف / قراءة فقط</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label" for="user-pass">كلمة المرور</label>
+                        <input type="password" class="form-control" id="user-pass" placeholder="اتركها فارغة عند عدم التغيير" />
+                    </div>
+                    <div class="col-md-6 d-flex align-items-center">
+                        <div class="form-check form-switch mt-4">
+                            <input class="form-check-input" type="checkbox" role="switch" id="user-active" checked />
+                            <label class="form-check-label" for="user-active">الحساب نشط</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
+                <button type="button" class="btn btn-primary"><i class="bi bi-check-lg me-1"></i> حفظ</button>
+            </div>
+        </div>
+    </div>
+</div>

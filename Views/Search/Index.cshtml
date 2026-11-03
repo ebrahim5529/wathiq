@@ -1,0 +1,204 @@
+@{
+    ViewData["Title"] = "بحث متقدم";
+    ViewData["Nav"] = "search";
+}
+@await Html.PartialAsync("_PageHeader", "بحث متقدم")
+
+<div class="app-content">
+    <div class="container-fluid">
+        <div class="card mb-3">
+            <div class="card-header">
+                <h3 class="card-title"><i class="bi bi-funnel me-2"></i>معايير البحث</h3>
+            </div>
+            <div class="card-body">
+                <form method="get" asp-controller="Search" asp-action="Index">
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <label class="form-label" for="q">كلمة في الاسم أو الوصف</label>
+                            <input type="text" class="form-control" id="q" name="q" placeholder="اسم الملف أو كلمة من الوصف…" />
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label" for="ref">رقم الأرشيف / المرجع</label>
+                            <input type="text" class="form-control" id="ref" name="referenceNo" placeholder="INV-2026-…" />
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label" for="refBy">رفع بواسطة</label>
+                            <select class="form-select" id="refBy" name="uploadedBy">
+                                <option value="">الكل</option>
+                                <option>أحمد العلي</option>
+                                <option>سارة محمد</option>
+                                <option>خالد يوسف</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label" for="category">التصنيف</label>
+                            <select class="form-select" id="category" name="categoryId">
+                                <option value="">الكل</option>
+                                <option>العقود</option>
+                                <option>الفواتير</option>
+                                <option>المراسلات</option>
+                                <option>التقارير</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label" for="dept">القسم</label>
+                            <select class="form-select" id="dept" name="departmentId">
+                                <option value="">الكل</option>
+                                <option>الموارد البشرية</option>
+                                <option>المالية</option>
+                                <option>المشتريات</option>
+                                <option>تقنية المعلومات</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label" for="docType">نوع المستند</label>
+                            <select class="form-select" id="docType" name="type">
+                                <option value="">الكل</option>
+                                <option>مستند رسمي</option>
+                                <option>عقد</option>
+                                <option>مراسلة</option>
+                                <option>فاتورة</option>
+                                <option>عام</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label" for="tags">الوسوم</label>
+                            <input type="text" class="form-control" id="tags" name="tags" placeholder="مثال: 2026, عاجل" />
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label" for="from">تاريخ الرفع من</label>
+                            <input type="date" class="form-control" id="from" name="from" />
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label" for="to">إلى</label>
+                            <input type="date" class="form-control" id="to" name="to" />
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label d-block">امتداد الملف</label>
+                            <div class="d-flex flex-wrap gap-3 pt-2">
+                                <div class="form-check"><input class="form-check-input" type="checkbox" id="ext-pdf" name="ext" value="pdf" checked /><label class="form-check-label" for="ext-pdf">PDF</label></div>
+                                <div class="form-check"><input class="form-check-input" type="checkbox" id="ext-doc" name="ext" value="docx" /><label class="form-check-label" for="ext-doc">Word</label></div>
+                                <div class="form-check"><input class="form-check-input" type="checkbox" id="ext-xls" name="ext" value="xlsx" /><label class="form-check-label" for="ext-xls">Excel</label></div>
+                                <div class="form-check"><input class="form-check-input" type="checkbox" id="ext-img" name="ext" value="img" /><label class="form-check-label" for="ext-img">صور</label></div>
+                                <div class="form-check"><input class="form-check-input" type="checkbox" id="ext-zip" name="ext" value="zip" /><label class="form-check-label" for="ext-zip">ZIP</label></div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 d-flex align-items-end">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" role="switch" id="trash" name="inTrash" />
+                                <label class="form-check-label" for="trash">داخل سلة المحذوفات</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="d-flex gap-2 mt-4">
+                        <button type="submit" class="btn btn-primary"><i class="bi bi-search me-1"></i> بحث</button>
+                        <button type="reset" class="btn btn-outline-secondary">إعادة تعيين</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h3 class="card-title"><i class="bi bi-list-check me-2"></i>النتائج <span class="badge text-bg-secondary ms-1">4</span></h3>
+                <div class="card-tools">
+                    <button class="btn btn-sm btn-outline-secondary"><i class="bi bi-download me-1"></i> تصدير النتائج</button>
+                </div>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-striped align-middle mb-0">
+                        <thead>
+                            <tr>
+                                <th>الاسم</th>
+                                <th>النوع</th>
+                                <th>المرجع</th>
+                                <th>التصنيف</th>
+                                <th>القسم</th>
+                                <th>الحجم</th>
+                                <th>تاريخ الرفع</th>
+                                <th class="text-end">إجراءات</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><i class="bi bi-file-earmark-pdf-fill text-danger me-2"></i>design-review.pdf</td>
+                                <td><span class="badge text-bg-secondary">عام</span></td>
+                                <td>—</td>
+                                <td>التصميم</td>
+                                <td>تقنية المعلومات</td>
+                                <td>1.4 MB</td>
+                                <td>2026/11/03</td>
+                                <td class="text-end">
+                                    <div class="d-inline-flex gap-1">
+                                        <button class="btn btn-sm btn-outline-secondary" title="فتح"><i class="bi bi-folder2-open"></i></button>
+                                        <button class="btn btn-sm btn-outline-secondary" title="تنزيل"><i class="bi bi-download"></i></button>
+                                        <button class="btn btn-sm btn-outline-warning" title="مفضلة"><i class="bi bi-star"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><i class="bi bi-file-earmark-pdf-fill text-danger me-2"></i>INV-2026-00428.pdf</td>
+                                <td><span class="badge text-bg-warning text-dark">فاتورة</span></td>
+                                <td>INV-2026-00428</td>
+                                <td>الفواتير</td>
+                                <td>المالية</td>
+                                <td>184 KB</td>
+                                <td>2026/11/02</td>
+                                <td class="text-end">
+                                    <div class="d-inline-flex gap-1">
+                                        <button class="btn btn-sm btn-outline-secondary" title="فتح"><i class="bi bi-folder2-open"></i></button>
+                                        <button class="btn btn-sm btn-outline-secondary" title="تنزيل"><i class="bi bi-download"></i></button>
+                                        <button class="btn btn-sm btn-outline-warning" title="مفضلة"><i class="bi bi-star"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><i class="bi bi-file-earmark-word-fill text-info me-2"></i>contract-draft.docx</td>
+                                <td><span class="badge text-bg-success">عقد</span></td>
+                                <td>CN-2026-112</td>
+                                <td>العقود</td>
+                                <td>المشتريات</td>
+                                <td>320 KB</td>
+                                <td>2026/10/28</td>
+                                <td class="text-end">
+                                    <div class="d-inline-flex gap-1">
+                                        <button class="btn btn-sm btn-outline-secondary" title="فتح"><i class="bi bi-folder2-open"></i></button>
+                                        <button class="btn btn-sm btn-outline-secondary" title="تنزيل"><i class="bi bi-download"></i></button>
+                                        <button class="btn btn-sm btn-outline-warning" title="مفضلة"><i class="bi bi-star"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><i class="bi bi-file-earmark-image-fill text-primary me-2"></i>focus-ring-dark.png</td>
+                                <td><span class="badge text-bg-secondary">عام</span></td>
+                                <td>—</td>
+                                <td>التصميم</td>
+                                <td>تقنية المعلومات</td>
+                                <td>320 KB</td>
+                                <td>2026/10/25</td>
+                                <td class="text-end">
+                                    <div class="d-inline-flex gap-1">
+                                        <button class="btn btn-sm btn-outline-secondary" title="فتح"><i class="bi bi-folder2-open"></i></button>
+                                        <button class="btn btn-sm btn-outline-secondary" title="تنزيل"><i class="bi bi-download"></i></button>
+                                        <button class="btn btn-sm btn-outline-warning" title="مفضلة"><i class="bi bi-star"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="card-footer d-flex justify-content-between align-items-center">
+                <small class="text-secondary">عرض 1–4 من 4 نتائج</small>
+                <nav aria-label="صفحات النتائج">
+                    <ul class="pagination pagination-sm mb-0">
+                        <li class="page-item disabled"><span class="page-link">السابق</span></li>
+                        <li class="page-item active"><span class="page-link">1</span></li>
+                        <li class="page-item disabled"><span class="page-link">التالي</span></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+</div>

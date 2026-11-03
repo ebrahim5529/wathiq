@@ -1,0 +1,114 @@
+@{
+    ViewData["Title"] = "الملفات الأخيرة";
+    ViewData["Nav"] = "recent";
+}
+@await Html.PartialAsync("_PageHeader", "الملفات الأخيرة")
+
+<div class="app-content">
+    <div class="container-fluid">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h3 class="card-title"><i class="bi bi-clock-history me-2"></i>آخر 50 عنصراً فتحته أو عدّلته</h3>
+                <div class="card-tools">
+                    <a asp-controller="Archive" asp-action="Index" class="btn btn-sm btn-outline-secondary">
+                        <i class="bi bi-folder2-open me-1"></i> مدير الملفات
+                    </a>
+                </div>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead>
+                            <tr>
+                                <th>الاسم</th>
+                                <th>النوع</th>
+                                <th>الإجراء</th>
+                                <th>الحجم</th>
+                                <th>آخر وصول</th>
+                                <th class="text-end">إجراءات</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><i class="bi bi-file-earmark-pdf-fill text-danger me-2"></i>design-review.pdf</td>
+                                <td><span class="badge text-bg-secondary">PDF</span></td>
+                                <td><span class="badge text-bg-info">فتح</span></td>
+                                <td>1.4 MB</td>
+                                <td>اليوم 10:42 ص</td>
+                                <td class="text-end">
+                                    <div class="d-inline-flex gap-1">
+                                        <button class="btn btn-sm btn-outline-secondary" title="تنزيل"><i class="bi bi-download"></i></button>
+                                        <button class="btn btn-sm btn-outline-warning" title="مفضلة"><i class="bi bi-star"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><i class="bi bi-folder-fill text-warning me-2"></i>مقابلات العملاء</td>
+                                <td><span class="badge text-bg-light">مجلد</span></td>
+                                <td><span class="badge text-bg-info">فتح</span></td>
+                                <td>—</td>
+                                <td>اليوم 10:38 ص</td>
+                                <td class="text-end">
+                                    <a asp-controller="Archive" asp-action="Index" class="btn btn-sm btn-outline-secondary" title="فتح"><i class="bi bi-folder2-open"></i></a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><i class="bi bi-file-earmark-word-fill text-info me-2"></i>roadmap.docx</td>
+                                <td><span class="badge text-bg-secondary">DOCX</span></td>
+                                <td><span class="badge text-bg-warning text-dark">تعديل</span></td>
+                                <td>47 KB</td>
+                                <td>أمس 04:15 م</td>
+                                <td class="text-end">
+                                    <div class="d-inline-flex gap-1">
+                                        <button class="btn btn-sm btn-outline-secondary" title="تنزيل"><i class="bi bi-download"></i></button>
+                                        <button class="btn btn-sm btn-outline-warning" title="مفضلة"><i class="bi bi-star"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><i class="bi bi-file-earmark-pdf-fill text-danger me-2"></i>INV-2026-00428.pdf</td>
+                                <td><span class="badge text-bg-secondary">PDF</span></td>
+                                <td><span class="badge text-bg-success">رفع</span></td>
+                                <td>184 KB</td>
+                                <td>أمس 11:20 ص</td>
+                                <td class="text-end">
+                                    <div class="d-inline-flex gap-1">
+                                        <button class="btn btn-sm btn-outline-secondary" title="تنزيل"><i class="bi bi-download"></i></button>
+                                        <button class="btn btn-sm btn-outline-warning" title="مفضلة"><i class="bi bi-star"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><i class="bi bi-file-earmark-spreadsheet-fill text-success me-2"></i>analytics-may.xlsx</td>
+                                <td><span class="badge text-bg-secondary">XLSX</span></td>
+                                <td><span class="badge text-bg-info">فتح</span></td>
+                                <td>92 KB</td>
+                                <td>16 مايو 2026</td>
+                                <td class="text-end">
+                                    <div class="d-inline-flex gap-1">
+                                        <button class="btn btn-sm btn-outline-secondary" title="تنزيل"><i class="bi bi-download"></i></button>
+                                        <button class="btn btn-sm btn-outline-warning" title="مفضلة"><i class="bi bi-star"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><i class="bi bi-file-earmark-image-fill text-primary me-2"></i>focus-ring-dark.png</td>
+                                <td><span class="badge text-bg-secondary">PNG</span></td>
+                                <td><span class="badge text-bg-success">رفع</span></td>
+                                <td>320 KB</td>
+                                <td>15 مايو 2026</td>
+                                <td class="text-end">
+                                    <div class="d-inline-flex gap-1">
+                                        <button class="btn btn-sm btn-outline-secondary" title="تنزيل"><i class="bi bi-download"></i></button>
+                                        <button class="btn btn-sm btn-outline-warning" title="مفضلة"><i class="bi bi-star"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="card-footer text-secondary small">يُحدَّث هذا السجل تلقائياً عند فتح أو تعديل أي عنصر</div>
+        </div>
+    </div>
+</div>

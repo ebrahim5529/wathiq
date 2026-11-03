@@ -1,0 +1,121 @@
+@{
+    ViewData["Title"] = "التخزين المستخدم";
+    ViewData["Nav"] = "reports-storage";
+}
+@await Html.PartialAsync("_PageHeader", "التخزين المستخدم")
+
+<div class="app-content">
+    <div class="container-fluid">
+        <div class="alert alert-danger d-flex align-items-center gap-2">
+            <i class="bi bi-exclamation-triangle"></i>
+            <span>تم تجاوز 60% من الحصة التخزينية. يُنصح بمراجعة الملفات الكبيرة أو زيادة الحصة قبل الوصول إلى 80%.</span>
+        </div>
+
+        <div class="row g-3">
+            <div class="col-lg-4">
+                <div class="card h-100">
+                    <div class="card-header"><h3 class="card-title"><i class="bi bi-hdd me-2"></i>الحصة الكلية</h3></div>
+                    <div class="card-body text-center">
+                        <div class="display-6 fw-semibold">6.2 <small class="fs-5">جيجا</small></div>
+                        <p class="text-secondary mb-3">من أصل 10 جيجا</p>
+                        <div class="progress mb-2" style="height: 14px">
+                            <div class="progress-bar bg-warning" role="progressbar" style="width: 62%" aria-valuenow="62" aria-valuemin="0" aria-valuemax="100">62%</div>
+                        </div>
+                        <small class="text-secondary">المتبقي: 3.8 جيجا</small>
+                        <hr />
+                        <div class="row text-start small">
+                            <div class="col-6 mb-2"><span class="text-secondary">ملفات:</span> 1,248</div>
+                            <div class="col-6 mb-2"><span class="text-secondary">مجلدات:</span> 86</div>
+                            <div class="col-6"><span class="text-secondary">متوسط الملف:</span> 5.1 MB</div>
+                            <div class="col-6"><span class="text-secondary">أكبر ملف:</span> 240 MB</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-8">
+                <div class="card h-100">
+                    <div class="card-header"><h3 class="card-title"><i class="bi bi-bar-chart-steps me-2"></i>الاستخدام حسب القسم</h3></div>
+                    <div class="card-body">
+                        @{
+                            var deps = new (string Name, string Color, double Used, double Percent, string Count)[]
+                            {
+                                ("المالية", "danger", 1.8, 29, "364 ملف"),
+                                ("الموارد البشرية", "success", 1.1, 17, "210 ملف"),
+                                ("تقنية المعلومات", "info", 0.92, 12, "152 ملف"),
+                                ("الإدارة العليا", "primary", 0.70, 10, "120 ملف"),
+                                ("المشتريات", "warning", 0.41, 7, "88 ملف"),
+                                ("أخرى", "secondary", 1.27, 25, "314 ملف")
+                            };
+                        }
+                        @foreach (var d in deps)
+                        {
+                            <div class="mb-3">
+                                <div class="d-flex justify-content-between small mb-1">
+                                    <span>@d.Name <span class="text-secondary">(@d.Count)</span></span>
+                                    <span class="text-secondary">@d.Used.ToString("0.##") GB · @d.Percent%</span>
+                                </div>
+                                <div class="progress" style="height: 8px">
+                                    <div class="progress-bar bg-@d.Color" role="progressbar" style="width: @d.Percent%" aria-valuenow="@d.Percent" aria-valuemin="0" aria-valuemax="100"></div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-6">
+                <div class="card h-100">
+                    <div class="card-header"><h3 class="card-title"><i class="bi bi-people me-2"></i>أكثر المستخدمين استهلاكاً</h3></div>
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-striped align-middle mb-0">
+                                <thead>
+                                    <tr>
+                                        <th>المستخدم</th>
+                                        <th>القسم</th>
+                                        <th>عدد الملفات</th>
+                                        <th>الحجم</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td><i class="bi bi-person-circle me-1"></i> أحمد العلي</td><td>المشتريات</td><td>182</td><td>1.2 GB</td></tr>
+                                    <tr><td><i class="bi bi-person-circle me-1"></i> سارة محمد</td><td>الموارد البشرية</td><td>164</td><td>980 MB</td></tr>
+                                    <tr><td><i class="bi bi-person-circle me-1"></i> خالد يوسف</td><td>المالية</td><td>231</td><td>870 MB</td></tr>
+                                    <tr><td><i class="bi bi-person-circle me-1"></i> ليلى حسن</td><td>تقنية المعلومات</td><td>97</td><td>640 MB</td></tr>
+                                    <tr><td><i class="bi bi-person-circle me-1"></i> عمر سالم</td><td>الإدارة العليا</td><td>58</td><td>410 MB</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-6">
+                <div class="card h-100">
+                    <div class="card-header"><h3 class="card-title"><i class="bi bi-file-earmark-bar-graph me-2"></i>أكبر الملفات</h3></div>
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-striped align-middle mb-0">
+                                <thead>
+                                    <tr>
+                                        <th>الملف</th>
+                                        <th>النوع</th>
+                                        <th>الحجم</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td><i class="bi bi-file-earmark-zip-fill text-secondary me-2"></i>db-backup-2026-05.zip</td><td>ZIP</td><td>240 MB</td></tr>
+                                    <tr><td><i class="bi bi-file-earmark-play-fill text-warning me-2"></i>training-video.mp4</td><td>MP4</td><td>185 MB</td></tr>
+                                    <tr><td><i class="bi bi-file-earmark-pdf-fill text-danger me-2"></i>annual-report-2025.pdf</td><td>PDF</td><td>96 MB</td></tr>
+                                    <tr><td><i class="bi bi-file-earmark-zip-fill text-secondary me-2"></i>site-export-2026-05.zip</td><td>ZIP</td><td>12.3 MB</td></tr>
+                                    <tr><td><i class="bi bi-file-earmark-pdf-fill text-danger me-2"></i>design-review.pdf</td><td>PDF</td><td>1.4 MB</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

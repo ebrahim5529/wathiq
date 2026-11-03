@@ -1,0 +1,221 @@
+@{
+    ViewData["Title"] = "الصلاحيات";
+    ViewData["Nav"] = "roles";
+}
+@await Html.PartialAsync("_PageHeader", "الصلاحيات")
+
+<div class="app-content">
+    <div class="container-fluid">
+        <div class="row g-3 mb-3">
+            <div class="col-lg-4 col-md-6">
+                <div class="card border-danger h-100">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <h5 class="mb-1"><i class="bi bi-shield-fill-check text-danger me-2"></i>مدير النظام</h5>
+                                <p class="text-secondary small mb-2">كامل الصلاحيات على النظام والمحتوى</p>
+                            </div>
+                            <span class="badge text-bg-danger">1 مستخدم</span>
+                        </div>
+                        <div class="d-flex gap-1 flex-wrap">
+                            <span class="badge text-bg-light">كل الشاشات</span>
+                            <span class="badge text-bg-light">الإعدادات</span>
+                            <span class="badge text-bg-light">المستخدمون</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+                <div class="card border-primary h-100">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <h5 class="mb-1"><i class="bi bi-archive text-primary me-2"></i>أمين الأرشيف</h5>
+                                <p class="text-secondary small mb-2">إدارة المحتوى والتصنيف والتقارير</p>
+                            </div>
+                            <span class="badge text-bg-primary">1 مستخدم</span>
+                        </div>
+                        <div class="d-flex gap-1 flex-wrap">
+                            <span class="badge text-bg-light">رفع / نقل</span>
+                            <span class="badge text-bg-light">استعادة</span>
+                            <span class="badge text-bg-light">تقارير</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+                <div class="card border-info h-100">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <h5 class="mb-1"><i class="bi bi-diagram-3 text-info me-2"></i>مشرف قسم</h5>
+                                <p class="text-secondary small mb-2">صلاحيات ضمن نطاق قسمه فقط</p>
+                            </div>
+                            <span class="badge text-bg-info">1 مستخدم</span>
+                        </div>
+                        <div class="d-flex gap-1 flex-wrap">
+                            <span class="badge text-bg-light">عرض</span>
+                            <span class="badge text-bg-light">رفع</span>
+                            <span class="badge text-bg-light">مشاركة داخلية</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 col-md-6">
+                <div class="card border-secondary h-100">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <h5 class="mb-1"><i class="bi bi-person text-secondary me-2"></i>مستخدم</h5>
+                                <p class="text-secondary small mb-2">استخدام يومي وعرض المسموح</p>
+                            </div>
+                            <span class="badge text-bg-secondary">1 مستخدم</span>
+                        </div>
+                        <div class="d-flex gap-1 flex-wrap">
+                            <span class="badge text-bg-light">رفع محدود</span>
+                            <span class="badge text-bg-light">مفضلة</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 col-md-6">
+                <div class="card border-dark h-100">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <h5 class="mb-1"><i class="bi bi-eye text-dark me-2"></i>ضيف / قراءة فقط</h5>
+                                <p class="text-secondary small mb-2">اطلاع وتنزيل حسب المشاركة</p>
+                            </div>
+                            <span class="badge text-bg-dark">1 مستخدم</span>
+                        </div>
+                        <div class="d-flex gap-1 flex-wrap">
+                            <span class="badge text-bg-light">عرض</span>
+                            <span class="badge text-bg-light">تنزيل</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h3 class="card-title"><i class="bi bi-grid-3x3-gap me-2"></i>مصفوفة صلاحيات الشاشات</h3>
+                <button class="btn btn-sm btn-primary"><i class="bi bi-check2-all me-1"></i> حفظ التغييرات</button>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover align-middle text-center mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th class="text-start">الشاشة</th>
+                                <th>مدير النظام</th>
+                                <th>أمين الأرشيف</th>
+                                <th>مشرف قسم</th>
+                                <th>مستخدم</th>
+                                <th>ضيف</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="text-start">لوحة التحكم</td>
+                                <td><input class="form-check-input" type="checkbox" checked disabled /></td>
+                                <td><input class="form-check-input" type="checkbox" checked /></td>
+                                <td><input class="form-check-input" type="checkbox" checked /></td>
+                                <td><input class="form-check-input" type="checkbox" checked /></td>
+                                <td><input class="form-check-input" type="checkbox" checked /></td>
+                            </tr>
+                            <tr>
+                                <td class="text-start">مدير الملفات</td>
+                                <td><input class="form-check-input" type="checkbox" checked disabled /></td>
+                                <td><input class="form-check-input" type="checkbox" checked /></td>
+                                <td><input class="form-check-input" type="checkbox" checked /></td>
+                                <td><input class="form-check-input" type="checkbox" checked /></td>
+                                <td><input class="form-check-input" type="checkbox" checked /></td>
+                            </tr>
+                            <tr>
+                                <td class="text-start">بحث متقدم</td>
+                                <td><input class="form-check-input" type="checkbox" checked disabled /></td>
+                                <td><input class="form-check-input" type="checkbox" checked /></td>
+                                <td><input class="form-check-input" type="checkbox" checked /></td>
+                                <td><input class="form-check-input" type="checkbox" checked /></td>
+                                <td><input class="form-check-input" type="checkbox" checked /></td>
+                            </tr>
+                            <tr>
+                                <td class="text-start">التصنيفات</td>
+                                <td><input class="form-check-input" type="checkbox" checked disabled /></td>
+                                <td><input class="form-check-input" type="checkbox" checked /></td>
+                                <td><input class="form-check-input" type="checkbox" /></td>
+                                <td><input class="form-check-input" type="checkbox" /></td>
+                                <td><input class="form-check-input" type="checkbox" /></td>
+                            </tr>
+                            <tr>
+                                <td class="text-start">الأقسام</td>
+                                <td><input class="form-check-input" type="checkbox" checked disabled /></td>
+                                <td><input class="form-check-input" type="checkbox" checked /></td>
+                                <td><input class="form-check-input" type="checkbox" /></td>
+                                <td><input class="form-check-input" type="checkbox" /></td>
+                                <td><input class="form-check-input" type="checkbox" /></td>
+                            </tr>
+                            <tr>
+                                <td class="text-start">سلة المحذوفات</td>
+                                <td><input class="form-check-input" type="checkbox" checked disabled /></td>
+                                <td><input class="form-check-input" type="checkbox" checked /></td>
+                                <td><input class="form-check-input" type="checkbox" /></td>
+                                <td><input class="form-check-input" type="checkbox" /></td>
+                                <td><input class="form-check-input" type="checkbox" /></td>
+                            </tr>
+                            <tr>
+                                <td class="text-start">التقارير</td>
+                                <td><input class="form-check-input" type="checkbox" checked disabled /></td>
+                                <td><input class="form-check-input" type="checkbox" checked /></td>
+                                <td><input class="form-check-input" type="checkbox" /></td>
+                                <td><input class="form-check-input" type="checkbox" /></td>
+                                <td><input class="form-check-input" type="checkbox" /></td>
+                            </tr>
+                            <tr>
+                                <td class="text-start">المستخدمون</td>
+                                <td><input class="form-check-input" type="checkbox" checked disabled /></td>
+                                <td><input class="form-check-input" type="checkbox" /></td>
+                                <td><input class="form-check-input" type="checkbox" /></td>
+                                <td><input class="form-check-input" type="checkbox" /></td>
+                                <td><input class="form-check-input" type="checkbox" /></td>
+                            </tr>
+                            <tr>
+                                <td class="text-start">الصلاحيات</td>
+                                <td><input class="form-check-input" type="checkbox" checked disabled /></td>
+                                <td><input class="form-check-input" type="checkbox" /></td>
+                                <td><input class="form-check-input" type="checkbox" /></td>
+                                <td><input class="form-check-input" type="checkbox" /></td>
+                                <td><input class="form-check-input" type="checkbox" /></td>
+                            </tr>
+                            <tr>
+                                <td class="text-start">الإعدادات</td>
+                                <td><input class="form-check-input" type="checkbox" checked disabled /></td>
+                                <td><input class="form-check-input" type="checkbox" /></td>
+                                <td><input class="form-check-input" type="checkbox" /></td>
+                                <td><input class="form-check-input" type="checkbox" /></td>
+                                <td><input class="form-check-input" type="checkbox" /></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="card mt-3">
+            <div class="card-header"><h3 class="card-title"><i class="bi bi-lock me-2"></i>صلاحيات المحتوى (على مجلد / ملف / قسم)</h3></div>
+            <div class="card-body">
+                <div class="d-flex flex-wrap gap-2">
+                    <span class="badge text-bg-secondary p-2">عرض</span>
+                    <span class="badge text-bg-secondary p-2">تنزيل</span>
+                    <span class="badge text-bg-secondary p-2">رفع</span>
+                    <span class="badge text-bg-secondary p-2">تعديل / إعادة تسمية</span>
+                    <span class="badge text-bg-secondary p-2">مشاركة</span>
+                    <span class="badge text-bg-secondary p-2">حذف</span>
+                    <span class="badge text-bg-secondary p-2">إدارة</span>
+                </div>
+                <p class="text-secondary small mb-0 mt-2">تُطبَّق هذه الصلاحيات عند مشاركة عنصر مع مستخدم أو قسم، وتُورَّث تلقائياً للمجلدات الفرعية.</p>
+            </div>
+        </div>
+    </div>
+</div>

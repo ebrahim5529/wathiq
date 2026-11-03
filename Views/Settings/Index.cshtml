@@ -1,0 +1,159 @@
+@{
+    ViewData["Title"] = "الإعدادات";
+    ViewData["Nav"] = "settings";
+}
+@await Html.PartialAsync("_PageHeader", "الإعدادات")
+
+<div class="app-content">
+    <div class="container-fluid">
+        <div class="card">
+            <div class="card-header p-0 border-bottom-0">
+                <ul class="nav nav-tabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#tab-general" type="button" role="tab"><i class="bi bi-gear me-1"></i> عامة</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-storage" type="button" role="tab"><i class="bi bi-hdd me-1"></i> التخزين</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-types" type="button" role="tab"><i class="bi bi-file-earmark-check me-1"></i> الأنواع المسموحة</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-trash" type="button" role="tab"><i class="bi bi-trash me-1"></i> السلة</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-security" type="button" role="tab"><i class="bi bi-shield-lock me-1"></i> الأمان</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-notifications" type="button" role="tab"><i class="bi bi-bell me-1"></i> الإشعارات</button>
+                    </li>
+                </ul>
+            </div>
+            <div class="card-body">
+                <div class="tab-content">
+                    <div class="tab-pane fade show active" id="tab-general" role="tabpanel">
+                        <div class="row g-3" style="max-width: 680px">
+                            <div class="col-md-8">
+                                <label class="form-label" for="set-name">اسم النظام</label>
+                                <input type="text" class="form-control" id="set-name" value="نظام الأرشفة" />
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label" for="set-lang">اللغة الافتراضية</label>
+                                <select class="form-select" id="set-lang">
+                                    <option selected>العربية</option>
+                                    <option>English</option>
+                                </select>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label" for="set-logo">الشعار</label>
+                                <input type="file" class="form-control" id="set-logo" accept="image/*" />
+                                <div class="form-text">PNG أو SVG، بحجم أقصى 2 ميجابايت.</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="tab-pane fade" id="tab-storage" role="tabpanel">
+                        <div class="row g-3" style="max-width: 680px">
+                            <div class="col-12">
+                                <label class="form-label" for="set-path">مسار التخزين الفعلي</label>
+                                <input type="text" class="form-control" id="set-path" value="/var/hr-archive/uploads" dir="ltr" />
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label" for="set-max">الحد الأقصى للملف (ميجابايت)</label>
+                                <input type="number" class="form-control" id="set-max" value="10" min="1" />
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label" for="set-quota">الحصة الكلية (جيجابايت)</label>
+                                <input type="number" class="form-control" id="set-quota" value="10" min="1" />
+                            </div>
+                            <div class="col-12">
+                                <div class="alert alert-secondary mb-0">
+                                    <i class="bi bi-info-circle me-1"></i>
+                                    الاستخدام الحالي: <strong>6.2 جيجا</strong> من 10 جيجا (62%).
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="tab-pane fade" id="tab-types" role="tabpanel">
+                        <p class="text-secondary small">حدّد الامتدادات المسموح برفعها إلى الأرشيف.</p>
+                        <div class="row g-2" style="max-width: 680px">
+                            @foreach (var ext in new[] { "pdf", "doc", "docx", "xls", "xlsx", "csv", "ppt", "pptx", "png", "jpg", "jpeg", "gif", "webp", "zip", "rar", "7z", "txt", "md" })
+                            {
+                                <div class="col-auto">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="ext-@ext" checked />
+                                        <label class="form-check-label" for="ext-@ext">.@ext</label>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+
+                    <div class="tab-pane fade" id="tab-trash" role="tabpanel">
+                        <div class="row g-3" style="max-width: 480px">
+                            <div class="col-12">
+                                <label class="form-label" for="set-trash-days">أيام الاحتفاظ قبل الحذف النهائي</label>
+                                <input type="number" class="form-control" id="set-trash-days" value="30" min="1" />
+                            </div>
+                            <div class="col-12">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" role="switch" id="set-trash-auto" checked />
+                                    <label class="form-check-label" for="set-trash-auto">تفعيل الحذف التلقائي</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="tab-pane fade" id="tab-security" role="tabpanel">
+                        <div class="row g-3" style="max-width: 480px">
+                            <div class="col-12">
+                                <label class="form-label" for="set-session">مدة الجلسة (دقائق)</label>
+                                <input type="number" class="form-control" id="set-session" value="60" min="5" />
+                            </div>
+                            <div class="col-12">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" role="switch" id="set-https" checked />
+                                    <label class="form-check-label" for="set-https">إجبار HTTPS</label>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" role="switch" id="set-2fa" />
+                                    <label class="form-check-label" for="set-2fa">التحقق بخطوتين للمديرين</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="tab-pane fade" id="tab-notifications" role="tabpanel">
+                        <div class="row g-3" style="max-width: 480px">
+                            <div class="col-12">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" role="switch" id="set-contract" checked />
+                                    <label class="form-check-label" for="set-contract">تنبيه قبل انتهاء العقود (30 يوماً)</label>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" role="switch" id="set-storage-alert" checked />
+                                    <label class="form-check-label" for="set-storage-alert">تنبيه عند تجاوز 80% من التخزين</label>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" role="switch" id="set-email" />
+                                    <label class="form-check-label" for="set-email">إرسال الإشعارات بالبريد الإلكتروني</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer d-flex gap-2">
+                <button class="btn btn-primary"><i class="bi bi-check-lg me-1"></i> حفظ الإعدادات</button>
+                <button class="btn btn-outline-secondary">استعادة الافتراضي</button>
+            </div>
+        </div>
+    </div>
+</div>

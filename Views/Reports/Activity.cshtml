@@ -1,0 +1,142 @@
+@{
+    ViewData["Title"] = "سجل النشاط";
+    ViewData["Nav"] = "reports-activity";
+}
+@await Html.PartialAsync("_PageHeader", "سجل النشاط")
+
+<div class="app-content">
+    <div class="container-fluid">
+        <div class="card mb-3">
+            <div class="card-body">
+                <form class="row g-2 align-items-end">
+                    <div class="col-md-3">
+                        <label class="form-label" for="log-user">المستخدم</label>
+                        <select class="form-select form-select-sm" id="log-user">
+                            <option value="">الكل</option>
+                            <option>أحمد العلي</option>
+                            <option>سارة محمد</option>
+                            <option>خالد يوسف</option>
+                            <option>ليلى حسن</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label" for="log-action">الإجراء</label>
+                        <select class="form-select form-select-sm" id="log-action">
+                            <option value="">الكل</option>
+                            <option>رفع</option>
+                            <option>تنزيل</option>
+                            <option>حذف</option>
+                            <option>مشاركة</option>
+                            <option>إعادة تسمية</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label" for="log-from">من تاريخ</label>
+                        <input type="date" class="form-control form-control-sm" id="log-from" />
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label" for="log-to">إلى</label>
+                        <input type="date" class="form-control form-control-sm" id="log-to" />
+                    </div>
+                    <div class="col-md-2 d-flex gap-2">
+                        <button type="submit" class="btn btn-sm btn-primary flex-fill"><i class="bi bi-funnel me-1"></i> تصفية</button>
+                        <button type="reset" class="btn btn-sm btn-outline-secondary">مسح</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h3 class="card-title"><i class="bi bi-journal-text me-2"></i>آخر العمليات</h3>
+                <div class="card-tools">
+                    <button class="btn btn-sm btn-outline-secondary"><i class="bi bi-download me-1"></i> تصدير</button>
+                </div>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-striped align-middle mb-0">
+                        <thead>
+                            <tr>
+                                <th>المستخدم</th>
+                                <th>الإجراء</th>
+                                <th>العنصر</th>
+                                <th>التفاصيل</th>
+                                <th>عنوان IP</th>
+                                <th>التاريخ والوقت</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><i class="bi bi-person-circle me-1"></i> أحمد العلي</td>
+                                <td><span class="badge text-bg-success">رفع</span></td>
+                                <td>design-review.pdf</td>
+                                <td>إلى مجلد "التصميم"</td>
+                                <td><code>192.168.1.24</code></td>
+                                <td>2026/11/03 10:42 ص</td>
+                            </tr>
+                            <tr>
+                                <td><i class="bi bi-person-circle me-1"></i> سارة محمد</td>
+                                <td><span class="badge text-bg-info">تنزيل</span></td>
+                                <td>roadmap.docx</td>
+                                <td>تنزيل مباشر</td>
+                                <td><code>192.168.1.31</code></td>
+                                <td>2026/11/03 10:38 ص</td>
+                            </tr>
+                            <tr>
+                                <td><i class="bi bi-person-circle me-1"></i> خالد يوسف</td>
+                                <td><span class="badge text-bg-primary">مشاركة</span></td>
+                                <td>INV-2026-00428.pdf</td>
+                                <td>مع قسم المالية — قراءة</td>
+                                <td><code>192.168.1.18</code></td>
+                                <td>2026/11/03 09:55 ص</td>
+                            </tr>
+                            <tr>
+                                <td><i class="bi bi-person-circle me-1"></i> ليلى حسن</td>
+                                <td><span class="badge text-bg-warning text-dark">إعادة تسمية</span></td>
+                                <td>focus-ring-dark.png</td>
+                                <td>من focus-ring.png</td>
+                                <td><code>192.168.1.42</code></td>
+                                <td>2026/11/02 04:20 م</td>
+                            </tr>
+                            <tr>
+                                <td><i class="bi bi-person-circle me-1"></i> أحمد العلي</td>
+                                <td><span class="badge text-bg-danger">حذف</span></td>
+                                <td>old-report.pdf</td>
+                                <td>إلى سلة المحذوفات</td>
+                                <td><code>192.168.1.24</code></td>
+                                <td>2026/11/01 01:12 م</td>
+                            </tr>
+                            <tr>
+                                <td><i class="bi bi-person-circle me-1"></i> سارة محمد</td>
+                                <td><span class="badge text-bg-success">رفع</span></td>
+                                <td>analytics-may.xlsx</td>
+                                <td>إلى مجلد "التقارير"</td>
+                                <td><code>192.168.1.31</code></td>
+                                <td>2026/10/30 11:07 ص</td>
+                            </tr>
+                            <tr>
+                                <td><i class="bi bi-person-circle me-1"></i> خالد يوسف</td>
+                                <td><span class="badge text-bg-secondary">دخول</span></td>
+                                <td>—</td>
+                                <td>تسجيل دخول ناجح</td>
+                                <td><code>192.168.1.18</code></td>
+                                <td>2026/10/30 08:00 ص</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="card-footer d-flex justify-content-between align-items-center">
+                <small class="text-secondary">عرض 1–7 من 7</small>
+                <nav aria-label="صفحات السجل">
+                    <ul class="pagination pagination-sm mb-0">
+                        <li class="page-item disabled"><span class="page-link">السابق</span></li>
+                        <li class="page-item active"><span class="page-link">1</span></li>
+                        <li class="page-item disabled"><span class="page-link">التالي</span></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+</div>

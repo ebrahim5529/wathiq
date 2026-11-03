@@ -1,0 +1,86 @@
+@{
+    ViewData["Title"] = "سلة المحذوفات";
+    ViewData["Nav"] = "trash";
+}
+@await Html.PartialAsync("_PageHeader", "سلة المحذوفات")
+
+<div class="app-content">
+    <div class="container-fluid">
+        <div class="alert alert-warning d-flex align-items-center gap-2">
+            <i class="bi bi-exclamation-triangle"></i>
+            <span>تُحذف العناصر نهائياً تلقائياً بعد 30 يوماً من نقلها إلى السلة. الحذف النهائي متاح للمدير وأمين الأرشيف فقط.</span>
+        </div>
+
+        <div class="card">
+            <div class="card-header d-flex flex-wrap gap-2 justify-content-between align-items-center">
+                <h3 class="card-title"><i class="bi bi-trash me-2"></i>العناصر المحذوفة</h3>
+                <div class="d-flex gap-2">
+                    <button class="btn btn-sm btn-outline-danger">
+                        <i class="bi bi-trash3 me-1"></i> تفريغ السلة
+                    </button>
+                </div>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-striped align-middle mb-0">
+                        <thead>
+                            <tr>
+                                <th>الاسم</th>
+                                <th>النوع</th>
+                                <th>حذف بواسطة</th>
+                                <th>تاريخ الحذف</th>
+                                <th>المتبقي قبل الحذف النهائي</th>
+                                <th class="text-end">إجراءات</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><i class="bi bi-folder-fill text-warning me-2 opacity-50"></i>مجلد قديم</td>
+                                <td><span class="badge text-bg-light">مجلد</span></td>
+                                <td>أحمد العلي</td>
+                                <td>2026/11/01</td>
+                                <td><span class="badge text-bg-warning text-dark">28 يوماً</span></td>
+                                <td class="text-end">
+                                    <div class="d-inline-flex gap-1">
+                                        <button class="btn btn-sm btn-outline-success" title="استعادة"><i class="bi bi-arrow-counterclockwise"></i></button>
+                                        <button class="btn btn-sm btn-outline-danger" title="حذف نهائي"><i class="bi bi-x-circle"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><i class="bi bi-file-earmark-pdf-fill text-danger me-2 opacity-50"></i>old-report.pdf</td>
+                                <td><span class="badge text-bg-secondary">PDF</span></td>
+                                <td>سارة محمد</td>
+                                <td>2026/10/27</td>
+                                <td><span class="badge text-bg-warning text-dark">23 يوماً</span></td>
+                                <td class="text-end">
+                                    <div class="d-inline-flex gap-1">
+                                        <button class="btn btn-sm btn-outline-success" title="استعادة"><i class="bi bi-arrow-counterclockwise"></i></button>
+                                        <button class="btn btn-sm btn-outline-danger" title="حذف نهائي"><i class="bi bi-x-circle"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><i class="bi bi-file-earmark-word-fill text-info me-2 opacity-50"></i>draft-contract.docx</td>
+                                <td><span class="badge text-bg-secondary">DOCX</span></td>
+                                <td>خالد يوسف</td>
+                                <td>2026/10/12</td>
+                                <td><span class="badge text-bg-danger">8 أيام</span></td>
+                                <td class="text-end">
+                                    <div class="d-inline-flex gap-1">
+                                        <button class="btn btn-sm btn-outline-success" title="استعادة"><i class="bi bi-arrow-counterclockwise"></i></button>
+                                        <button class="btn btn-sm btn-outline-danger" title="حذف نهائي"><i class="bi bi-x-circle"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="card-footer d-flex justify-content-between align-items-center">
+                <small class="text-secondary">3 عناصر في السلة</small>
+                <button class="btn btn-sm btn-outline-secondary" disabled>استعادة الكل</button>
+            </div>
+        </div>
+    </div>
+</div>

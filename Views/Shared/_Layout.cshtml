@@ -39,7 +39,7 @@
                         </a>
                     </li>
                     <li class="nav-item d-none d-md-block">
-                        <a asp-controller="Home" asp-action="Index" class="nav-link">الأرشيف</a>
+                        <a asp-controller="Archive" asp-action="Index" class="nav-link">الأرشيف</a>
                     </li>
                 </ul>
                 <ul class="navbar-nav ms-auto">
@@ -79,7 +79,7 @@
 
         <aside class="app-sidebar bg-body-secondary shadow" data-bs-theme="dark">
             <div class="sidebar-brand">
-                <a asp-controller="Home" asp-action="Index" class="brand-link justify-content-center py-2">
+                <a asp-controller="Dashboard" asp-action="Index" class="brand-link justify-content-center py-2">
                     <img src="~/adminite/assets/img/wathiq-logo.jpg"
                          alt="وثيق - WATHIQ"
                          class="brand-image-xl opacity-100 shadow-none"
@@ -87,24 +87,28 @@
                 </a>
             </div>
             <div class="sidebar-wrapper">
+                @{
+                    string Active(string key) =>
+                        string.Equals(ViewData["Nav"] as string, key, StringComparison.Ordinal) ? " active" : string.Empty;
+                }
                 <nav class="mt-2" aria-label="القائمة الرئيسية">
                     <ul class="nav sidebar-menu flex-column" data-lte-toggle="treeview" data-accordion="false" id="navigation">
 
                         <li class="nav-header">الرئيسي</li>
                         <li class="nav-item">
-                            <a href="#" class="nav-link">
+                            <a asp-controller="Dashboard" asp-action="Index" class="nav-link@(Active("dashboard"))">
                                 <i class="nav-icon bi bi-speedometer2"></i>
                                 <p>لوحة التحكم</p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a asp-controller="Home" asp-action="Index" class="nav-link active">
+                            <a asp-controller="Archive" asp-action="Index" class="nav-link@(Active("file-manager"))">
                                 <i class="nav-icon bi bi-folder2-open"></i>
                                 <p>مدير الملفات</p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="#" class="nav-link">
+                            <a asp-controller="Search" asp-action="Index" class="nav-link@(Active("search"))">
                                 <i class="nav-icon bi bi-search"></i>
                                 <p>بحث متقدم</p>
                             </a>
@@ -121,45 +125,45 @@
                             </a>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item">
-                                    <a href="#" class="nav-link">
-                                        <i class="nav-icon bi bi-circle"></i>
+                                    <a asp-controller="Archive" asp-action="Index" class="nav-link@(Active("archive-all"))">
+                                        <i class="nav-icon bi bi-circle" aria-hidden="true"></i>
                                         <p>كل الملفات</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="#" class="nav-link">
-                                        <i class="nav-icon bi bi-circle"></i>
+                                    <a asp-controller="Archive" asp-action="Index" asp-route-type="Official" class="nav-link@(Active("archive-official"))">
+                                        <i class="nav-icon bi bi-circle" aria-hidden="true"></i>
                                         <p>المستندات الرسمية</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="#" class="nav-link">
-                                        <i class="nav-icon bi bi-circle"></i>
+                                    <a asp-controller="Archive" asp-action="Index" asp-route-type="Contract" class="nav-link@(Active("archive-contract"))">
+                                        <i class="nav-icon bi bi-circle" aria-hidden="true"></i>
                                         <p>العقود</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="#" class="nav-link">
-                                        <i class="nav-icon bi bi-circle"></i>
+                                    <a asp-controller="Archive" asp-action="Index" asp-route-type="Correspondence" class="nav-link@(Active("archive-correspondence"))">
+                                        <i class="nav-icon bi bi-circle" aria-hidden="true"></i>
                                         <p>المراسلات</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="#" class="nav-link">
-                                        <i class="nav-icon bi bi-circle"></i>
+                                    <a asp-controller="Archive" asp-action="Index" asp-route-type="Invoice" class="nav-link@(Active("archive-invoice"))">
+                                        <i class="nav-icon bi bi-circle" aria-hidden="true"></i>
                                         <p>الفواتير</p>
                                     </a>
                                 </li>
                             </ul>
                         </li>
                         <li class="nav-item">
-                            <a href="#" class="nav-link">
+                            <a asp-controller="Categories" asp-action="Index" class="nav-link@(Active("categories"))">
                                 <i class="nav-icon bi bi-tags"></i>
                                 <p>التصنيفات</p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="#" class="nav-link">
+                            <a asp-controller="Departments" asp-action="Index" class="nav-link@(Active("departments"))">
                                 <i class="nav-icon bi bi-building"></i>
                                 <p>الأقسام</p>
                             </a>
@@ -167,25 +171,25 @@
 
                         <li class="nav-header">الوصول السريع</li>
                         <li class="nav-item">
-                            <a href="#" class="nav-link">
+                            <a asp-controller="Favorites" asp-action="Index" class="nav-link@(Active("favorites"))">
                                 <i class="nav-icon bi bi-star"></i>
                                 <p>المفضلة</p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="#" class="nav-link">
+                            <a asp-controller="Recent" asp-action="Index" class="nav-link@(Active("recent"))">
                                 <i class="nav-icon bi bi-clock-history"></i>
                                 <p>الملفات الأخيرة</p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="#" class="nav-link">
+                            <a asp-controller="Shared" asp-action="Index" class="nav-link@(Active("shared"))">
                                 <i class="nav-icon bi bi-share"></i>
                                 <p>المشاركة معي</p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="#" class="nav-link">
+                            <a asp-controller="Trash" asp-action="Index" class="nav-link@(Active("trash"))">
                                 <i class="nav-icon bi bi-trash"></i>
                                 <p>سلة المحذوفات</p>
                             </a>
@@ -202,39 +206,39 @@
                             </a>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item">
-                                    <a href="#" class="nav-link">
-                                        <i class="nav-icon bi bi-circle"></i>
+                                    <a asp-controller="Reports" asp-action="Statistics" class="nav-link@(Active("reports-stats"))">
+                                        <i class="nav-icon bi bi-circle" aria-hidden="true"></i>
                                         <p>إحصائيات الأرشيف</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="#" class="nav-link">
-                                        <i class="nav-icon bi bi-circle"></i>
+                                    <a asp-controller="Reports" asp-action="Activity" class="nav-link@(Active("reports-activity"))">
+                                        <i class="nav-icon bi bi-circle" aria-hidden="true"></i>
                                         <p>سجل النشاط</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="#" class="nav-link">
-                                        <i class="nav-icon bi bi-circle"></i>
+                                    <a asp-controller="Reports" asp-action="Storage" class="nav-link@(Active("reports-storage"))">
+                                        <i class="nav-icon bi bi-circle" aria-hidden="true"></i>
                                         <p>التخزين المستخدم</p>
                                     </a>
                                 </li>
                             </ul>
                         </li>
                         <li class="nav-item">
-                            <a href="#" class="nav-link">
+                            <a asp-controller="Users" asp-action="Index" class="nav-link@(Active("users"))">
                                 <i class="nav-icon bi bi-people"></i>
                                 <p>المستخدمون</p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="#" class="nav-link">
+                            <a asp-controller="Roles" asp-action="Index" class="nav-link@(Active("roles"))">
                                 <i class="nav-icon bi bi-shield-lock"></i>
                                 <p>الصلاحيات</p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="#" class="nav-link">
+                            <a asp-controller="Settings" asp-action="Index" class="nav-link@(Active("settings"))">
                                 <i class="nav-icon bi bi-gear"></i>
                                 <p>الإعدادات</p>
                             </a>

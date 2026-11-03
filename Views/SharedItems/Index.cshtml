@@ -1,0 +1,97 @@
+@{
+    ViewData["Title"] = "المشاركة معي";
+    ViewData["Nav"] = "shared";
+}
+@await Html.PartialAsync("_PageHeader", "المشاركة معي")
+
+<div class="app-content">
+    <div class="container-fluid">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h3 class="card-title"><i class="bi bi-share me-2"></i>عناصر شاركها آخرون معك أو مع قسمك</h3>
+                <span class="badge text-bg-secondary">5 عناصر</span>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-striped align-middle mb-0">
+                        <thead>
+                            <tr>
+                                <th>الاسم</th>
+                                <th>النوع</th>
+                                <th>المشارك من</th>
+                                <th>الصلاحية</th>
+                                <th>تاريخ المشاركة</th>
+                                <th class="text-end">إجراءات</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><i class="bi bi-folder-fill text-warning me-2"></i>تخطيط الربع الثاني</td>
+                                <td><span class="badge text-bg-light">مجلد</span></td>
+                                <td><i class="bi bi-person-circle me-1"></i> أحمد العلي</td>
+                                <td><span class="badge text-bg-danger">تعديل</span></td>
+                                <td>2026/11/01</td>
+                                <td class="text-end">
+                                    <a asp-controller="Archive" asp-action="Index" class="btn btn-sm btn-outline-secondary" title="فتح"><i class="bi bi-folder2-open"></i></a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><i class="bi bi-file-earmark-word-fill text-info me-2"></i>roadmap.docx</td>
+                                <td><span class="badge text-bg-secondary">DOCX</span></td>
+                                <td><i class="bi bi-person-circle me-1"></i> سارة محمد</td>
+                                <td><span class="badge text-bg-warning text-dark">تنزيل</span></td>
+                                <td>2026/10/30</td>
+                                <td class="text-end">
+                                    <div class="d-inline-flex gap-1">
+                                        <button class="btn btn-sm btn-outline-secondary" title="تنزيل"><i class="bi bi-download"></i></button>
+                                        <button class="btn btn-sm btn-outline-warning" title="مفضلة"><i class="bi bi-star"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><i class="bi bi-file-earmark-pdf-fill text-danger me-2"></i>INV-2026-00428.pdf</td>
+                                <td><span class="badge text-bg-secondary">PDF</span></td>
+                                <td><i class="bi bi-building me-1"></i> قسم المالية</td>
+                                <td><span class="badge text-bg-secondary">قراءة</span></td>
+                                <td>2026/10/28</td>
+                                <td class="text-end">
+                                    <div class="d-inline-flex gap-1">
+                                        <button class="btn btn-sm btn-outline-secondary" title="تنزيل"><i class="bi bi-download"></i></button>
+                                        <button class="btn btn-sm btn-outline-warning" title="مفضلة"><i class="bi bi-star"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><i class="bi bi-file-earmark-spreadsheet-fill text-success me-2"></i>analytics-may.xlsx</td>
+                                <td><span class="badge text-bg-secondary">XLSX</span></td>
+                                <td><i class="bi bi-person-circle me-1"></i> خالد يوسف</td>
+                                <td><span class="badge text-bg-warning text-dark">تنزيل</span></td>
+                                <td>2026/10/26</td>
+                                <td class="text-end">
+                                    <div class="d-inline-flex gap-1">
+                                        <button class="btn btn-sm btn-outline-secondary" title="تنزيل"><i class="bi bi-download"></i></button>
+                                        <button class="btn btn-sm btn-outline-warning" title="مفضلة"><i class="bi bi-star"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><i class="bi bi-file-earmark-zip-fill text-secondary me-2"></i>site-export-2026-05.zip</td>
+                                <td><span class="badge text-bg-secondary">ZIP</span></td>
+                                <td><i class="bi bi-person-circle me-1"></i> ليلى حسن</td>
+                                <td><span class="badge text-bg-secondary">قراءة</span></td>
+                                <td>2026/10/22</td>
+                                <td class="text-end">
+                                    <div class="d-inline-flex gap-1">
+                                        <button class="btn btn-sm btn-outline-secondary" title="تنزيل"><i class="bi bi-download"></i></button>
+                                        <button class="btn btn-sm btn-outline-warning" title="مفضلة"><i class="bi bi-star"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="card-footer text-secondary small">الصلاحيات: قراءة / تنزيل / تعديل — تُدار من نافذة المشاركة في مدير الملفات</div>
+        </div>
+    </div>
+</div>

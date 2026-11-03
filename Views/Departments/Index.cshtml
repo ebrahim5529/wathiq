@@ -1,0 +1,170 @@
+@{
+    ViewData["Title"] = "الأقسام";
+    ViewData["Nav"] = "departments";
+}
+@await Html.PartialAsync("_PageHeader", "الأقسام")
+
+<div class="app-content">
+    <div class="container-fluid">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h3 class="card-title"><i class="bi bi-building me-2"></i>الهيكل التنظيمي</h3>
+                <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#department-modal">
+                    <i class="bi bi-plus-lg me-1"></i> قسم جديد
+                </button>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-striped align-middle mb-0">
+                        <thead>
+                            <tr>
+                                <th>الاسم</th>
+                                <th>الرمز</th>
+                                <th>القسم الأب</th>
+                                <th>المدير المسؤول</th>
+                                <th>عدد الملفات</th>
+                                <th>الحالة</th>
+                                <th class="text-end">إجراءات</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><i class="bi bi-building me-2 text-primary"></i>الإدارة العليا</td>
+                                <td><span class="badge text-bg-light">HQ</span></td>
+                                <td>—</td>
+                                <td>د. عبدالله السالم</td>
+                                <td>120</td>
+                                <td><span class="badge text-bg-success">نشط</span></td>
+                                <td class="text-end">
+                                    <div class="d-inline-flex gap-1">
+                                        <button class="btn btn-sm btn-outline-secondary" title="تعديل" data-bs-toggle="modal" data-bs-target="#department-modal"><i class="bi bi-pencil"></i></button>
+                                        <button class="btn btn-sm btn-outline-danger" title="حذف"><i class="bi bi-trash"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><i class="bi bi-building ms-4 me-2 text-primary"></i>الموارد البشرية</td>
+                                <td><span class="badge text-bg-light">HR</span></td>
+                                <td>الإدارة العليا</td>
+                                <td>سارة محمد</td>
+                                <td>210</td>
+                                <td><span class="badge text-bg-success">نشط</span></td>
+                                <td class="text-end">
+                                    <div class="d-inline-flex gap-1">
+                                        <button class="btn btn-sm btn-outline-secondary" title="تعديل" data-bs-toggle="modal" data-bs-target="#department-modal"><i class="bi bi-pencil"></i></button>
+                                        <button class="btn btn-sm btn-outline-danger" title="حذف"><i class="bi bi-trash"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><i class="bi bi-building ms-4 me-2 text-primary"></i>المالية</td>
+                                <td><span class="badge text-bg-light">FIN</span></td>
+                                <td>الإدارة العليا</td>
+                                <td>خالد يوسف</td>
+                                <td>364</td>
+                                <td><span class="badge text-bg-success">نشط</span></td>
+                                <td class="text-end">
+                                    <div class="d-inline-flex gap-1">
+                                        <button class="btn btn-sm btn-outline-secondary" title="تعديل" data-bs-toggle="modal" data-bs-target="#department-modal"><i class="bi bi-pencil"></i></button>
+                                        <button class="btn btn-sm btn-outline-danger" title="حذف"><i class="bi bi-trash"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><i class="bi bi-building ms-4 me-2 text-primary"></i>المشتريات</td>
+                                <td><span class="badge text-bg-light">PUR</span></td>
+                                <td>الإدارة العليا</td>
+                                <td>أحمد العلي</td>
+                                <td>88</td>
+                                <td><span class="badge text-bg-success">نشط</span></td>
+                                <td class="text-end">
+                                    <div class="d-inline-flex gap-1">
+                                        <button class="btn btn-sm btn-outline-secondary" title="تعديل" data-bs-toggle="modal" data-bs-target="#department-modal"><i class="bi bi-pencil"></i></button>
+                                        <button class="btn btn-sm btn-outline-danger" title="حذف"><i class="bi bi-trash"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><i class="bi bi-building ms-4 me-2 text-primary"></i>تقنية المعلومات</td>
+                                <td><span class="badge text-bg-light">IT</span></td>
+                                <td>الإدارة العليا</td>
+                                <td>ليلى حسن</td>
+                                <td>152</td>
+                                <td><span class="badge text-bg-success">نشط</span></td>
+                                <td class="text-end">
+                                    <div class="d-inline-flex gap-1">
+                                        <button class="btn btn-sm btn-outline-secondary" title="تعديل" data-bs-toggle="modal" data-bs-target="#department-modal"><i class="bi bi-pencil"></i></button>
+                                        <button class="btn btn-sm btn-outline-danger" title="حذف"><i class="bi bi-trash"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><i class="bi bi-building ms-5 me-2 text-secondary"></i>الدعم الفني</td>
+                                <td><span class="badge text-bg-light">IT-SUP</span></td>
+                                <td>تقنية المعلومات</td>
+                                <td>—</td>
+                                <td>34</td>
+                                <td><span class="badge text-bg-secondary">معطّل</span></td>
+                                <td class="text-end">
+                                    <div class="d-inline-flex gap-1">
+                                        <button class="btn btn-sm btn-outline-secondary" title="تعديل" data-bs-toggle="modal" data-bs-target="#department-modal"><i class="bi bi-pencil"></i></button>
+                                        <button class="btn btn-sm btn-outline-danger" title="حذف"><i class="bi bi-trash"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="card-footer text-secondary small">6 أقسام · كل ملف أو مجلد يمكن ربطه بقسم لتحديد نطاق الصلاحيات</div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="department-modal" tabindex="-1" aria-labelledby="department-modal-title" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="department-modal-title"><i class="bi bi-building me-2"></i>بيانات القسم</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="إغلاق"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row g-3">
+                    <div class="col-md-8">
+                        <label class="form-label" for="dep-name">الاسم <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="dep-name" placeholder="اسم القسم" />
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label" for="dep-code">الرمز</label>
+                        <input type="text" class="form-control" id="dep-code" placeholder="HR" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label" for="dep-parent">القسم الأب</label>
+                        <select class="form-select" id="dep-parent">
+                            <option value="">بدون</option>
+                            <option>الإدارة العليا</option>
+                            <option>تقنية المعلومات</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label" for="dep-manager">المدير المسؤول</label>
+                        <select class="form-select" id="dep-manager">
+                            <option value="">بدون</option>
+                            <option>سارة محمد</option>
+                            <option>خالد يوسف</option>
+                            <option>أحمد العلي</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-check form-switch mt-3">
+                    <input class="form-check-input" type="checkbox" role="switch" id="dep-active" checked />
+                    <label class="form-check-label" for="dep-active">نشط</label>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
+                <button type="button" class="btn btn-primary"><i class="bi bi-check-lg me-1"></i> حفظ</button>
+            </div>
+        </div>
+    </div>
+</div>

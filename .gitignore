@@ -9,12 +9,18 @@ obj/
 .vs/
 .vscode/
 *.swp
+publish-*/
+publish/
+out/
 
 ## Secrets / env
 .env
+.env.*
+!.env.example
 appsettings.Development.json
 appsettings.*.local.json
 **/secrets.json
+appsettings.Production.json
 
 ## OS
 .DS_Store
@@ -23,6 +29,11 @@ Thumbs.db
 ## Uploads / runtime
 uploads/
 wwwroot/uploads/
+
+## Local machine / tooling junk
+.local/
+Library/
+fix-ar-dns.sh
 
 ## Logs
 *.log
