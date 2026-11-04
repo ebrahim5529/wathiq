@@ -2,7 +2,8 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="utf-8" />
-    <title>@ViewData["Title"] - نظام الأرشفة</title>
+    <title>@ViewData["Title"] - وثيق | WATHIQ</title>
+    <meta name="theme-color" content="#0072ce" />
     <script>
         (() => {
             'use strict';
@@ -27,6 +28,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.16.0/styles/overlayscrollbars.min.css" crossorigin="anonymous" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css" crossorigin="anonymous" />
     <link rel="stylesheet" href="~/adminite/css/adminlte.rtl.min.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/wathiq-theme.css" asp-append-version="true" />
 </head>
 <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
     <div class="app-wrapper">
@@ -77,13 +79,13 @@
             </div>
         </nav>
 
-        <aside class="app-sidebar bg-body-secondary shadow" data-bs-theme="dark">
+        <aside class="app-sidebar shadow" data-bs-theme="dark">
             <div class="sidebar-brand">
-                <a asp-controller="Dashboard" asp-action="Index" class="brand-link justify-content-center py-2">
+                <a asp-controller="Dashboard" asp-action="Index" class="brand-link justify-content-center py-3 px-2">
                     <img src="~/adminite/assets/img/wathiq-logo.jpg"
                          alt="وثيق - WATHIQ"
                          class="brand-image-xl opacity-100 shadow-none"
-                         style="max-height: 56px; width: auto; max-width: 90%; object-fit: contain; border-radius: .35rem;" />
+                         style="max-height: 72px; width: auto; max-width: 92%; object-fit: contain; background: #fff; border-radius: .5rem;" />
                 </a>
             </div>
             <div class="sidebar-wrapper">
@@ -254,7 +256,8 @@
         </main>
 
         <footer class="app-footer">
-            <strong>نظام الأرشفة &copy; @DateTime.Now.Year</strong>
+            <strong>وثيق WATHIQ</strong>
+            <span class="text-secondary"> — إدارة ذكية للوثائق والأرشفة الإلكترونية &copy; @DateTime.Now.Year</span>
         </footer>
     </div>
 
