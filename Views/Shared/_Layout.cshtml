@@ -92,20 +92,19 @@
             </div>
         </nav>
 
-        <aside class="app-sidebar shadow" data-bs-theme="dark">
+        <aside class="app-sidebar bg-body-secondary shadow" data-bs-theme="dark">
             <div class="sidebar-brand">
-                <a asp-controller="Dashboard" asp-action="Index" class="brand-link justify-content-center py-3 px-2">
+                <a asp-controller="Dashboard" asp-action="Index" class="brand-link wathiq-brand-link">
                     <img src="~/adminite/assets/img/wathiq-logo.jpg" asp-append-version="true"
                          alt="وثيق - WATHIQ"
-                         class="brand-image-xl opacity-100 shadow-none"
-                         style="max-height: 72px; width: auto; max-width: 92%; object-fit: contain; background: #fff; border-radius: .5rem;" />
+                         class="wathiq-brand-logo" />
                 </a>
             </div>
             <div class="sidebar-wrapper">
                 <nav class="mt-2" aria-label="القائمة الرئيسية">
                     <ul class="nav sidebar-menu flex-column" data-lte-toggle="treeview" data-accordion="false" id="navigation">
 
-                        <li class="nav-header text-uppercase opacity-75">الرئيسي</li>
+                        <li class="nav-header">الرئيسي</li>
                         <li class="nav-item">
                             <a asp-controller="Dashboard" asp-action="Index" class="nav-link @(currentController == "Dashboard" ? "active" : "")">
                                 <i class="nav-icon bi bi-speedometer2"></i>
@@ -125,7 +124,7 @@
                             </a>
                         </li>
 
-                        <li class="nav-header text-uppercase opacity-75">الأرشيف</li>
+                        <li class="nav-header">الأرشيف</li>
                         <li class="nav-item @(currentController == "Archive" && !string.IsNullOrEmpty(currentType) ? "menu-open" : "")">
                             <a href="#" class="nav-link @(currentController == "Archive" && !string.IsNullOrEmpty(currentType) ? "active" : "")">
                                 <i class="nav-icon bi bi-inbox"></i>
@@ -180,7 +179,7 @@
                             </a>
                         </li>
 
-                        <li class="nav-header text-uppercase opacity-75">الوصول السريع</li>
+                        <li class="nav-header">الوصول السريع</li>
                         <li class="nav-item">
                             <a asp-controller="Favorites" asp-action="Index" class="nav-link @(currentController == "Favorites" ? "active" : "")">
                                 <i class="nav-icon bi bi-star text-warning"></i>
@@ -206,7 +205,7 @@
                             </a>
                         </li>
 
-                        <li class="nav-header text-uppercase opacity-75">التقارير والإدارة</li>
+                        <li class="nav-header">التقارير والإدارة</li>
                         <li class="nav-item @(currentController == "Reports" ? "menu-open" : "")">
                             <a href="#" class="nav-link @(currentController == "Reports" ? "active" : "")">
                                 <i class="nav-icon bi bi-bar-chart"></i>

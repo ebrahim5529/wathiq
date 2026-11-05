@@ -50,6 +50,24 @@ public static class FileUiHelper
         return $"{mb / 1024.0:0.##} GB";
     }
 
+    /// <summary>لون نص مقروء (أبيض أو كحلي) فوق خلفية بلون Hex مثل #0072ce.</summary>
+    public static string ContrastText(string? hexColor)
+    {
+        var hex = (hexColor ?? string.Empty).Trim().TrimStart('#');
+        if (hex.Length == 3) hex = string.Concat(hex.Select(c => $"{c}{c}"));
+        if (hex.Length != 6 || !int.TryParse(hex, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out var rgb))
+            return "#fff";
+
+        static double Channel(int v)
+        {
+            var c = v / 255.0;
+            return c <= 0.03928 ? c / 12.92 : Math.Pow((c + 0.055) / 1.055, 2.4);
+        }
+
+        var luminance = 0.2126 * Channel((rgb >> 16) & 0xFF) + 0.7152 * Channel((rgb >> 8) & 0xFF) + 0.0722 * Channel(rgb & 0xFF);
+        return luminance > 0.179 ? "#071e3d" : "#fff";
+    }
+
     /// <summary>تاريخ نسبي بالعربية (اليوم/أمس/يوم شهر). القيمة الداخلة تكون UTC.</summary>
     public static string RelativeDate(DateTime? utcDate)
     {

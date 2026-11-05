@@ -331,7 +331,7 @@
                                                 }
                                                 @if (file.Category != null)
                                                 {
-                                                    <span class="badge text-white" style="background-color: @(file.Category.Color ?? "#6c757d"); font-size: 0.7rem;">@file.Category.Name</span>
+                                                    <span class="badge" style="background-color: @(file.Category.Color ?? "#6c757d"); color: @HR.Helpers.FileUiHelper.ContrastText(file.Category.Color ?? "#6c757d"); font-size: 0.7rem;">@file.Category.Name</span>
                                                 }
                                             </div>
                                         </a>
