@@ -118,31 +118,45 @@
   --bs-emphasis-color: #fff;
 }
 .app-sidebar .sidebar-brand {
-  background: #fff;
-  border-bottom: 3px solid var(--wathiq-orange);
-  height: auto;
-  min-height: 3.5rem;
-  padding: 0;
+  background: #ffffff !important;
+  border-bottom: 3px solid var(--wathiq-orange) !important;
+  height: 3.5rem !important;
+  min-height: 3.5rem !important;
+  padding: 0.25rem 0.5rem !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  overflow: hidden;
 }
 .app-sidebar .brand-link {
-  background: #fff;
+  background: transparent !important;
 }
 .app-sidebar .brand-link.wathiq-brand-link {
-  display: block;
-  width: 100%;
-  padding: 0;
-  border: 0;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 100% !important;
+  height: 100% !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border: 0 !important;
 }
 .wathiq-brand-logo {
-  display: block;
-  width: 100%;
-  height: auto;
-  object-fit: contain;
+  display: block !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  height: 100% !important;
+  max-height: 100% !important;
+  object-fit: contain !important;
+  border-radius: 0.35rem;
+  transition: max-height 0.2s ease, width 0.2s ease;
+}
+.sidebar-mini.sidebar-collapse .app-sidebar:not(:hover) .sidebar-brand {
+  min-height: 3.5rem !important;
+  padding: 0.25rem !important;
 }
 .sidebar-mini.sidebar-collapse .app-sidebar:not(:hover) .wathiq-brand-logo {
-  object-fit: cover;
-  object-position: left center;
-  height: 2.5rem;
+  object-fit: contain !important;
 }
 .sidebar-wrapper .nav-header {
   color: var(--wathiq-orange-light) !important;

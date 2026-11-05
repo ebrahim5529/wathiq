@@ -67,7 +67,11 @@
                                         <i class="bi @(cat.IsActive ? "bi-pause-circle" : "bi-play-circle")"></i>
                                     </button>
                                 </form>
-                                <form method="post" asp-action="Delete" asp-route-id="@cat.Id" onsubmit="return confirm('هل أنت متأكد من رغبتك في حذف هذا التصنيف؟');" class="d-inline">
+                                <form method="post" asp-action="Delete" asp-route-id="@cat.Id"
+                                      data-confirm="هل أنت متأكد من رغبتك في حذف تصنيف '@cat.Name'؟"
+                                      data-confirm-title="تأكيد حذف التصنيف"
+                                      data-confirm-btn="نعم، احذف التصنيف"
+                                      class="d-inline">
                                     @Html.AntiForgeryToken()
                                     <button type="submit" class="btn btn-outline-danger btn-sm" title="حذف">
                                         <i class="bi bi-trash"></i>

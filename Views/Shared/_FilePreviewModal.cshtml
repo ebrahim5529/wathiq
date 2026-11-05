@@ -1,0 +1,400 @@
+@* File Preview Modal with Download Option *@
+<div class="modal fade" id="filePreviewModal" tabindex="-1" aria-labelledby="previewModalTitle" aria-hidden="true" data-bs-backdrop="static">
+    <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable" id="previewModalDialog">
+        <div class="modal-content shadow-lg border-0">
+            <!-- Modal Header -->
+            <div class="modal-header bg-body-secondary py-2 px-3 align-items-center">
+                <div class="d-flex align-items-center gap-2 overflow-hidden flex-grow-1 me-2">
+                    <i id="previewModalIcon" class="bi bi-file-earmark fs-4 text-primary"></i>
+                    <div class="text-truncate">
+                        <h6 class="modal-title mb-0 fw-bold text-truncate" id="previewModalTitle">معاينة الملف</h6>
+                        <small class="text-secondary d-flex align-items-center gap-2 flex-wrap">
+                            <span id="previewModalMetaBadge" class="badge bg-secondary-subtle text-secondary-emphasis"></span>
+                            <span id="previewModalSize"></span>
+                            <span class="d-none d-md-inline">•</span>
+                            <span id="previewModalDate" class="d-none d-md-inline"></span>
+                        </small>
+                    </div>
+                </div>
+
+                <div class="d-flex align-items-center gap-2">
+                    <!-- Download Button in Header -->
+                    <a id="previewHeaderDownloadBtn" href="#" class="btn btn-sm btn-success d-inline-flex align-items-center gap-1 shadow-sm px-3" title="تحميل الملف">
+                        <i class="bi bi-download"></i>
+                        <span class="d-none d-sm-inline">تحميل الملف</span>
+                    </a>
+
+                    <!-- Open in New Tab -->
+                    <a id="previewOpenNewTabBtn" href="#" target="_blank" class="btn btn-sm btn-outline-secondary" title="فتح في نافذة مستقلة">
+                        <i class="bi bi-box-arrow-up-right"></i>
+                    </a>
+
+                    <!-- Toggle Fullscreen -->
+                    <button type="button" class="btn btn-sm btn-outline-secondary" id="previewToggleFullscreenBtn" title="ملء الشاشة">
+                        <i class="bi bi-arrows-fullscreen"></i>
+                    </button>
+
+                    <!-- Close Button -->
+                    <button type="button" class="btn-close ms-1" data-bs-dismiss="modal" aria-label="إغلاق"></button>
+                </div>
+            </div>
+
+            <!-- Modal Body -->
+            <div class="modal-body p-3 position-relative" style="min-height: 420px; background-color: var(--bs-tertiary-bg);">
+                <!-- Loading State -->
+                <div id="previewLoading" class="position-absolute top-50 start-50 translate-middle text-center" style="z-index: 10;">
+                    <div class="spinner-border text-primary mb-2" role="status" style="width: 3rem; height: 3rem;">
+                        <span class="visually-hidden">جاري التحميل...</span>
+                    </div>
+                    <p class="text-secondary small mb-0">جاري تحميل معاينة الملف...</p>
+                </div>
+
+                <!-- Error State -->
+                <div id="previewError" class="d-none text-center p-5">
+                    <i class="bi bi-exclamation-triangle display-4 text-warning mb-3"></i>
+                    <h5 class="fw-bold">تعذرت معاينة الملف مباشرة</h5>
+                    <p class="text-secondary" id="previewErrorMessage">قد لا يدعم المتصفح عرض هذا النوع من الملفات بشكل مباشر.</p>
+                    <a id="previewErrorDownloadBtn" href="#" class="btn btn-primary mt-2">
+                        <i class="bi bi-download me-1"></i> تحميل الملف على جهازك
+                    </a>
+                </div>
+
+                <!-- Preview Containers -->
+                <!-- 1. PDF Container -->
+                <div id="previewPdfContainer" class="d-none h-100">
+                    <iframe id="previewPdfIframe" class="w-100 rounded border bg-white" style="height: 65vh; border:none;" src="about:blank"></iframe>
+                </div>
+
+                <!-- 2. Image Container -->
+                <div id="previewImageContainer" class="d-none text-center p-2 rounded bg-body" style="max-height: 65vh; overflow: auto;">
+                    <img id="previewImageElement" class="img-fluid rounded shadow-sm" style="max-height: 62vh; object-fit: contain;" src="" alt="" />
+                </div>
+
+                <!-- 3. Text / Code Container -->
+                <div id="previewTextContainer" class="d-none">
+                    <div class="d-flex justify-content-between align-items-center bg-dark text-light px-3 py-1 rounded-top small">
+                        <span>محتوى الملف النصي</span>
+                        <button class="btn btn-sm btn-outline-light py-0 px-2" type="button" id="previewCopyTextBtn">
+                            <i class="bi bi-clipboard me-1"></i> نسخ
+                        </button>
+                    </div>
+                    <pre id="previewTextElement" class="p-3 bg-dark text-light rounded-bottom small mb-0" style="max-height: 60vh; overflow: auto; text-align: left; direction: ltr; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;"></pre>
+                </div>
+
+                <!-- 4. Media (Audio/Video) Container -->
+                <div id="previewMediaContainer" class="d-none text-center p-4">
+                    <div id="previewMediaInner" class="w-100"></div>
+                </div>
+
+                <!-- 5. Office / Unsupported Fallback Card -->
+                <div id="previewFallbackContainer" class="d-none">
+                    <div class="card border-0 shadow-sm mx-auto my-3" style="max-width: 650px;">
+                        <div class="card-body text-center p-4">
+                            <i id="previewFallbackIcon" class="bi bi-file-earmark-word display-1 text-primary mb-3"></i>
+                            <h5 class="fw-bold mb-1" id="previewFallbackTitle">مستند محفوظ</h5>
+                            <p class="text-secondary small mb-3">هذا الملف مخصص للعرض والتحرير في التطبيقات المتوافقة.</p>
+
+                            <div class="d-flex justify-content-center gap-2 mb-4">
+                                <a id="previewFallbackDownloadBtn" href="#" class="btn btn-primary btn-lg px-4 shadow-sm">
+                                    <i class="bi bi-download me-2"></i> تحميل الملف الآن (<span id="previewFallbackSize"></span>)
+                                </a>
+                            </div>
+
+                            <div class="alert alert-light border small text-start text-secondary mb-0">
+                                <i class="bi bi-shield-check text-success me-1"></i> يتم فحص الملفات والتأكد من سلامتها ومطابقتها للمواصفات الأمنية للنظام.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Document Metadata Card (Collapsible) -->
+                <div class="card mt-3 shadow-none border bg-body">
+                    <div class="card-header py-2 px-3 bg-transparent d-flex justify-content-between align-items-center cursor-pointer"
+                         data-bs-toggle="collapse" data-bs-target="#previewMetadataCollapse" aria-expanded="true" role="button">
+                        <span class="fw-semibold small text-primary d-flex align-items-center gap-1">
+                            <i class="bi bi-info-circle"></i> بطاقة بيانات وتفاصيل المستند
+                        </span>
+                        <i class="bi bi-chevron-down small text-secondary"></i>
+                    </div>
+                    <div class="collapse show" id="previewMetadataCollapse">
+                        <div class="card-body p-3">
+                            <div class="row g-2 small">
+                                <div class="col-6 col-md-3">
+                                    <span class="text-secondary d-block">الرقم المرجعي:</span>
+                                    <strong id="metaReferenceNo">—</strong>
+                                </div>
+                                <div class="col-6 col-md-3">
+                                    <span class="text-secondary d-block">نوع المستند:</span>
+                                    <span id="metaDocumentType" class="badge bg-secondary-subtle text-secondary-emphasis">—</span>
+                                </div>
+                                <div class="col-6 col-md-3">
+                                    <span class="text-secondary d-block">التصنيف:</span>
+                                    <span id="metaCategory" class="badge text-white" style="background-color: #6c757d;">—</span>
+                                </div>
+                                <div class="col-6 col-md-3">
+                                    <span class="text-secondary d-block">القسم التابع:</span>
+                                    <strong id="metaDepartment">—</strong>
+                                </div>
+                                <div class="col-6 col-md-3">
+                                    <span class="text-secondary d-block">الجهة / الطرف:</span>
+                                    <strong id="metaParty">—</strong>
+                                </div>
+                                <div class="col-6 col-md-3">
+                                    <span class="text-secondary d-block">المبلغ:</span>
+                                    <strong id="metaAmount">—</strong>
+                                </div>
+                                <div class="col-6 col-md-3">
+                                    <span class="text-secondary d-block">تاريخ المستند:</span>
+                                    <strong id="metaDocDate">—</strong>
+                                </div>
+                                <div class="col-6 col-md-3">
+                                    <span class="text-secondary d-block">تاريخ الانتهاء:</span>
+                                    <strong id="metaExpiryDate">—</strong>
+                                </div>
+                                <div class="col-12" id="metaDescriptionRow">
+                                    <span class="text-secondary d-block">الوصف / الملاحظات:</span>
+                                    <p class="mb-0 text-body" id="metaDescription">—</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="modal-footer bg-body-secondary py-2 px-3 d-flex justify-content-between align-items-center">
+                <div class="small text-secondary">
+                    <span>رفع بواسطة: <strong id="metaCreatedBy">—</strong></span>
+                    <span class="mx-1">|</span>
+                    <span id="metaCreatedAt">—</span>
+                </div>
+                <div class="d-flex gap-2">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">إغلاق</button>
+                    <a id="previewFooterDownloadBtn" href="#" class="btn btn-primary d-inline-flex align-items-center gap-1 shadow-sm">
+                        <i class="bi bi-download"></i>
+                        <span>تحميل الملف</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    (function () {
+        'use strict';
+
+        let previewModalInstance = null;
+        let isFullscreen = false;
+
+        function getModal() {
+            const el = document.getElementById('filePreviewModal');
+            if (!el) return null;
+            if (!previewModalInstance && window.bootstrap && window.bootstrap.Modal) {
+                previewModalInstance = new bootstrap.Modal(el);
+            }
+            return { el, instance: previewModalInstance };
+        }
+
+        function resetModalViews() {
+            document.getElementById('previewLoading').classList.remove('d-none');
+            document.getElementById('previewError').classList.add('d-none');
+            document.getElementById('previewPdfContainer').classList.add('d-none');
+            document.getElementById('previewImageContainer').classList.add('d-none');
+            document.getElementById('previewTextContainer').classList.add('d-none');
+            document.getElementById('previewMediaContainer').classList.add('d-none');
+            document.getElementById('previewFallbackContainer').classList.add('d-none');
+
+            // Reset contents
+            const pdfIframe = document.getElementById('previewPdfIframe');
+            if (pdfIframe) pdfIframe.src = 'about:blank';
+            const img = document.getElementById('previewImageElement');
+            if (img) img.src = '';
+            const txt = document.getElementById('previewTextElement');
+            if (txt) txt.textContent = '';
+            const mediaInner = document.getElementById('previewMediaInner');
+            if (mediaInner) mediaInner.innerHTML = '';
+        }
+
+        function getExtensionIcon(ext) {
+            ext = (ext || '').toLowerCase();
+            if (ext === '.pdf') return { icon: 'bi-file-earmark-pdf-fill', color: 'text-danger' };
+            if (ext.indexOf('doc') !== -1) return { icon: 'bi-file-earmark-word-fill', color: 'text-primary' };
+            if (ext.indexOf('xls') !== -1 || ext.indexOf('csv') !== -1) return { icon: 'bi-file-earmark-spreadsheet-fill', color: 'text-success' };
+            if (ext.indexOf('ppt') !== -1) return { icon: 'bi-file-earmark-ppt-fill', color: 'text-warning' };
+            if (['.png', '.jpg', '.jpeg', '.gif', '.webp', '.svg', '.bmp'].includes(ext)) return { icon: 'bi-file-earmark-image-fill', color: 'text-info' };
+            if (['.zip', '.rar', '.7z', '.tar', '.gz'].includes(ext)) return { icon: 'bi-file-earmark-zip-fill', color: 'text-secondary' };
+            if (['.mp4', '.webm', '.avi', '.mov'].includes(ext)) return { icon: 'bi-file-earmark-play-fill', color: 'text-danger' };
+            if (['.mp3', '.wav', '.ogg'].includes(ext)) return { icon: 'bi-file-earmark-music-fill', color: 'text-info' };
+            return { icon: 'bi-file-earmark-text-fill', color: 'text-secondary' };
+        }
+
+        window.openFilePreview = function (fileId) {
+            if (!fileId) return;
+
+            const m = getModal();
+            if (!m) return;
+
+            resetModalViews();
+            m.instance.show();
+
+            fetch('/Archive/GetFileInfo/' + fileId)
+                .then(function (res) {
+                    if (!res.ok) throw new Error('فشل جلب بيانات الملف');
+                    return res.json();
+                })
+                .then(function (file) {
+                    renderFilePreview(file);
+                })
+                .catch(function (err) {
+                    document.getElementById('previewLoading').classList.add('d-none');
+                    document.getElementById('previewError').classList.remove('d-none');
+                    document.getElementById('previewErrorMessage').textContent = err.message || 'حدث خطأ أثناء تحميل الملف';
+                    const dlBtn = document.getElementById('previewErrorDownloadBtn');
+                    dlBtn.href = '/Archive/DownloadFile/' + fileId;
+                });
+        };
+
+        function renderFilePreview(file) {
+            document.getElementById('previewLoading').classList.add('d-none');
+
+            // Header Elements
+            document.getElementById('previewModalTitle').textContent = file.name;
+            document.getElementById('previewModalTitle').title = file.name;
+            document.getElementById('previewModalSize').textContent = file.sizeFormatted;
+            document.getElementById('previewModalDate').textContent = file.createdAt;
+
+            const extInfo = getExtensionIcon(file.extension);
+            const iconEl = document.getElementById('previewModalIcon');
+            iconEl.className = 'bi ' + extInfo.icon + ' fs-4 ' + extInfo.color;
+
+            const badgeEl = document.getElementById('previewModalMetaBadge');
+            badgeEl.textContent = (file.extension || '').replace('.', '').toUpperCase() || 'FILE';
+
+            // Download Buttons
+            document.getElementById('previewHeaderDownloadBtn').href = file.downloadUrl;
+            document.getElementById('previewFooterDownloadBtn').href = file.downloadUrl;
+            document.getElementById('previewOpenNewTabBtn').href = file.viewUrl;
+
+            // Metadata Card
+            document.getElementById('metaReferenceNo').textContent = file.referenceNo;
+            document.getElementById('metaDocumentType').textContent = file.documentType;
+            const catEl = document.getElementById('metaCategory');
+            catEl.textContent = file.categoryName;
+            catEl.style.backgroundColor = file.categoryColor || '#6c757d';
+            document.getElementById('metaDepartment').textContent = file.departmentName;
+            document.getElementById('metaParty').textContent = file.party;
+            document.getElementById('metaAmount').textContent = file.amount;
+            document.getElementById('metaDocDate').textContent = file.documentDate;
+            document.getElementById('metaExpiryDate').textContent = file.expiryDate;
+            document.getElementById('metaDescription').textContent = file.description;
+            document.getElementById('metaCreatedBy').textContent = file.createdBy;
+            document.getElementById('metaCreatedAt').textContent = file.createdAt;
+
+            // Viewer Selection
+            const ext = (file.extension || '').toLowerCase();
+
+            if (file.isPdf) {
+                // PDF Viewer via Iframe
+                const pdfContainer = document.getElementById('previewPdfContainer');
+                const iframe = document.getElementById('previewPdfIframe');
+                iframe.src = file.viewUrl;
+                pdfContainer.classList.remove('d-none');
+            } else if (file.isImage) {
+                // Image Viewer
+                const imgContainer = document.getElementById('previewImageContainer');
+                const img = document.getElementById('previewImageElement');
+                img.src = file.viewUrl;
+                img.alt = file.name;
+                imgContainer.classList.remove('d-none');
+            } else if (file.isText) {
+                // Text Viewer
+                const txtContainer = document.getElementById('previewTextContainer');
+                const txt = document.getElementById('previewTextElement');
+                fetch(file.viewUrl)
+                    .then(r => r.text())
+                    .then(content => {
+                        txt.textContent = content.substring(0, 100000);
+                        txtContainer.classList.remove('d-none');
+                    })
+                    .catch(() => {
+                        showFallback(file, extInfo);
+                    });
+            } else if (['.mp4', '.webm'].includes(ext)) {
+                // Video Viewer
+                const mediaContainer = document.getElementById('previewMediaContainer');
+                const inner = document.getElementById('previewMediaInner');
+                inner.innerHTML = '<video controls autoplay class="rounded shadow w-100" style="max-height: 60vh;"><source src="' + file.viewUrl + '" type="' + file.contentType + '">متصفحك لا يدعم مشغل الفيديو.</video>';
+                mediaContainer.classList.remove('d-none');
+            } else if (['.mp3', '.wav', '.ogg'].includes(ext)) {
+                // Audio Viewer
+                const mediaContainer = document.getElementById('previewMediaContainer');
+                const inner = document.getElementById('previewMediaInner');
+                inner.innerHTML = '<div class="p-4 bg-body rounded shadow-sm"><i class="bi bi-music-note-beamed display-2 text-primary mb-3 d-block"></i><audio controls autoplay class="w-100"><source src="' + file.viewUrl + '" type="' + file.contentType + '">متصفحك لا يدعم مشغل الصوت.</audio></div>';
+                mediaContainer.classList.remove('d-none');
+            } else {
+                // Office / Archive / Other Fallback Card
+                showFallback(file, extInfo);
+            }
+        }
+
+        function showFallback(file, extInfo) {
+            const fallbackContainer = document.getElementById('previewFallbackContainer');
+            const fallbackIcon = document.getElementById('previewFallbackIcon');
+            fallbackIcon.className = 'bi ' + extInfo.icon + ' display-1 ' + extInfo.color + ' mb-3';
+            document.getElementById('previewFallbackTitle').textContent = file.name;
+            document.getElementById('previewFallbackSize').textContent = file.sizeFormatted;
+            document.getElementById('previewFallbackDownloadBtn').href = file.downloadUrl;
+            fallbackContainer.classList.remove('d-none');
+        }
+
+        // Fullscreen Toggle
+        document.addEventListener('DOMContentLoaded', function () {
+            const fullscreenBtn = document.getElementById('previewToggleFullscreenBtn');
+            const dialog = document.getElementById('previewModalDialog');
+            if (fullscreenBtn && dialog) {
+                fullscreenBtn.addEventListener('click', function () {
+                    isFullscreen = !isFullscreen;
+                    if (isFullscreen) {
+                        dialog.classList.remove('modal-xl');
+                        dialog.classList.add('modal-fullscreen');
+                        fullscreenBtn.innerHTML = '<i class="bi bi-fullscreen-exit"></i>';
+                    } else {
+                        dialog.classList.remove('modal-fullscreen');
+                        dialog.classList.add('modal-xl');
+                        fullscreenBtn.innerHTML = '<i class="bi bi-arrows-fullscreen"></i>';
+                    }
+                });
+            }
+
+            // Copy Text Button
+            const copyBtn = document.getElementById('previewCopyTextBtn');
+            if (copyBtn) {
+                copyBtn.addEventListener('click', function () {
+                    const txt = document.getElementById('previewTextElement').textContent;
+                    if (navigator.clipboard) {
+                        navigator.clipboard.writeText(txt).then(function () {
+                            copyBtn.innerHTML = '<i class="bi bi-check2 me-1"></i> تم النسخ';
+                            setTimeout(function () {
+                                copyBtn.innerHTML = '<i class="bi bi-clipboard me-1"></i> نسخ';
+                            }, 2000);
+                        });
+                    }
+                });
+            }
+
+            // Global delegation for preview triggers
+            document.addEventListener('click', function (e) {
+                const trigger = e.target.closest('[data-preview-file]');
+                if (trigger) {
+                    e.preventDefault();
+                    const fileId = trigger.getAttribute('data-preview-file');
+                    if (fileId) {
+                        window.openFilePreview(fileId);
+                    }
+                }
+            });
+        });
+    })();
+</script>
+

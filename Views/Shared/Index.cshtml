@@ -78,7 +78,18 @@
                                             <span class="badge text-bg-warning"><i class="bi bi-folder me-1"></i>مجلد</span>
                                         }
                                     </td>
-                                    <td class="fw-bold">@itemName</td>
+                                    <td class="fw-bold">
+                                        @if (isFile && share.FileId.HasValue)
+                                        {
+                                            <a href="javascript:void(0)" data-preview-file="@share.FileId.Value" role="button" class="text-decoration-none text-body" title="معاينة الملف">
+                                                @itemName
+                                            </a>
+                                        }
+                                        else
+                                        {
+                                            @itemName
+                                        }
+                                    </td>
                                     <td>
                                         @if (!string.IsNullOrEmpty(share.SharedWithUser))
                                         {
@@ -109,9 +120,14 @@
                                     <td class="text-end">
                                         @if (isFile && share.FileId.HasValue)
                                         {
-                                            <a asp-controller="Archive" asp-action="DownloadFile" asp-route-id="@share.FileId.Value" class="btn btn-sm btn-outline-primary">
-                                                <i class="bi bi-download me-1"></i> تنزيل
-                                            </a>
+                                            <div class="btn-group btn-group-sm">
+                                                <button type="button" class="btn btn-outline-info" data-preview-file="@share.FileId.Value" title="معاينة في نافذة منبثقة">
+                                                    <i class="bi bi-eye"></i>
+                                                </button>
+                                                <a asp-controller="Archive" asp-action="DownloadFile" asp-route-id="@share.FileId.Value" class="btn btn-outline-primary" title="تنزيل">
+                                                    <i class="bi bi-download"></i>
+                                                </a>
+                                            </div>
                                         }
                                         else if (!isFile && share.FolderId.HasValue)
                                         {

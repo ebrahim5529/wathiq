@@ -268,6 +268,105 @@ public class ArchiveController : Controller
         return File(download.Value.Stream, download.Value.ContentType, download.Value.DownloadName);
     }
 
+    // GET: /Archive/ViewFile/5 (Inline preview)
+    public async Task<IActionResult> ViewFile(int id)
+    {
+        var file = await _db.ArchiveFiles.FirstOrDefaultAsync(f => f.Id == id && !f.IsDeleted);
+        if (file == null)
+        {
+            return NotFound("الملف غير موجود");
+        }
+
+        var download = _storage.GetFileDownload(file);
+        if (download == null)
+        {
+            return NotFound("الملف الفعلي غير متوفر على الخادم");
+        }
+
+        var ext = (file.Extension ?? Path.GetExtension(file.Name)).ToLowerInvariant();
+        var contentType = download.Value.ContentType;
+        if (string.IsNullOrWhiteSpace(contentType) || contentType == "application/octet-stream")
+        {
+            contentType = ext switch
+            {
+                ".pdf" => "application/pdf",
+                ".png" => "image/png",
+                ".jpg" or ".jpeg" => "image/jpeg",
+                ".gif" => "image/gif",
+                ".webp" => "image/webp",
+                ".svg" => "image/svg+xml",
+                ".bmp" => "image/bmp",
+                ".txt" => "text/plain; charset=utf-8",
+                ".json" => "application/json; charset=utf-8",
+                ".csv" => "text/plain; charset=utf-8",
+                ".mp4" => "video/mp4",
+                ".webm" => "video/webm",
+                ".mp3" => "audio/mpeg",
+                ".wav" => "audio/wav",
+                _ => "application/octet-stream"
+            };
+        }
+
+        Response.Headers.Append("Content-Disposition", $"inline; filename=\"{Uri.EscapeDataString(file.Name)}\"");
+        return File(download.Value.Stream, contentType);
+    }
+
+    // GET: /Archive/GetFileInfo/5 (JSON file metadata for preview modal)
+    [HttpGet]
+    public async Task<IActionResult> GetFileInfo(int id)
+    {
+        var file = await _db.ArchiveFiles
+            .Include(f => f.Category)
+            .Include(f => f.Department)
+            .Include(f => f.Folder)
+            .FirstOrDefaultAsync(f => f.Id == id && !f.IsDeleted);
+
+        if (file == null)
+        {
+            return NotFound(new { error = "الملف غير موجود" });
+        }
+
+        var ext = (file.Extension ?? Path.GetExtension(file.Name)).ToLowerInvariant();
+        var isImage = new[] { ".png", ".jpg", ".jpeg", ".gif", ".webp", ".svg", ".bmp" }.Contains(ext);
+        var isPdf = ext == ".pdf";
+        var isText = new[] { ".txt", ".json", ".csv", ".log", ".xml", ".md" }.Contains(ext);
+        var isMedia = new[] { ".mp4", ".webm", ".mp3", ".wav" }.Contains(ext);
+        var canDirectPreview = isImage || isPdf || isText || isMedia;
+
+        return Json(new
+        {
+            id = file.Id,
+            name = file.Name,
+            extension = ext,
+            contentType = file.ContentType,
+            sizeBytes = file.SizeBytes,
+            sizeFormatted = file.SizeBytes >= 1024 * 1024
+                ? $"{Math.Round(file.SizeBytes / (1024.0 * 1024.0), 2)} MB"
+                : $"{Math.Round(file.SizeBytes / 1024.0, 1)} KB",
+            referenceNo = string.IsNullOrWhiteSpace(file.ReferenceNo) ? "—" : file.ReferenceNo,
+            documentType = file.DocumentType.ToString(),
+            categoryName = file.Category?.Name ?? "غير مصنف",
+            categoryColor = file.Category?.Color ?? "#6c757d",
+            departmentName = file.Department?.Name ?? "عام",
+            folderName = file.Folder?.Name ?? "المجلد الرئيسي",
+            party = string.IsNullOrWhiteSpace(file.Party) ? "—" : file.Party,
+            description = string.IsNullOrWhiteSpace(file.Description) ? "—" : file.Description,
+            documentDate = file.DocumentDate?.ToString("yyyy-MM-dd") ?? "—",
+            expiryDate = file.ExpiryDate?.ToString("yyyy-MM-dd") ?? "—",
+            amount = file.Amount.HasValue ? $"{file.Amount.Value:N2} {file.Currency}" : "—",
+            tags = file.Tags ?? "",
+            createdAt = file.CreatedAt.ToString("yyyy-MM-dd HH:mm"),
+            createdBy = string.IsNullOrWhiteSpace(file.CreatedBy) ? "مدير النظام" : file.CreatedBy,
+            isImage,
+            isPdf,
+            isText,
+            isMedia,
+            canDirectPreview,
+            viewUrl = Url.Action("ViewFile", "Archive", new { id = file.Id }),
+            downloadUrl = Url.Action("DownloadFile", "Archive", new { id = file.Id })
+        });
+    }
+
     // GET: /Archive/DownloadFolder/5
     public async Task<IActionResult> DownloadFolder(int id)
     {

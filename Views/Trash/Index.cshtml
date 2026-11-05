@@ -15,9 +15,12 @@
                 <div class="float-sm-end d-flex gap-2">
                     @if (totalDeleted > 0)
                     {
-                        <form method="post" asp-action="EmptyTrash" onsubmit="return confirm('تحذير: هل أنت متأكد من تفريغ سلة المحذوفات بالكامل؟ سيتم حذف جميع الملفات والمجلدات نهائياً من القرص.');">
+                        <form method="post" asp-action="EmptyTrash"
+                              data-confirm="تحذير أمني شديد: سيتم حذف جميع الملفات والمجلدات في سلة المحذوفات نهائياً ومسحها من الخادم بدون إمكانية استرجاعها مطلقاً!"
+                              data-confirm-title="تفريغ سلة المحذوفات بالكامل"
+                              data-confirm-btn="نعم، أفرغ السلة نهائياً">
                             @Html.AntiForgeryToken()
-                            <button type="submit" class="btn btn-sm btn-danger">
+                            <button type="submit" class="btn btn-sm btn-danger shadow-sm">
                                 <i class="bi bi-trash3 me-1"></i> تفريغ سلة المحذوفات نهائياً
                             </button>
                         </form>
@@ -88,7 +91,11 @@
                                                         <input type="hidden" name="itemType" value="Folder" />
                                                         <button type="submit" class="btn btn-outline-success" title="استعادة"><i class="bi bi-arrow-counterclockwise me-1"></i>استعادة</button>
                                                     </form>
-                                                    <form method="post" asp-action="DeletePermanently" onsubmit="return confirm('هل تريد حذف هذا المجلد نهائياً؟');" class="d-inline">
+                                                    <form method="post" asp-action="DeletePermanently"
+                                                          data-confirm="هل تريد حذف مجلد '@folder.Name' ومحتوياته نهائياً من الخادم؟ لن يمكن استرجاعه بعد ذلك."
+                                                          data-confirm-title="تأكيد الحذف النهائي للمجلد"
+                                                          data-confirm-btn="نعم، احذف نهائياً"
+                                                          class="d-inline">
                                                         @Html.AntiForgeryToken()
                                                         <input type="hidden" name="id" value="@folder.Id" />
                                                         <input type="hidden" name="itemType" value="Folder" />
@@ -153,7 +160,11 @@
                                                         <input type="hidden" name="itemType" value="File" />
                                                         <button type="submit" class="btn btn-outline-success" title="استعادة"><i class="bi bi-arrow-counterclockwise me-1"></i>استعادة</button>
                                                     </form>
-                                                    <form method="post" asp-action="DeletePermanently" onsubmit="return confirm('هل أنت متأكد من حذف هذا الملف نهائياً من القرص الصلب؟');" class="d-inline">
+                                                    <form method="post" asp-action="DeletePermanently"
+                                                          data-confirm="هل أنت متأكد من حذف ملف '@file.Name' نهائياً من القرص الصلب؟ لا يمكن التراجع عن هذا الإجراء."
+                                                          data-confirm-title="تأكيد الحذف النهائي للملف"
+                                                          data-confirm-btn="نعم، احذف نهائياً"
+                                                          class="d-inline">
                                                         @Html.AntiForgeryToken()
                                                         <input type="hidden" name="id" value="@file.Id" />
                                                         <input type="hidden" name="itemType" value="File" />

@@ -82,7 +82,11 @@
                                         <i class="bi @(dept.IsActive ? "bi-pause-circle" : "bi-play-circle")"></i>
                                     </button>
                                 </form>
-                                <form method="post" asp-action="Delete" asp-route-id="@dept.Id" onsubmit="return confirm('هل تريد حذف هذا القسم نهائياً؟');" class="d-inline">
+                                <form method="post" asp-action="Delete" asp-route-id="@dept.Id"
+                                      data-confirm="هل تريد حذف قسم '@dept.Name' نهائياً؟ قد يؤثر ذلك على المجلدات والملفات المرتبطة بهذا القسم."
+                                      data-confirm-title="تأكيد حذف القسم"
+                                      data-confirm-btn="نعم، احذف القسم"
+                                      class="d-inline">
                                     @Html.AntiForgeryToken()
                                     <button type="submit" class="btn btn-outline-danger" title="حذف">
                                         <i class="bi bi-trash"></i>

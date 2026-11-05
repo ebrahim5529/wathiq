@@ -186,7 +186,7 @@
 
                                     <tr>
                                         <td>
-                                            <a asp-controller="Archive" asp-action="DownloadFile" asp-route-id="@file.Id" class="text-decoration-none fw-bold">
+                                            <a href="javascript:void(0)" data-preview-file="@file.Id" role="button" class="text-decoration-none fw-bold" title="معاينة الملف">
                                                 <i class="bi bi-file-earmark-text text-primary me-1"></i>@file.Name
                                             </a>
                                             @if (!string.IsNullOrEmpty(file.Description))
@@ -222,6 +222,9 @@
                                         </td>
                                         <td class="text-end">
                                             <div class="btn-group btn-group-sm">
+                                                <button type="button" class="btn btn-outline-info" data-preview-file="@file.Id" title="معاينة في نافذة منبثقة">
+                                                    <i class="bi bi-eye"></i>
+                                                </button>
                                                 @if (file.FolderId.HasValue)
                                                 {
                                                     <a asp-controller="Archive" asp-action="Index" asp-route-folderId="@file.FolderId" class="btn btn-outline-secondary" title="فتح المجلد">

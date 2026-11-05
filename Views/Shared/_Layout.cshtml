@@ -31,7 +31,9 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@@fontsource/source-sans-3@5.3.0/index.css" crossorigin="anonymous" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.16.0/styles/overlayscrollbars.min.css" crossorigin="anonymous" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.17.2/dist/sweetalert2.min.css" crossorigin="anonymous" />
     <link rel="stylesheet" href="~/adminite/css/adminlte.rtl.min.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/wathiq-theme.css" asp-append-version="true" />
 </head>
 <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
     <div class="app-wrapper">
@@ -278,6 +280,13 @@
                     </div>
                 </div>
             }
+
+            <!-- Toast Data Carrier for SweetAlert2 -->
+            <div id="wathiqCrudToastData" class="d-none"
+                 data-success="@(TempData["Success"]?.ToString())"
+                 data-error="@(TempData["Error"]?.ToString())"
+                 data-warning="@(TempData["Warning"]?.ToString())"></div>
+
             @RenderBody()
         </main>
 
@@ -291,10 +300,15 @@
         </footer>
     </div>
 
+    <!-- Global File Preview Modal with Download Option -->
+    <partial name="_FilePreviewModal" />
+
     <script src="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.16.0/browser/overlayscrollbars.browser.es6.min.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/@@popperjs/core@2.11.8/dist/umd/popper.min.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.17.2/dist/sweetalert2.all.min.js" crossorigin="anonymous"></script>
     <script src="~/adminite/js/adminlte.min.js" asp-append-version="true"></script>
+    <script src="~/js/wathiq-confirm.js" asp-append-version="true"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             const sidebarWrapper = document.querySelector('.sidebar-wrapper');

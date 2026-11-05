@@ -290,7 +290,7 @@
 
                                         <tr>
                                             <td>
-                                                <a asp-controller="Archive" asp-action="DownloadFile" asp-route-id="@file.Id" class="fw-bold text-decoration-none">
+                                                <a href="javascript:void(0)" data-preview-file="@file.Id" role="button" class="fw-bold text-decoration-none" title="معاينة الملف">
                                                     <i class="bi bi-file-earmark-text text-primary me-1"></i>@file.Name
                                                 </a>
                                             </td>
@@ -299,9 +299,14 @@
                                             <td>@Math.Round(file.SizeBytes / 1024.0, 1) KB</td>
                                             <td class="text-muted">@file.CreatedAt.ToString("MM/dd HH:mm")</td>
                                             <td class="text-end">
-                                                <a asp-controller="Archive" asp-action="DownloadFile" asp-route-id="@file.Id" class="btn btn-sm btn-outline-primary py-0 px-2">
-                                                    <i class="bi bi-download"></i>
-                                                </a>
+                                                <div class="btn-group btn-group-sm">
+                                                    <button type="button" class="btn btn-outline-info py-0 px-2" data-preview-file="@file.Id" title="معاينة في نافذة منبثقة">
+                                                        <i class="bi bi-eye"></i>
+                                                    </button>
+                                                    <a asp-controller="Archive" asp-action="DownloadFile" asp-route-id="@file.Id" class="btn btn-outline-primary py-0 px-2" title="تنزيل">
+                                                        <i class="bi bi-download"></i>
+                                                    </a>
+                                                </div>
                                             </td>
                                         </tr>
                                     }

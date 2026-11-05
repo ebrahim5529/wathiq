@@ -107,7 +107,11 @@
                                                     <i class="bi @(user.IsActive ? "bi-person-x" : "bi-person-check")"></i>
                                                 </button>
                                             </form>
-                                            <form method="post" asp-action="Delete" asp-route-id="@user.Id" onsubmit="return confirm('هل تريد حذف هذا المستخدم؟');" class="d-inline">
+                                            <form method="post" asp-action="Delete" asp-route-id="@user.Id"
+                                                  data-confirm="هل تريد بالتأكيد حذف حساب المستخدم '@user.FullName'؟"
+                                                  data-confirm-title="تأكيد حذف المستخدم"
+                                                  data-confirm-btn="نعم، احذف الحساب"
+                                                  class="d-inline">
                                                 @Html.AntiForgeryToken()
                                                 <button type="submit" class="btn btn-outline-danger" title="حذف">
                                                     <i class="bi bi-trash"></i>

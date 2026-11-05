@@ -206,7 +206,10 @@
                                                 </li>
                                                 <li><hr class="dropdown-divider"></li>
                                                 <li>
-                                                    <form method="post" asp-action="Delete" onsubmit="return confirm('هل تريد نقل هذا المجلد إلى سلة المحذوفات؟');">
+                                                    <form method="post" asp-action="Delete"
+                                                          data-confirm="هل تريد نقل هذا المجلد ومحتوياته إلى سلة المحذوفات؟"
+                                                          data-confirm-title="نقل المجلد إلى السلة"
+                                                          data-confirm-btn="نعم، انقل إلى السلة">
                                                         @Html.AntiForgeryToken()
                                                         <input type="hidden" name="id" value="@folder.Id" />
                                                         <input type="hidden" name="itemType" value="Folder" />
@@ -262,6 +265,11 @@
                                             </button>
                                             <ul class="dropdown-menu dropdown-menu-end shadow-sm">
                                                 <li>
+                                                    <button type="button" class="dropdown-item" data-preview-file="@file.Id">
+                                                        <i class="bi bi-eye me-2 text-info"></i> معاينة في نافذة
+                                                    </button>
+                                                </li>
+                                                <li>
                                                     <a class="dropdown-item" asp-action="DownloadFile" asp-route-id="@file.Id">
                                                         <i class="bi bi-download me-2 text-success"></i> تنزيل
                                                     </a>
@@ -290,7 +298,10 @@
                                                 </li>
                                                 <li><hr class="dropdown-divider"></li>
                                                 <li>
-                                                    <form method="post" asp-action="Delete" onsubmit="return confirm('هل تريد نقل هذا الملف إلى سلة المحذوفات؟');">
+                                                    <form method="post" asp-action="Delete"
+                                                          data-confirm="هل تريد نقل الملف '@file.Name' إلى سلة المحذوفات؟"
+                                                          data-confirm-title="نقل الملف إلى السلة"
+                                                          data-confirm-btn="نعم، انقل إلى السلة">
                                                         @Html.AntiForgeryToken()
                                                         <input type="hidden" name="id" value="@file.Id" />
                                                         <input type="hidden" name="itemType" value="File" />
@@ -310,7 +321,7 @@
                                             </span>
                                         }
 
-                                        <a asp-action="DownloadFile" asp-route-id="@file.Id" class="card-body text-center text-decoration-none text-body d-flex flex-column justify-content-center pt-4 pb-2">
+                                        <a href="javascript:void(0)" data-preview-file="@file.Id" role="button" class="card-body text-center text-decoration-none text-body d-flex flex-column justify-content-center pt-4 pb-2" title="انقر للمعاينة والتحميل">
                                             <i class="bi @iconClass display-4 mb-2"></i>
                                             <p class="card-title fw-medium small text-break mb-1" title="@file.Name">@file.Name</p>
                                             <div>
@@ -327,7 +338,10 @@
 
                                         <div class="card-footer bg-transparent small text-secondary py-1 px-2 d-flex justify-content-between align-items-center">
                                             <span>@Math.Round(file.SizeBytes / 1024.0, 0) KB</span>
-                                            <span>@file.CreatedAt.ToString("MM/dd")</span>
+                                            <div class="d-flex align-items-center gap-2">
+                                                <button type="button" class="btn btn-sm btn-link p-0 text-primary" data-preview-file="@file.Id" title="معاينة في نافذة منبثقة"><i class="bi bi-eye"></i></button>
+                                                <a asp-action="DownloadFile" asp-route-id="@file.Id" class="btn btn-sm btn-link p-0 text-success" title="تحميل"><i class="bi bi-download"></i></a>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -371,7 +385,11 @@
                                                     <div class="btn-group btn-group-sm">
                                                         <a asp-action="DownloadFolder" asp-route-id="@folder.Id" class="btn btn-outline-success" title="تنزيل ZIP"><i class="bi bi-download"></i></a>
                                                         <button class="btn btn-outline-secondary" type="button" data-bs-toggle="modal" data-bs-target="#renameModal" data-id="@folder.Id" data-type="Folder" data-name="@folder.Name" title="إعادة تسمية"><i class="bi bi-pencil"></i></button>
-                                                        <form method="post" asp-action="Delete" onsubmit="return confirm('نقل المجلد إلى السلة؟');" class="d-inline">
+                                                        <form method="post" asp-action="Delete"
+                                                              data-confirm="نقل المجلد '@folder.Name' ومحتوياته إلى السلة؟"
+                                                              data-confirm-title="تأكيد الحذف للسلة"
+                                                              data-confirm-btn="نعم، انقل للسلة"
+                                                              class="d-inline">
                                                             @Html.AntiForgeryToken()
                                                             <input type="hidden" name="id" value="@folder.Id" />
                                                             <input type="hidden" name="itemType" value="Folder" />
@@ -394,7 +412,7 @@
 
                                             <tr>
                                                 <td>
-                                                    <a asp-action="DownloadFile" asp-route-id="@file.Id" class="text-decoration-none text-body">
+                                                    <a href="javascript:void(0)" data-preview-file="@file.Id" role="button" class="text-decoration-none text-body fw-medium" title="معاينة الملف">
                                                         <i class="bi @iconClass me-2 fs-5"></i>@file.Name
                                                     </a>
                                                     @if (file.IsFavorite)
@@ -415,9 +433,14 @@
                                                 <td class="small text-secondary">@file.CreatedAt.ToString("yyyy-MM-dd")</td>
                                                 <td class="text-end">
                                                     <div class="btn-group btn-group-sm">
-                                                        <a asp-action="DownloadFile" asp-route-id="@file.Id" class="btn btn-outline-primary" title="تنزيل"><i class="bi bi-download"></i></a>
+                                                        <button class="btn btn-outline-info" type="button" data-preview-file="@file.Id" title="معاينة في نافذة منبثقة"><i class="bi bi-eye"></i></button>
+                                                        <a asp-action="DownloadFile" asp-route-id="@file.Id" class="btn btn-outline-success" title="تنزيل"><i class="bi bi-download"></i></a>
                                                         <button class="btn btn-outline-secondary" type="button" data-bs-toggle="modal" data-bs-target="#renameModal" data-id="@file.Id" data-type="File" data-name="@file.Name" title="إعادة تسمية"><i class="bi bi-pencil"></i></button>
-                                                        <form method="post" asp-action="Delete" onsubmit="return confirm('نقل الملف إلى السلة؟');" class="d-inline">
+                                                        <form method="post" asp-action="Delete"
+                                                              data-confirm="نقل الملف '@file.Name' إلى سلة المحذوفات؟"
+                                                              data-confirm-title="تأكيد الحذف للسلة"
+                                                              data-confirm-btn="نعم، انقل للسلة"
+                                                              class="d-inline">
                                                             @Html.AntiForgeryToken()
                                                             <input type="hidden" name="id" value="@file.Id" />
                                                             <input type="hidden" name="itemType" value="File" />
