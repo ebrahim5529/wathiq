@@ -16,6 +16,8 @@ public class ArchiveFolder
     public int? DepartmentId { get; set; }
     public Department? Department { get; set; }
 
+    public bool IsFavorite { get; set; }
+
     [MaxLength(100)]
     public string? CreatedBy { get; set; }
 
@@ -26,4 +28,5 @@ public class ArchiveFolder
     public DateTime? DeletedAt { get; set; }
 
     public ICollection<ArchiveFile> Files { get; set; } = new List<ArchiveFile>();
+    public ICollection<ArchiveShare> Shares { get; set; } = new List<ArchiveShare>();
 }

@@ -1,0 +1,139 @@
+@model IEnumerable<HR.Models.ActivityLog>
+@{
+    ViewData["Title"] = "سجل التدقيق والنشاط";
+}
+
+<div class="app-content-header">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-6">
+                <h1 class="mb-0 fs-3 fw-bold">سجل التدقيق والنشاط (Audit Trail)</h1>
+            </div>
+            <div class="col-sm-6">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb float-sm-end">
+                        <li class="breadcrumb-item"><a asp-controller="Dashboard" asp-action="Index">الرئيسية</a></li>
+                        <li class="breadcrumb-item"><a asp-controller="Reports" asp-action="Statistics">التقارير</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">سجل التدقيق</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="app-content">
+    <div class="container-fluid">
+        <!-- Filter Card -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="card-title fw-bold"><i class="bi bi-funnel-fill me-2 text-primary"></i>تصفية سجل النشاط</h5>
+
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-lte-toggle="card-collapse" aria-label="Collapse card">
+                        <i data-lte-icon="expand" class="bi bi-plus-lg"></i>
+                        <i data-lte-icon="collapse" class="bi bi-dash-lg"></i>
+                    </button>
+                    <button type="button" class="btn btn-tool" data-lte-toggle="card-remove" aria-label="Remove card">
+                        <i class="bi bi-x-lg"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                <form method="get" asp-action="AuditLogs" class="row g-3 align-items-end">
+                    <div class="col-md-3">
+                        <label class="form-label small fw-semibold">المستخدم</label>
+                        <input type="text" name="user" value="@ViewBag.SelectedUser" class="form-control form-control-sm" placeholder="اسم المستخدم..." />
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label small fw-semibold">نوع الإجراء</label>
+                        <input type="text" name="action" value="@ViewBag.SelectedAction" class="form-control form-control-sm" placeholder="رفع، حذف، تنزيل، تعديل..." />
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label small fw-semibold">من تاريخ</label>
+                        <input type="date" name="from" value="@ViewBag.SelectedFrom" class="form-control form-control-sm" />
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label small fw-semibold">إلى تاريخ</label>
+                        <input type="date" name="to" value="@ViewBag.SelectedTo" class="form-control form-control-sm" />
+                    </div>
+                    <div class="col-md-2 d-flex gap-2">
+                        <button type="submit" class="btn btn-sm btn-primary flex-grow-1">
+                            <i class="bi bi-funnel me-1"></i> تصفية
+                        </button>
+                        <a asp-action="AuditLogs" class="btn btn-sm btn-outline-secondary">إلغاء</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Logs Table Card -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h3 class="card-title fw-bold"><i class="bi bi-journal-text me-2 text-primary"></i>العمليات المسجلة في المنظومة</h3>
+
+                <div class="card-tools">
+                    <span class="badge text-bg-primary me-2">@Model.Count() سجل</span>
+                    <button type="button" class="btn btn-tool" data-lte-toggle="card-collapse" aria-label="Collapse card">
+                        <i data-lte-icon="expand" class="bi bi-plus-lg"></i>
+                        <i data-lte-icon="collapse" class="bi bi-dash-lg"></i>
+                    </button>
+                    <button type="button" class="btn btn-tool" data-lte-toggle="card-remove" aria-label="Remove card">
+                        <i class="bi bi-x-lg"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle m-0 small">
+                        <thead class="table-light">
+                            <tr>
+                                <th>#</th>
+                                <th>المستخدم</th>
+                                <th>الإجراء</th>
+                                <th>نوع العنصر</th>
+                                <th>اسم العنصر</th>
+                                <th>التفاصيل</th>
+                                <th>عنوان IP</th>
+                                <th>التاريخ والوقت</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (!Model.Any())
+                            {
+                                <tr>
+                                    <td colspan="8" class="text-center py-5 text-muted">لا توجد سجلات تطابق شروط التصفية.</td>
+                                </tr>
+                            }
+                            @foreach (var log in Model)
+                            {
+                                var badgeColor = "text-bg-secondary";
+                                if (log.Action.Contains("رفع")) badgeColor = "text-bg-success";
+                                else if (log.Action.Contains("حذف")) badgeColor = "text-bg-danger";
+                                else if (log.Action.Contains("تنزيل")) badgeColor = "text-bg-info";
+                                else if (log.Action.Contains("مشاركة")) badgeColor = "text-bg-primary";
+                                else if (log.Action.Contains("تعديل") || log.Action.Contains("تسمية")) badgeColor = "text-bg-warning";
+
+                                <tr>
+                                    <td class="text-muted">@log.Id</td>
+                                    <td class="fw-bold"><i class="bi bi-person-fill me-1 text-primary"></i>@log.UserName</td>
+                                    <td><span class="badge @badgeColor">@log.Action</span></td>
+                                    <td><span class="badge bg-light text-dark border">@log.ItemType</span></td>
+                                    <td class="fw-semibold">@log.ItemName</td>
+                                    <td class="text-secondary small">@(log.Details ?? "—")</td>
+                                    <td class="text-muted"><code>@log.IpAddress</code></td>
+                                    <td class="text-muted text-nowrap">@log.CreatedAt.ToString("yyyy-MM-dd HH:mm:ss")</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="card-footer bg-body clearfix">
+                <a asp-action="ExportCsv" asp-route-type="audit" class="btn btn-sm btn-outline-success float-start">
+                    <i class="bi bi-file-earmark-spreadsheet me-1"></i> تصدير السجل بالكامل (CSV)
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

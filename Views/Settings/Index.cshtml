@@ -1,159 +1,167 @@
+@model IEnumerable<HR.Models.SystemSetting>
 @{
-    ViewData["Title"] = "الإعدادات";
-    ViewData["Nav"] = "settings";
+    ViewData["Title"] = "إعدادات النظام";
+    var settingsDict = Model.ToDictionary(s => s.Key, s => s.Value);
+
+    string GetVal(string key, string fallback = "") =>
+        settingsDict.ContainsKey(key) ? settingsDict[key] : fallback;
 }
-@await Html.PartialAsync("_PageHeader", "الإعدادات")
+
+<div class="app-content-header">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-6">
+                <h1 class="mb-0 fs-3 fw-bold">إعدادات النظام العامة</h1>
+            </div>
+            <div class="col-sm-6">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb float-sm-end">
+                        <li class="breadcrumb-item"><a asp-controller="Dashboard" asp-action="Index">الرئيسية</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">الإعدادات</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </div>
+</div>
 
 <div class="app-content">
     <div class="container-fluid">
-        <div class="card">
-            <div class="card-header p-0 border-bottom-0">
-                <ul class="nav nav-tabs" role="tablist">
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#tab-general" type="button" role="tab"><i class="bi bi-gear me-1"></i> عامة</button>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-storage" type="button" role="tab"><i class="bi bi-hdd me-1"></i> التخزين</button>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-types" type="button" role="tab"><i class="bi bi-file-earmark-check me-1"></i> الأنواع المسموحة</button>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-trash" type="button" role="tab"><i class="bi bi-trash me-1"></i> السلة</button>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-security" type="button" role="tab"><i class="bi bi-shield-lock me-1"></i> الأمان</button>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-notifications" type="button" role="tab"><i class="bi bi-bell me-1"></i> الإشعارات</button>
-                    </li>
-                </ul>
-            </div>
-            <div class="card-body">
-                <div class="tab-content">
-                    <div class="tab-pane fade show active" id="tab-general" role="tabpanel">
-                        <div class="row g-3" style="max-width: 680px">
-                            <div class="col-md-8">
-                                <label class="form-label" for="set-name">اسم النظام</label>
-                                <input type="text" class="form-control" id="set-name" value="نظام الأرشفة" />
-                            </div>
-                            <div class="col-md-4">
-                                <label class="form-label" for="set-lang">اللغة الافتراضية</label>
-                                <select class="form-select" id="set-lang">
-                                    <option selected>العربية</option>
-                                    <option>English</option>
-                                </select>
-                            </div>
-                            <div class="col-12">
-                                <label class="form-label" for="set-logo">الشعار</label>
-                                <input type="file" class="form-control" id="set-logo" accept="image/*" />
-                                <div class="form-text">PNG أو SVG، بحجم أقصى 2 ميجابايت.</div>
-                            </div>
-                        </div>
-                    </div>
+        <form method="post" asp-action="Save">
+            @Html.AntiForgeryToken()
 
-                    <div class="tab-pane fade" id="tab-storage" role="tabpanel">
-                        <div class="row g-3" style="max-width: 680px">
-                            <div class="col-12">
-                                <label class="form-label" for="set-path">مسار التخزين الفعلي</label>
-                                <input type="text" class="form-control" id="set-path" value="/var/hr-archive/uploads" dir="ltr" />
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label" for="set-max">الحد الأقصى للملف (ميجابايت)</label>
-                                <input type="number" class="form-control" id="set-max" value="10" min="1" />
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label" for="set-quota">الحصة الكلية (جيجابايت)</label>
-                                <input type="number" class="form-control" id="set-quota" value="10" min="1" />
-                            </div>
-                            <div class="col-12">
-                                <div class="alert alert-secondary mb-0">
-                                    <i class="bi bi-info-circle me-1"></i>
-                                    الاستخدام الحالي: <strong>6.2 جيجا</strong> من 10 جيجا (62%).
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+            <div class="card mb-4">
+                <div class="card-header p-2">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <ul class="nav nav-pills" id="settingsTabs" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link active" id="general-tab" data-bs-toggle="tab" data-bs-target="#general" type="button" role="tab">
+                                    <i class="bi bi-sliders me-1"></i> إعدادات عامة
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="storage-tab" data-bs-toggle="tab" data-bs-target="#storage" type="button" role="tab">
+                                    <i class="bi bi-hdd-network me-1"></i> التخزين والملفات
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="notifications-tab" data-bs-toggle="tab" data-bs-target="#notifications" type="button" role="tab">
+                                    <i class="bi bi-bell me-1"></i> التنبيهات والإشعارات
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="security-tab" data-bs-toggle="tab" data-bs-target="#security" type="button" role="tab">
+                                    <i class="bi bi-shield-check me-1"></i> الأمان والجلسات
+                                </button>
+                            </li>
+                        </ul>
 
-                    <div class="tab-pane fade" id="tab-types" role="tabpanel">
-                        <p class="text-secondary small">حدّد الامتدادات المسموح برفعها إلى الأرشيف.</p>
-                        <div class="row g-2" style="max-width: 680px">
-                            @foreach (var ext in new[] { "pdf", "doc", "docx", "xls", "xlsx", "csv", "ppt", "pptx", "png", "jpg", "jpeg", "gif", "webp", "zip", "rar", "7z", "txt", "md" })
-                            {
-                                <div class="col-auto">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" id="ext-@ext" checked />
-                                        <label class="form-check-label" for="ext-@ext">.@ext</label>
-                                    </div>
-                                </div>
-                            }
-                        </div>
-                    </div>
-
-                    <div class="tab-pane fade" id="tab-trash" role="tabpanel">
-                        <div class="row g-3" style="max-width: 480px">
-                            <div class="col-12">
-                                <label class="form-label" for="set-trash-days">أيام الاحتفاظ قبل الحذف النهائي</label>
-                                <input type="number" class="form-control" id="set-trash-days" value="30" min="1" />
-                            </div>
-                            <div class="col-12">
-                                <div class="form-check form-switch">
-                                    <input class="form-check-input" type="checkbox" role="switch" id="set-trash-auto" checked />
-                                    <label class="form-check-label" for="set-trash-auto">تفعيل الحذف التلقائي</label>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="tab-pane fade" id="tab-security" role="tabpanel">
-                        <div class="row g-3" style="max-width: 480px">
-                            <div class="col-12">
-                                <label class="form-label" for="set-session">مدة الجلسة (دقائق)</label>
-                                <input type="number" class="form-control" id="set-session" value="60" min="5" />
-                            </div>
-                            <div class="col-12">
-                                <div class="form-check form-switch">
-                                    <input class="form-check-input" type="checkbox" role="switch" id="set-https" checked />
-                                    <label class="form-check-label" for="set-https">إجبار HTTPS</label>
-                                </div>
-                            </div>
-                            <div class="col-12">
-                                <div class="form-check form-switch">
-                                    <input class="form-check-input" type="checkbox" role="switch" id="set-2fa" />
-                                    <label class="form-check-label" for="set-2fa">التحقق بخطوتين للمديرين</label>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="tab-pane fade" id="tab-notifications" role="tabpanel">
-                        <div class="row g-3" style="max-width: 480px">
-                            <div class="col-12">
-                                <div class="form-check form-switch">
-                                    <input class="form-check-input" type="checkbox" role="switch" id="set-contract" checked />
-                                    <label class="form-check-label" for="set-contract">تنبيه قبل انتهاء العقود (30 يوماً)</label>
-                                </div>
-                            </div>
-                            <div class="col-12">
-                                <div class="form-check form-switch">
-                                    <input class="form-check-input" type="checkbox" role="switch" id="set-storage-alert" checked />
-                                    <label class="form-check-label" for="set-storage-alert">تنبيه عند تجاوز 80% من التخزين</label>
-                                </div>
-                            </div>
-                            <div class="col-12">
-                                <div class="form-check form-switch">
-                                    <input class="form-check-input" type="checkbox" role="switch" id="set-email" />
-                                    <label class="form-check-label" for="set-email">إرسال الإشعارات بالبريد الإلكتروني</label>
-                                </div>
-                            </div>
+                        <div class="card-tools me-2">
+                            <button type="button" class="btn btn-tool" data-lte-toggle="card-collapse" aria-label="Collapse card">
+                                <i data-lte-icon="expand" class="bi bi-plus-lg"></i>
+                                <i data-lte-icon="collapse" class="bi bi-dash-lg"></i>
+                            </button>
+                            <button type="button" class="btn btn-tool" data-lte-toggle="card-remove" aria-label="Remove card">
+                                <i class="bi bi-x-lg"></i>
+                            </button>
                         </div>
                     </div>
                 </div>
+                <div class="card-body">
+                    <div class="tab-content" id="settingsTabsContent">
+
+                        <!-- GENERAL TAB -->
+                        <div class="tab-pane fade show active p-2" id="general" role="tabpanel">
+                            <h5 class="fw-bold mb-3 text-primary"><i class="bi bi-building me-1"></i> هوية المنظومة</h5>
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label class="form-label fw-semibold">اسم النظام المعروض</label>
+                                    <input type="text" name="settings[SystemName]" value="@GetVal("SystemName", "نظام وثيق للأرشفة الإلكترونية")" class="form-control" />
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-semibold">اللغة الافتراضية</label>
+                                    <select name="settings[DefaultLanguage]" class="form-select">
+                                        <option value="ar" selected>العربية (Arabic - RTL)</option>
+                                        <option value="en">الإنجليزية (English)</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-12">
+                                    <label class="form-label fw-semibold">نص التذييل (Footer Text)</label>
+                                    <input type="text" name="settings[FooterText]" value="@GetVal("FooterText", "نظام وثيق للأرشفة الإلكترونية — جميع الحقوق محفوظة")" class="form-control" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- STORAGE TAB -->
+                        <div class="tab-pane fade p-2" id="storage" role="tabpanel">
+                            <h5 class="fw-bold mb-3 text-primary"><i class="bi bi-hdd-network me-1"></i> سياسات التخزين والرفع</h5>
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label class="form-label fw-semibold">الحصة التخزينية الإجمالية (بالجيجابايت GB)</label>
+                                    <input type="number" name="settings[StorageQuotaGB]" value="@GetVal("StorageQuotaGB", "50")" class="form-control" />
+                                    <div class="form-text small">إجمالي سعة التخزين المخصصة للنظام بالكامل.</div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-semibold">الحد الأقصى لحجم الملف الواحد (بالميجابايت MB)</label>
+                                    <input type="number" name="settings[MaxUploadSizeMB]" value="@GetVal("MaxUploadSizeMB", "50")" class="form-control" />
+                                    <div class="form-text small">حجم الملف الأقصى المسموح به في الرفعة الواحدة.</div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-semibold">الامتدادات المسموح بها في الرفع</label>
+                                    <input type="text" name="settings[AllowedExtensions]" value="@GetVal("AllowedExtensions", ".pdf,.doc,.docx,.xls,.xlsx,.png,.jpg,.jpeg,.zip,.rar")" class="form-control font-monospace" />
+                                    <div class="form-text small">مفصولة بفواصل، مثل: .pdf,.docx,.xlsx</div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-semibold">أيام الاحتفاظ في سلة المحذوفات قبل الحذف النهائي</label>
+                                    <input type="number" name="settings[TrashRetentionDays]" value="@GetVal("TrashRetentionDays", "30")" class="form-control" />
+                                    <div class="form-text small">عدد الأيام التي يبقى فيها الملف في السلة.</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- NOTIFICATIONS TAB -->
+                        <div class="tab-pane fade p-2" id="notifications" role="tabpanel">
+                            <h5 class="fw-bold mb-3 text-primary"><i class="bi bi-bell me-1"></i> التنبيهات التلقائية</h5>
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label class="form-label fw-semibold">تنبيه قبل انتهاء العقود (بالأيام)</label>
+                                    <input type="number" name="settings[ContractAlertDays]" value="@GetVal("ContractAlertDays", "15")" class="form-control" />
+                                    <div class="form-text small">يظهر تنبيه في لوحة المؤشرات عندما يقترب انتهاء العقد بهذا العدد من الأيام.</div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-semibold">نسبة التحذير من امتلاء التخزين (%)</label>
+                                    <input type="number" name="settings[StorageWarningPct]" value="@GetVal("StorageWarningPct", "85")" class="form-control" />
+                                    <div class="form-text small">إظهار شارة تحذير باللون البرتقالي/الأحمر عند تجاوز هذه النسبة.</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- SECURITY TAB -->
+                        <div class="tab-pane fade p-2" id="security" role="tabpanel">
+                            <h5 class="fw-bold mb-3 text-primary"><i class="bi bi-shield-lock me-1"></i> سياسات الأمان</h5>
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label class="form-label fw-semibold">مدة مهلة انتهاء الجلسة (بالدقائق)</label>
+                                    <input type="number" name="settings[SessionTimeoutMinutes]" value="@GetVal("SessionTimeoutMinutes", "60")" class="form-control" />
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-semibold">تسجيل عناوين IP في سجل التدقيق</label>
+                                    <select name="settings[LogIpAddress]" class="form-select">
+                                        <option value="true" selected>مفعل (نعم)</option>
+                                        <option value="false">معطل</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="card-footer bg-body clearfix">
+                    <button type="submit" class="btn btn-primary px-4 float-end">
+                        <i class="bi bi-check2-circle me-1"></i> حفظ جميع الإعدادات
+                    </button>
+                </div>
             </div>
-            <div class="card-footer d-flex gap-2">
-                <button class="btn btn-primary"><i class="bi bi-check-lg me-1"></i> حفظ الإعدادات</button>
-                <button class="btn btn-outline-secondary">استعادة الافتراضي</button>
-            </div>
-        </div>
+        </form>
     </div>
 </div>

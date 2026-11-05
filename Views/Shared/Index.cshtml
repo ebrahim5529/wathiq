@@ -1,0 +1,134 @@
+@model IEnumerable<HR.Models.ArchiveShare>
+@{
+    ViewData["Title"] = "العناصر المشاركة معي";
+}
+
+<div class="app-content-header">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-6">
+                <h1 class="mb-0 fs-3 fw-bold">العناصر المشاركة معي</h1>
+            </div>
+            <div class="col-sm-6">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb float-sm-end">
+                        <li class="breadcrumb-item"><a asp-controller="Dashboard" asp-action="Index">الرئيسية</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">المشاركة معي</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="app-content">
+    <div class="container-fluid">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h3 class="card-title fw-bold"><i class="bi bi-people-fill me-2 text-primary"></i>الملفات والمجلدات التي تمت مشاركتها</h3>
+
+                <div class="card-tools">
+                    <span class="badge text-bg-primary me-2">@Model.Count() عنصر مشارك</span>
+                    <button type="button" class="btn btn-tool" data-lte-toggle="card-collapse" aria-label="Collapse card">
+                        <i data-lte-icon="expand" class="bi bi-plus-lg"></i>
+                        <i data-lte-icon="collapse" class="bi bi-dash-lg"></i>
+                    </button>
+                    <button type="button" class="btn btn-tool" data-lte-toggle="card-remove" aria-label="Remove card">
+                        <i class="bi bi-x-lg"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle m-0 small">
+                        <thead class="table-light">
+                            <tr>
+                                <th>نوع العنصر</th>
+                                <th>اسم العنصر</th>
+                                <th>مشارك مع</th>
+                                <th>الصلاحية</th>
+                                <th>تمت المشاركة بواسطة</th>
+                                <th>تاريخ المشاركة</th>
+                                <th>ملاحظات</th>
+                                <th class="text-end">الإجراء</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (!Model.Any())
+                            {
+                                <tr>
+                                    <td colspan="8" class="text-center py-5 text-muted">
+                                        <i class="bi bi-share display-4 opacity-25 d-block mb-2"></i>
+                                        لا توجد عناصر مشاركة حالياً.
+                                    </td>
+                                </tr>
+                            }
+                            @foreach (var share in Model)
+                            {
+                                var itemName = share.File?.Name ?? share.Folder?.Name ?? "عنصر محذوف";
+                                var isFile = share.ItemType == "File";
+                                <tr>
+                                    <td>
+                                        @if (isFile)
+                                        {
+                                            <span class="badge text-bg-primary"><i class="bi bi-file-earmark me-1"></i>ملف</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge text-bg-warning"><i class="bi bi-folder me-1"></i>مجلد</span>
+                                        }
+                                    </td>
+                                    <td class="fw-bold">@itemName</td>
+                                    <td>
+                                        @if (!string.IsNullOrEmpty(share.SharedWithUser))
+                                        {
+                                            <span class="badge bg-light text-dark border"><i class="bi bi-person me-1"></i>@share.SharedWithUser</span>
+                                        }
+                                        @if (share.SharedWithDepartment != null)
+                                        {
+                                            <span class="badge bg-light text-primary border"><i class="bi bi-building me-1"></i>@share.SharedWithDepartment.Name</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (share.Permission == "Edit")
+                                        {
+                                            <span class="badge text-bg-danger">تعديل كامل</span>
+                                        }
+                                        else if (share.Permission == "Download")
+                                        {
+                                            <span class="badge text-bg-success">تنزيل ومعاينة</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge text-bg-secondary">معاينة فقط</span>
+                                        }
+                                    </td>
+                                    <td class="text-muted">@(share.SharedBy ?? "مدير النظام")</td>
+                                    <td class="text-muted">@share.SharedAt.ToString("yyyy-MM-dd")</td>
+                                    <td class="small text-secondary">@(share.Notes ?? "—")</td>
+                                    <td class="text-end">
+                                        @if (isFile && share.FileId.HasValue)
+                                        {
+                                            <a asp-controller="Archive" asp-action="DownloadFile" asp-route-id="@share.FileId.Value" class="btn btn-sm btn-outline-primary">
+                                                <i class="bi bi-download me-1"></i> تنزيل
+                                            </a>
+                                        }
+                                        else if (!isFile && share.FolderId.HasValue)
+                                        {
+                                            <a asp-controller="Archive" asp-action="Index" asp-route-folderId="@share.FolderId.Value" class="btn btn-sm btn-outline-secondary">
+                                                <i class="bi bi-folder2-open me-1"></i> فتح
+                                            </a>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="card-footer bg-body clearfix">
+                <span class="text-secondary small">إجمالي المشاركات: @Model.Count()</span>
+            </div>
+        </div>
+    </div>
+</div>

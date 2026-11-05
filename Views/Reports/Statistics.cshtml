@@ -1,202 +1,240 @@
 @{
-    ViewData["Title"] = "إحصائيات الأرشيف";
-    ViewData["Nav"] = "reports-stats";
+    ViewData["Title"] = "إحصائيات وتقارير الأرشيف";
+    var byType = ViewBag.ByType as IEnumerable<dynamic> ?? Enumerable.Empty<dynamic>();
+    var byDept = ViewBag.ByDept as IEnumerable<dynamic> ?? Enumerable.Empty<dynamic>();
+    var byCat = ViewBag.ByCat as IEnumerable<dynamic> ?? Enumerable.Empty<dynamic>();
+    int totalFiles = ViewBag.TotalFiles ?? 0;
+    int totalFolders = ViewBag.TotalFolders ?? 0;
 }
-@await Html.PartialAsync("_PageHeader", "إحصائيات الأرشيف")
+
+<div class="app-content-header">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-6">
+                <h1 class="mb-0 fs-3 fw-bold">إحصائيات الأرشيف الشاملة</h1>
+            </div>
+            <div class="col-sm-6">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb float-sm-end">
+                        <li class="breadcrumb-item"><a asp-controller="Dashboard" asp-action="Index">الرئيسية</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">الإحصائيات</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </div>
+</div>
 
 <div class="app-content">
     <div class="container-fluid">
-        <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
-            <div class="btn-group btn-group-sm" role="group" aria-label="فترة التقرير">
-                <button type="button" class="btn btn-outline-secondary active">هذا الشهر</button>
-                <button type="button" class="btn btn-outline-secondary">آخر 3 أشهر</button>
-                <button type="button" class="btn btn-outline-secondary">هذه السنة</button>
+        <!-- Top Info Boxes (AdminLTE index2 style) -->
+        <div class="row">
+            <div class="col-12 col-sm-6 col-md-3">
+                <div class="info-box">
+                    <span class="info-box-icon text-bg-primary shadow-sm"><i class="bi bi-file-earmark-text-fill"></i></span>
+                    <div class="info-box-content">
+                        <span class="info-box-text">إجمالي المستندات</span>
+                        <span class="info-box-number">@totalFiles</span>
+                    </div>
+                </div>
             </div>
-            <div class="d-flex gap-2">
-                <button class="btn btn-sm btn-outline-success"><i class="bi bi-file-earmark-excel me-1"></i> Excel</button>
-                <button class="btn btn-sm btn-outline-danger"><i class="bi bi-file-earmark-pdf me-1"></i> PDF</button>
+            <div class="col-12 col-sm-6 col-md-3">
+                <div class="info-box">
+                    <span class="info-box-icon text-bg-warning shadow-sm"><i class="bi bi-folder-fill"></i></span>
+                    <div class="info-box-content">
+                        <span class="info-box-text">إجمالي المجلدات</span>
+                        <span class="info-box-number">@totalFolders</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-sm-6 col-md-3">
+                <div class="info-box">
+                    <span class="info-box-icon text-bg-success shadow-sm"><i class="bi bi-building-fill"></i></span>
+                    <div class="info-box-content">
+                        <span class="info-box-text">الأقسام النشطة</span>
+                        <span class="info-box-number">@byDept.Count()</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-sm-6 col-md-3">
+                <div class="info-box">
+                    <span class="info-box-icon text-bg-info shadow-sm"><i class="bi bi-tags-fill"></i></span>
+                    <div class="info-box-content">
+                        <span class="info-box-text">التصنيفات المستخدمة</span>
+                        <span class="info-box-number">@byCat.Count()</span>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <div class="row g-3">
-            <div class="col-lg-3 col-6">
-                <div class="card">
-                    <div class="card-body d-flex justify-content-between align-items-center">
-                        <div>
-                            <p class="text-secondary small mb-1">إجمالي الملفات</p>
-                            <h3 class="mb-0">1,248</h3>
-                        </div>
-                        <i class="bi bi-files fs-1 text-primary opacity-50"></i>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-3 col-6">
-                <div class="card">
-                    <div class="card-body d-flex justify-content-between align-items-center">
-                        <div>
-                            <p class="text-secondary small mb-1">أُضيفت هذا الشهر</p>
-                            <h3 class="mb-0">96</h3>
-                        </div>
-                        <i class="bi bi-plus-circle fs-1 text-success opacity-50"></i>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-3 col-6">
-                <div class="card">
-                    <div class="card-body d-flex justify-content-between align-items-center">
-                        <div>
-                            <p class="text-secondary small mb-1">حجم الأرشيف</p>
-                            <h3 class="mb-0">6.2 <small class="fs-6">جيجا</small></h3>
-                        </div>
-                        <i class="bi bi-hdd fs-1 text-warning opacity-50"></i>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-3 col-6">
-                <div class="card">
-                    <div class="card-body d-flex justify-content-between align-items-center">
-                        <div>
-                            <p class="text-secondary small mb-1">عدد الأقسام</p>
-                            <h3 class="mb-0">6</h3>
-                        </div>
-                        <i class="bi bi-building fs-1 text-info opacity-50"></i>
-                    </div>
-                </div>
-            </div>
+        <div class="row">
+            <!-- By Document Type Card -->
+            <div class="col-md-6">
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="card-title fw-bold"><i class="bi bi-file-earmark-bar-graph me-1 text-primary"></i>الإحصائيات حسب نوع المستند</h5>
 
-            <div class="col-lg-7">
-                <div class="card h-100">
-                    <div class="card-header"><h3 class="card-title"><i class="bi bi-bar-chart me-2"></i>حسب الشهر (2026)</h3></div>
-                    <div class="card-body">
-                        @{
-                            var months = new (string Name, int Value)[]
-                            {
-                                ("يناير", 92), ("فبراير", 78), ("مارس", 110), ("أبريل", 86),
-                                ("مايو", 124), ("يونيو", 98), ("يوليو", 60), ("أغسطس", 72),
-                                ("سبتمبر", 105), ("أكتوبر", 118), ("نوفمبر", 96), ("ديسمبر", 0)
-                            };
-                            var maxMonth = months.Max(m => m.Value);
-                        }
-                        <div class="d-flex align-items-end justify-content-between gap-1" style="height: 180px">
-                            @foreach (var m in months)
-                            {
-                                var height = maxMonth == 0 ? 2 : Math.Max(2, m.Value * 100 / maxMonth);
-                                <div class="flex-fill d-flex flex-column align-items-center justify-content-end gap-1 h-100" title="@m.Name: @m.Value ملف">
-                                    <div class="bg-primary rounded-top w-100" style="height: @(height)%; min-height: 3px"></div>
-                                    <small class="text-secondary" style="font-size: .65rem">@m.Name[..3]</small>
-                                </div>
-                            }
+                        <div class="card-tools">
+                            <button type="button" class="btn btn-tool" data-lte-toggle="card-collapse" aria-label="Collapse card">
+                                <i data-lte-icon="expand" class="bi bi-plus-lg"></i>
+                                <i data-lte-icon="collapse" class="bi bi-dash-lg"></i>
+                            </button>
+                            <button type="button" class="btn btn-tool" data-lte-toggle="card-remove" aria-label="Remove card">
+                                <i class="bi bi-x-lg"></i>
+                            </button>
                         </div>
                     </div>
-                </div>
-            </div>
-
-            <div class="col-lg-5">
-                <div class="card h-100">
-                    <div class="card-header"><h3 class="card-title"><i class="bi bi-pie-chart me-2"></i>حسب نوع المستند</h3></div>
-                    <div class="card-body">
-                        @{
-                            var types = new (string Name, string Color, int Count, int Percent)[]
-                            {
-                                ("مستندات رسمية", "primary", 474, 38),
-                                ("عقود", "success", 300, 24),
-                                ("مراسلات", "info", 225, 18),
-                                ("فواتير", "warning", 175, 14),
-                                ("عام", "secondary", 74, 6)
-                            };
-                        }
-                        @foreach (var t in types)
-                        {
-                            <div class="mb-3">
-                                <div class="d-flex justify-content-between small mb-1">
-                                    <span>@t.Name <span class="text-secondary">(@t.Count)</span></span>
-                                    <span class="text-secondary">@t.Percent%</span>
-                                </div>
-                                <div class="progress" style="height: 7px">
-                                    <div class="progress-bar bg-@t.Color" role="progressbar" style="width: @t.Percent%" aria-valuenow="@t.Percent" aria-valuemin="0" aria-valuemax="100"></div>
-                                </div>
-                            </div>
-                        }
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-12">
-                <div class="card">
-                    <div class="card-header"><h3 class="card-title"><i class="bi bi-building me-2"></i>حسب القسم</h3></div>
                     <div class="card-body p-0">
                         <div class="table-responsive">
-                            <table class="table table-striped align-middle mb-0">
-                                <thead>
+                            <table class="table table-hover align-middle m-0 small">
+                                <thead class="table-light">
                                     <tr>
-                                        <th>القسم</th>
+                                        <th>نوع المستند</th>
                                         <th>عدد الملفات</th>
-                                        <th>الحجم</th>
-                                        <th>النسبة من الأرشيف</th>
-                                        <th>آخر إضافة</th>
+                                        <th>النسبة المئوية</th>
+                                        <th>إجمالي الحجم</th>
                                     </tr>
                                 </thead>
                                 <tbody>
+                                    @foreach (var item in byType)
+                                    {
+                                        var count = (int)item.Count;
+                                        var pct = totalFiles > 0 ? Math.Round(((double)count / totalFiles) * 100, 1) : 0;
+                                        var size = (long)item.TotalSize;
+                                        <tr>
+                                            <td class="fw-bold">@item.Type</td>
+                                            <td>@count</td>
+                                            <td style="width: 40%;">
+                                                <div class="progress-group">
+                                                    <span class="float-end fs-8">@pct%</span>
+                                                    <div class="progress progress-sm">
+                                                        <div class="progress-bar text-bg-primary" style="width: @pct%"></div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="text-muted">@Math.Round(size / (1024.0 * 1024.0), 2) MB</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="card-footer bg-body text-end">
+                        <a asp-action="ExportCsv" asp-route-type="files" class="btn btn-sm btn-outline-success">
+                            <i class="bi bi-file-earmark-spreadsheet me-1"></i> تصدير البيانات (CSV)
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- By Department Card -->
+            <div class="col-md-6">
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="card-title fw-bold"><i class="bi bi-building me-1 text-info"></i>الإحصائيات حسب الأقسام</h5>
+
+                        <div class="card-tools">
+                            <button type="button" class="btn btn-tool" data-lte-toggle="card-collapse" aria-label="Collapse card">
+                                <i data-lte-icon="expand" class="bi bi-plus-lg"></i>
+                                <i data-lte-icon="collapse" class="bi bi-dash-lg"></i>
+                            </button>
+                            <button type="button" class="btn btn-tool" data-lte-toggle="card-remove" aria-label="Remove card">
+                                <i class="bi bi-x-lg"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle m-0 small">
+                                <thead class="table-light">
                                     <tr>
-                                        <td><i class="bi bi-building me-2 text-primary"></i>المالية</td>
-                                        <td>364</td>
-                                        <td>1.8 GB</td>
-                                        <td>
-                                            <div class="d-flex align-items-center gap-2" style="max-width: 220px">
-                                                <div class="progress flex-grow-1" style="height: 6px"><div class="progress-bar bg-danger" style="width: 29%"></div></div>
-                                                <small class="text-secondary">29%</small>
-                                            </div>
-                                        </td>
-                                        <td>اليوم</td>
+                                        <th>القسم</th>
+                                        <th>عدد الملفات</th>
+                                        <th>النسبة من الإجمالي</th>
+                                        <th>إجمالي الحجم</th>
                                     </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in byDept)
+                                    {
+                                        var count = (int)item.Count;
+                                        var pct = totalFiles > 0 ? Math.Round(((double)count / totalFiles) * 100, 1) : 0;
+                                        var size = (long)item.TotalSize;
+                                        <tr>
+                                            <td class="fw-bold">@item.Dept</td>
+                                            <td>@count</td>
+                                            <td style="width: 40%;">
+                                                <div class="progress-group">
+                                                    <span class="float-end fs-8">@pct%</span>
+                                                    <div class="progress progress-sm">
+                                                        <div class="progress-bar text-bg-info" style="width: @pct%"></div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="text-muted">@Math.Round(size / (1024.0 * 1024.0), 2) MB</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="card-footer bg-body text-end">
+                        <button onclick="window.print()" class="btn btn-sm btn-outline-secondary">
+                            <i class="bi bi-printer me-1"></i> طباعة
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- By Category Card -->
+        <div class="row">
+            <div class="col-12">
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="card-title fw-bold"><i class="bi bi-tags-fill me-1 text-success"></i>الإحصائيات حسب تصنيفات الملفات</h5>
+
+                        <div class="card-tools">
+                            <button type="button" class="btn btn-tool" data-lte-toggle="card-collapse" aria-label="Collapse card">
+                                <i data-lte-icon="expand" class="bi bi-plus-lg"></i>
+                                <i data-lte-icon="collapse" class="bi bi-dash-lg"></i>
+                            </button>
+                            <button type="button" class="btn btn-tool" data-lte-toggle="card-remove" aria-label="Remove card">
+                                <i class="bi bi-x-lg"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle m-0 small">
+                                <thead class="table-light">
                                     <tr>
-                                        <td><i class="bi bi-building me-2 text-primary"></i>الموارد البشرية</td>
-                                        <td>210</td>
-                                        <td>1.1 GB</td>
-                                        <td>
-                                            <div class="d-flex align-items-center gap-2" style="max-width: 220px">
-                                                <div class="progress flex-grow-1" style="height: 6px"><div class="progress-bar bg-success" style="width: 17%"></div></div>
-                                                <small class="text-secondary">17%</small>
-                                            </div>
-                                        </td>
-                                        <td>اليوم</td>
+                                        <th>اسم التصنيف</th>
+                                        <th>عدد الملفات</th>
+                                        <th>الحصة من الأرشيف</th>
+                                        <th>إجمالي الحجم</th>
                                     </tr>
-                                    <tr>
-                                        <td><i class="bi bi-building me-2 text-primary"></i>تقنية المعلومات</td>
-                                        <td>152</td>
-                                        <td>920 MB</td>
-                                        <td>
-                                            <div class="d-flex align-items-center gap-2" style="max-width: 220px">
-                                                <div class="progress flex-grow-1" style="height: 6px"><div class="progress-bar bg-info" style="width: 12%"></div></div>
-                                                <small class="text-secondary">12%</small>
-                                            </div>
-                                        </td>
-                                        <td>أمس</td>
-                                    </tr>
-                                    <tr>
-                                        <td><i class="bi bi-building me-2 text-primary"></i>الإدارة العليا</td>
-                                        <td>120</td>
-                                        <td>700 MB</td>
-                                        <td>
-                                            <div class="d-flex align-items-center gap-2" style="max-width: 220px">
-                                                <div class="progress flex-grow-1" style="height: 6px"><div class="progress-bar bg-primary" style="width: 10%"></div></div>
-                                                <small class="text-secondary">10%</small>
-                                            </div>
-                                        </td>
-                                        <td>أمس</td>
-                                    </tr>
-                                    <tr>
-                                        <td><i class="bi bi-building me-2 text-primary"></i>المشتريات</td>
-                                        <td>88</td>
-                                        <td>410 MB</td>
-                                        <td>
-                                            <div class="d-flex align-items-center gap-2" style="max-width: 220px">
-                                                <div class="progress flex-grow-1" style="height: 6px"><div class="progress-bar bg-warning" style="width: 7%"></div></div>
-                                                <small class="text-secondary">7%</small>
-                                            </div>
-                                        </td>
-                                        <td>16 مايو</td>
-                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in byCat)
+                                    {
+                                        var count = (int)item.Count;
+                                        var pct = totalFiles > 0 ? Math.Round(((double)count / totalFiles) * 100, 1) : 0;
+                                        var size = (long)item.TotalSize;
+                                        <tr>
+                                            <td class="fw-bold"><i class="bi bi-tag-fill text-success me-2"></i>@item.Cat</td>
+                                            <td>@count</td>
+                                            <td style="width: 35%;">
+                                                <div class="progress-group">
+                                                    <span class="float-end fs-8">@pct%</span>
+                                                    <div class="progress progress-sm">
+                                                        <div class="progress-bar text-bg-success" style="width: @pct%"></div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="text-muted">@Math.Round(size / (1024.0 * 1024.0), 2) MB</td>
+                                        </tr>
+                                    }
                                 </tbody>
                             </table>
                         </div>
@@ -204,5 +242,6 @@
                 </div>
             </div>
         </div>
+
     </div>
 </div>

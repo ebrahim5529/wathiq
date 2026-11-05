@@ -19,11 +19,152 @@ namespace HR.Data.Migrations
                 .HasAnnotation("ProductVersion", "10.0.14")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
+            modelBuilder.Entity("HR.Models.ActivityLog", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("Action")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("Details")
+                        .HasMaxLength(1000)
+                        .HasColumnType("varchar(1000)");
+
+                    b.Property<string>("IpAddress")
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)");
+
+                    b.Property<int?>("ItemId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ItemName")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<string>("ItemType")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)");
+
+                    b.Property<string>("UserName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Action");
+
+                    b.HasIndex("CreatedAt");
+
+                    b.HasIndex("UserName");
+
+                    b.ToTable("ActivityLogs");
+                });
+
+            modelBuilder.Entity("HR.Models.AppRole", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(500)
+                        .HasColumnType("varchar(500)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
+
+                    b.Property<string>("Permissions")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Code")
+                        .IsUnique();
+
+                    b.ToTable("AppRoles");
+                });
+
+            modelBuilder.Entity("HR.Models.AppUser", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<int?>("DepartmentId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("varchar(150)");
+
+                    b.Property<string>("FullName")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("varchar(150)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<DateTime?>("LastLoginAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("PasswordHash")
+                        .HasMaxLength(255)
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<string>("Role")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)");
+
+                    b.Property<string>("Username")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DepartmentId");
+
+                    b.HasIndex("Email")
+                        .IsUnique();
+
+                    b.HasIndex("Username")
+                        .IsUnique();
+
+                    b.ToTable("AppUsers");
+                });
+
             modelBuilder.Entity("HR.Models.ArchiveFile", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
+
+                    b.Property<decimal?>("Amount")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<int?>("CategoryId")
                         .HasColumnType("int");
@@ -39,6 +180,10 @@ namespace HR.Data.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("varchar(100)");
 
+                    b.Property<string>("Currency")
+                        .HasMaxLength(20)
+                        .HasColumnType("varchar(20)");
+
                     b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("datetime(6)");
 
@@ -49,8 +194,14 @@ namespace HR.Data.Migrations
                         .HasMaxLength(1000)
                         .HasColumnType("varchar(1000)");
 
+                    b.Property<DateTime?>("DocumentDate")
+                        .HasColumnType("datetime(6)");
+
                     b.Property<int>("DocumentType")
                         .HasColumnType("int");
+
+                    b.Property<DateTime?>("ExpiryDate")
+                        .HasColumnType("datetime(6)");
 
                     b.Property<string>("Extension")
                         .HasMaxLength(20)
@@ -62,8 +213,15 @@ namespace HR.Data.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("tinyint(1)");
 
+                    b.Property<bool>("IsFavorite")
+                        .HasColumnType("tinyint(1)");
+
                     b.Property<string>("Name")
                         .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<string>("Party")
                         .HasMaxLength(255)
                         .HasColumnType("varchar(255)");
 
@@ -79,6 +237,10 @@ namespace HR.Data.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("varchar(255)");
 
+                    b.Property<string>("Tags")
+                        .HasMaxLength(255)
+                        .HasColumnType("varchar(255)");
+
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime(6)");
 
@@ -91,6 +253,10 @@ namespace HR.Data.Migrations
                     b.HasIndex("DocumentType");
 
                     b.HasIndex("FolderId");
+
+                    b.HasIndex("IsDeleted");
+
+                    b.HasIndex("IsFavorite");
 
                     b.HasIndex("Name");
 
@@ -121,6 +287,9 @@ namespace HR.Data.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("tinyint(1)");
 
+                    b.Property<bool>("IsFavorite")
+                        .HasColumnType("tinyint(1)");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(255)
@@ -136,9 +305,66 @@ namespace HR.Data.Migrations
 
                     b.HasIndex("DepartmentId");
 
+                    b.HasIndex("IsDeleted");
+
+                    b.HasIndex("IsFavorite");
+
                     b.HasIndex("ParentId", "Name");
 
                     b.ToTable("ArchiveFolders");
+                });
+
+            modelBuilder.Entity("HR.Models.ArchiveShare", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<int?>("FileId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("FolderId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ItemType")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("varchar(20)");
+
+                    b.Property<string>("Notes")
+                        .HasMaxLength(500)
+                        .HasColumnType("varchar(500)");
+
+                    b.Property<string>("Permission")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("varchar(30)");
+
+                    b.Property<DateTime>("SharedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("SharedBy")
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
+
+                    b.Property<int?>("SharedWithDepartmentId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("SharedWithUser")
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FileId");
+
+                    b.HasIndex("FolderId");
+
+                    b.HasIndex("SharedWithDepartmentId");
+
+                    b.HasIndex("ItemType", "FileId", "FolderId");
+
+                    b.ToTable("ArchiveShares");
                 });
 
             modelBuilder.Entity("HR.Models.Category", b =>
@@ -210,6 +436,49 @@ namespace HR.Data.Migrations
                     b.ToTable("Departments");
                 });
 
+            modelBuilder.Entity("HR.Models.SystemSetting", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(255)
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<string>("Group")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)");
+
+                    b.Property<string>("Key")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
+
+                    b.Property<string>("Value")
+                        .IsRequired()
+                        .HasMaxLength(1000)
+                        .HasColumnType("varchar(1000)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Key")
+                        .IsUnique();
+
+                    b.ToTable("SystemSettings");
+                });
+
+            modelBuilder.Entity("HR.Models.AppUser", b =>
+                {
+                    b.HasOne("HR.Models.Department", "Department")
+                        .WithMany()
+                        .HasForeignKey("DepartmentId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.Navigation("Department");
+                });
+
             modelBuilder.Entity("HR.Models.ArchiveFile", b =>
                 {
                     b.HasOne("HR.Models.Category", "Category")
@@ -251,6 +520,30 @@ namespace HR.Data.Migrations
                     b.Navigation("Parent");
                 });
 
+            modelBuilder.Entity("HR.Models.ArchiveShare", b =>
+                {
+                    b.HasOne("HR.Models.ArchiveFile", "File")
+                        .WithMany("Shares")
+                        .HasForeignKey("FileId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("HR.Models.ArchiveFolder", "Folder")
+                        .WithMany("Shares")
+                        .HasForeignKey("FolderId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("HR.Models.Department", "SharedWithDepartment")
+                        .WithMany()
+                        .HasForeignKey("SharedWithDepartmentId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.Navigation("File");
+
+                    b.Navigation("Folder");
+
+                    b.Navigation("SharedWithDepartment");
+                });
+
             modelBuilder.Entity("HR.Models.Category", b =>
                 {
                     b.HasOne("HR.Models.Category", "Parent")
@@ -271,11 +564,18 @@ namespace HR.Data.Migrations
                     b.Navigation("Parent");
                 });
 
+            modelBuilder.Entity("HR.Models.ArchiveFile", b =>
+                {
+                    b.Navigation("Shares");
+                });
+
             modelBuilder.Entity("HR.Models.ArchiveFolder", b =>
                 {
                     b.Navigation("Children");
 
                     b.Navigation("Files");
+
+                    b.Navigation("Shares");
                 });
 
             modelBuilder.Entity("HR.Models.Category", b =>

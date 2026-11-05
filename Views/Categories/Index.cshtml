@@ -1,174 +1,179 @@
+@model IEnumerable<HR.Models.Category>
 @{
-    ViewData["Title"] = "التصنيفات";
-    ViewData["Nav"] = "categories";
+    ViewData["Title"] = "إدارة التصنيفات";
 }
-@await Html.PartialAsync("_PageHeader", "التصنيفات")
 
-<div class="app-content">
+<div class="app-content-header">
     <div class="container-fluid">
-        <div class="alert alert-info d-flex align-items-center gap-2">
-            <i class="bi bi-info-circle"></i>
-            <span>لا يمكن حذف تصنيف مرتبط بملفات؛ استخدم التعطيل بدلاً من الحذف، أو أعد تعيين ملفاته أولاً.</span>
-        </div>
-
-        <div class="card">
-            <div class="card-header d-flex justify-content-between align-items-center">
-                <h3 class="card-title"><i class="bi bi-tags me-2"></i>قائمة التصنيفات</h3>
-                <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#category-modal">
-                    <i class="bi bi-plus-lg me-1"></i> تصنيف جديد
-                </button>
+        <div class="row">
+            <div class="col-sm-6">
+                <h1 class="mb-0 fs-3 fw-bold">إدارة التصنيفات</h1>
             </div>
-            <div class="card-body p-0">
-                <div class="table-responsive">
-                    <table class="table table-striped align-middle mb-0">
-                        <thead>
-                            <tr>
-                                <th>الاسم</th>
-                                <th>الوصف</th>
-                                <th>التصنيف الأب</th>
-                                <th>اللون</th>
-                                <th>عدد الملفات</th>
-                                <th>الحالة</th>
-                                <th class="text-end">إجراءات</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td><i class="bi bi-folder me-2 text-warning"></i>العقود</td>
-                                <td class="text-secondary">جميع العقود والاتفاقيات الرسمية</td>
-                                <td>—</td>
-                                <td><span class="badge rounded-circle p-2 bg-success" title="أخضر"></span></td>
-                                <td>142</td>
-                                <td><span class="badge text-bg-success">نشط</span></td>
-                                <td class="text-end">
-                                    <div class="d-inline-flex gap-1">
-                                        <button class="btn btn-sm btn-outline-secondary" title="تعديل" data-bs-toggle="modal" data-bs-target="#category-modal"><i class="bi bi-pencil"></i></button>
-                                        <button class="btn btn-sm btn-outline-danger" title="حذف"><i class="bi bi-trash"></i></button>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td><i class="bi bi-folder me-2 text-warning"></i>الفواتير</td>
-                                <td class="text-secondary">فواتير الموردين والمصروفات</td>
-                                <td>المالية</td>
-                                <td><span class="badge rounded-circle p-2 bg-warning" title="أصفر"></span></td>
-                                <td>318</td>
-                                <td><span class="badge text-bg-success">نشط</span></td>
-                                <td class="text-end">
-                                    <div class="d-inline-flex gap-1">
-                                        <button class="btn btn-sm btn-outline-secondary" title="تعديل" data-bs-toggle="modal" data-bs-target="#category-modal"><i class="bi bi-pencil"></i></button>
-                                        <button class="btn btn-sm btn-outline-danger" title="حذف"><i class="bi bi-trash"></i></button>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td><i class="bi bi-folder me-2 text-warning"></i>المراسلات</td>
-                                <td class="text-secondary">الخطابات الواردة والصادرة</td>
-                                <td>—</td>
-                                <td><span class="badge rounded-circle p-2 bg-info" title="أزرق"></span></td>
-                                <td>96</td>
-                                <td><span class="badge text-bg-success">نشط</span></td>
-                                <td class="text-end">
-                                    <div class="d-inline-flex gap-1">
-                                        <button class="btn btn-sm btn-outline-secondary" title="تعديل" data-bs-toggle="modal" data-bs-target="#category-modal"><i class="bi bi-pencil"></i></button>
-                                        <button class="btn btn-sm btn-outline-danger" title="حذف"><i class="bi bi-trash"></i></button>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td><i class="bi bi-folder me-2 text-warning"></i>التقارير</td>
-                                <td class="text-secondary">التقارير الدورية والتحليلية</td>
-                                <td>—</td>
-                                <td><span class="badge rounded-circle p-2 bg-primary" title="أزرق داكن"></span></td>
-                                <td>57</td>
-                                <td><span class="badge text-bg-success">نشط</span></td>
-                                <td class="text-end">
-                                    <div class="d-inline-flex gap-1">
-                                        <button class="btn btn-sm btn-outline-secondary" title="تعديل" data-bs-toggle="modal" data-bs-target="#category-modal"><i class="bi bi-pencil"></i></button>
-                                        <button class="btn btn-sm btn-outline-danger" title="حذف"><i class="bi bi-trash"></i></button>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td><i class="bi bi-folder me-2 text-warning"></i>المالية <span class="badge text-bg-light ms-1">أب</span></td>
-                                <td class="text-secondary">تصنيف رئيسي يحتوي فروعاً</td>
-                                <td>—</td>
-                                <td><span class="badge rounded-circle p-2 bg-danger" title="أحمر"></span></td>
-                                <td>364</td>
-                                <td><span class="badge text-bg-success">نشط</span></td>
-                                <td class="text-end">
-                                    <div class="d-inline-flex gap-1">
-                                        <button class="btn btn-sm btn-outline-secondary" title="تعديل" data-bs-toggle="modal" data-bs-target="#category-modal"><i class="bi bi-pencil"></i></button>
-                                        <button class="btn btn-sm btn-outline-danger" title="حذف"><i class="bi bi-trash"></i></button>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td><i class="bi bi-folder me-2 text-warning"></i>أرشيف قديم</td>
-                                <td class="text-secondary">ملفات مؤرشفة قبل 2024</td>
-                                <td>—</td>
-                                <td><span class="badge rounded-circle p-2 bg-secondary" title="رمادي"></span></td>
-                                <td>0</td>
-                                <td><span class="badge text-bg-secondary">معطّل</span></td>
-                                <td class="text-end">
-                                    <div class="d-inline-flex gap-1">
-                                        <button class="btn btn-sm btn-outline-secondary" title="تعديل" data-bs-toggle="modal" data-bs-target="#category-modal"><i class="bi bi-pencil"></i></button>
-                                        <button class="btn btn-sm btn-outline-danger" title="حذف"><i class="bi bi-trash"></i></button>
-                                    </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+            <div class="col-sm-6">
+                <div class="float-sm-end">
+                    <button class="btn btn-primary btn-sm" type="button" data-bs-toggle="modal" data-bs-target="#newCategoryModal">
+                        <i class="bi bi-plus-lg me-1"></i> إضافة تصنيف جديد
+                    </button>
                 </div>
             </div>
-            <div class="card-footer text-secondary small">6 تصنيفات · 977 ملف مرتبط</div>
         </div>
     </div>
 </div>
 
-<div class="modal fade" id="category-modal" tabindex="-1" aria-labelledby="category-modal-title" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
+<div class="app-content">
+    <div class="container-fluid">
+        <div class="row g-3">
+            @foreach (var cat in Model)
+            {
+                <div class="col-md-6 col-xl-4">
+                    <div class="card mb-3 border-0 border-top border-4 shadow-sm" style="border-top-color: @(cat.Color ?? "#0d6efd") !important;">
+                        <div class="card-header bg-transparent py-2">
+                            <h5 class="card-title fw-bold mb-0">
+                                <i class="bi @(string.IsNullOrEmpty(cat.Icon) ? "bi-tag-fill" : cat.Icon) me-1" style="color: @(cat.Color ?? "#0d6efd");"></i>
+                                @cat.Name
+                            </h5>
+                            <div class="card-tools">
+                                @if (cat.IsActive)
+                                {
+                                    <span class="badge text-bg-success">نشط</span>
+                                }
+                                else
+                                {
+                                    <span class="badge text-bg-secondary">معطل</span>
+                                }
+                                <button type="button" class="btn btn-tool" data-lte-toggle="card-collapse" aria-label="Collapse card">
+                                    <i data-lte-icon="expand" class="bi bi-plus-lg"></i>
+                                    <i data-lte-icon="collapse" class="bi bi-dash-lg"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <p class="text-secondary small mb-3">@(cat.Description ?? "لا يوجد وصف مدخل لهذا التصنيف.")</p>
+                            <div class="progress-group mb-1">
+                                <span class="progress-text small">الملفات المرتبطة</span>
+                                <span class="float-end small"><b>@cat.Files.Count(f => !f.IsDeleted)</b> ملف</span>
+                            </div>
+                        </div>
+                        <div class="card-footer bg-body d-flex justify-content-between align-items-center py-2">
+                            <span class="small text-muted"><i class="bi bi-files me-1"></i> @cat.Files.Count(f => !f.IsDeleted) ملف</span>
+                            <div class="btn-group btn-group-sm">
+                                <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#editCategoryModal"
+                                        data-id="@cat.Id" data-name="@cat.Name" data-desc="@cat.Description" data-color="@cat.Color" data-icon="@cat.Icon" data-active="@cat.IsActive.ToString().ToLower()">
+                                    <i class="bi bi-pencil"></i>
+                                </button>
+                                <form method="post" asp-action="ToggleActive" asp-route-id="@cat.Id" class="d-inline">
+                                    @Html.AntiForgeryToken()
+                                    <button type="submit" class="btn btn-outline-warning btn-sm" title="@(cat.IsActive ? "تعطيل" : "تفعيل")">
+                                        <i class="bi @(cat.IsActive ? "bi-pause-circle" : "bi-play-circle")"></i>
+                                    </button>
+                                </form>
+                                <form method="post" asp-action="Delete" asp-route-id="@cat.Id" onsubmit="return confirm('هل أنت متأكد من رغبتك في حذف هذا التصنيف؟');" class="d-inline">
+                                    @Html.AntiForgeryToken()
+                                    <button type="submit" class="btn btn-outline-danger btn-sm" title="حذف">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<!-- Modal: New Category -->
+<div class="modal fade" id="newCategoryModal" tabindex="-1" aria-labelledby="newCategoryModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <form method="post" asp-action="Create" class="modal-content">
+            @Html.AntiForgeryToken()
             <div class="modal-header">
-                <h5 class="modal-title" id="category-modal-title"><i class="bi bi-tag me-2"></i>بيانات التصنيف</h5>
+                <h5 class="modal-title" id="newCategoryModalLabel"><i class="bi bi-plus-circle text-primary me-2"></i>إضافة تصنيف جديد</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="إغلاق"></button>
             </div>
             <div class="modal-body">
                 <div class="mb-3">
-                    <label class="form-label" for="cat-name">الاسم <span class="text-danger">*</span></label>
-                    <input type="text" class="form-control" id="cat-name" placeholder="اسم التصنيف" />
+                    <label class="form-label fw-semibold">اسم التصنيف <span class="text-danger">*</span></label>
+                    <input type="text" name="Name" class="form-control" placeholder="مثال: عقود الصيانة، ملفات التوظيف..." required autofocus />
                 </div>
                 <div class="mb-3">
-                    <label class="form-label" for="cat-desc">الوصف</label>
-                    <textarea class="form-control" id="cat-desc" rows="2" placeholder="وصف مختصر…"></textarea>
+                    <label class="form-label">الوصف</label>
+                    <textarea name="Description" rows="2" class="form-control" placeholder="وصف موجز للمستندات المندرجة تحته..."></textarea>
                 </div>
-                <div class="row g-3">
+                <div class="row g-2 mb-3">
                     <div class="col-md-6">
-                        <label class="form-label" for="cat-parent">التصنيف الأب</label>
-                        <select class="form-select" id="cat-parent">
-                            <option value="">بدون (تصنيف رئيسي)</option>
-                            <option>المالية</option>
-                            <option>العقود</option>
-                        </select>
+                        <label class="form-label">لون الشارة</label>
+                        <input type="color" name="Color" class="form-control form-control-color w-100" value="#0d6efd" />
                     </div>
-                    <div class="col-md-3">
-                        <label class="form-label" for="cat-color">اللون</label>
-                        <input type="color" class="form-control form-control-color w-100" id="cat-color" value="#0072ce" />
+                    <div class="col-md-6">
+                        <label class="form-label">أيقونة (Bootstrap Icon)</label>
+                        <input type="text" name="Icon" class="form-control" value="bi-tag-fill" placeholder="bi-tag-fill" />
                     </div>
-                    <div class="col-md-3">
-                        <label class="form-label" for="cat-icon">الأيقونة</label>
-                        <input type="text" class="form-control" id="cat-icon" placeholder="bi-folder" />
-                    </div>
-                </div>
-                <div class="form-check form-switch mt-3">
-                    <input class="form-check-input" type="checkbox" role="switch" id="cat-active" checked />
-                    <label class="form-check-label" for="cat-active">نشط</label>
                 </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
-                <button type="button" class="btn btn-primary"><i class="bi bi-check-lg me-1"></i> حفظ</button>
+                <button type="submit" class="btn btn-primary"><i class="bi bi-check2 me-1"></i> حفظ التصنيف</button>
             </div>
-        </div>
+        </form>
     </div>
 </div>
+
+<!-- Modal: Edit Category -->
+<div class="modal fade" id="editCategoryModal" tabindex="-1" aria-labelledby="editCategoryModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <form method="post" asp-action="Edit" class="modal-content">
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="Id" id="editCatId" />
+            <div class="modal-header">
+                <h5 class="modal-title" id="editCategoryModalLabel"><i class="bi bi-pencil text-primary me-2"></i>تعديل التصنيف</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="إغلاق"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">اسم التصنيف <span class="text-danger">*</span></label>
+                    <input type="text" name="Name" id="editCatName" class="form-control" required />
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">الوصف</label>
+                    <textarea name="Description" id="editCatDesc" rows="2" class="form-control"></textarea>
+                </div>
+                <div class="row g-2 mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label">لون الشارة</label>
+                        <input type="color" name="Color" id="editCatColor" class="form-control form-control-color w-100" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">الأيقونة</label>
+                        <input type="text" name="Icon" id="editCatIcon" class="form-control" />
+                    </div>
+                </div>
+                <div class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" name="IsActive" value="true" id="editCatActive" />
+                    <label class="form-check-label" for="editCatActive">تصنيف نشط</label>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
+                <button type="submit" class="btn btn-primary"><i class="bi bi-check2 me-1"></i> حفظ التعديلات</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        const editModal = document.getElementById('editCategoryModal');
+        if (editModal) {
+            editModal.addEventListener('show.bs.modal', function (event) {
+                const button = event.relatedTarget;
+                document.getElementById('editCatId').value = button.getAttribute('data-id');
+                document.getElementById('editCatName').value = button.getAttribute('data-name');
+                document.getElementById('editCatDesc').value = button.getAttribute('data-desc') || '';
+                document.getElementById('editCatColor').value = button.getAttribute('data-color') || '#0d6efd';
+                document.getElementById('editCatIcon').value = button.getAttribute('data-icon') || 'bi-tag-fill';
+                document.getElementById('editCatActive').checked = button.getAttribute('data-active') === 'true';
+            });
+        }
+    </script>
+}

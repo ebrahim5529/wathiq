@@ -1,220 +1,397 @@
+@model HR.ViewModels.DashboardViewModel
 @{
-    ViewData["Title"] = "لوحة التحكم";
-    ViewData["Nav"] = "dashboard";
+    ViewData["Title"] = "لوحة التحكم والمؤشرات";
 }
-@await Html.PartialAsync("_PageHeader", "لوحة التحكم")
+
+<!-- Content Header -->
+<div class="app-content-header">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-6">
+                <h1 class="mb-0 fs-3 fw-bold">لوحة المؤشرات والتحكم</h1>
+            </div>
+            <div class="col-sm-6">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb float-sm-end">
+                        <li class="breadcrumb-item"><a asp-controller="Dashboard" asp-action="Index">الرئيسية</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">لوحة المؤشرات</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </div>
+</div>
 
 <div class="app-content">
     <div class="container-fluid">
-        <div class="row g-3">
-            <div class="col-lg-3 col-6">
-                <div class="small-box text-bg-primary">
-                    <div class="inner">
-                        <h3>1,248</h3>
-                        <p>إجمالي الملفات</p>
-                    </div>
-                    <i class="small-box-icon bi bi-file-earmark-text"></i>
-                    <a asp-controller="Archive" asp-action="Index" class="small-box-footer link-light">
-                        عرض الملفات <i class="bi bi-arrow-left"></i>
-                    </a>
-                </div>
-            </div>
-            <div class="col-lg-3 col-6">
-                <div class="small-box text-bg-success">
-                    <div class="inner">
-                        <h3>86</h3>
-                        <p>المجلدات</p>
-                    </div>
-                    <i class="small-box-icon bi bi-folder"></i>
-                    <a asp-controller="Archive" asp-action="Index" class="small-box-footer link-light">
-                        تصفح المجلدات <i class="bi bi-arrow-left"></i>
-                    </a>
-                </div>
-            </div>
-            <div class="col-lg-3 col-6">
-                <div class="small-box text-bg-warning">
-                    <div class="inner">
-                        <h3>6.2 <small class="fs-6">جيجا</small></h3>
-                        <p>حجم التخزين المستخدم</p>
-                    </div>
-                    <i class="small-box-icon bi bi-cloud"></i>
-                    <a asp-controller="Reports" asp-action="Storage" class="small-box-footer link-light">
-                        تقرير التخزين <i class="bi bi-arrow-left"></i>
-                    </a>
-                </div>
-            </div>
-            <div class="col-lg-3 col-6">
-                <div class="small-box text-bg-info">
-                    <div class="inner">
-                        <h3>14</h3>
-                        <p>المرفوع اليوم</p>
-                    </div>
-                    <i class="small-box-icon bi bi-cloud-upload"></i>
-                    <a asp-controller="Recent" asp-action="Index" class="small-box-footer link-light">
-                        آخر العمليات <i class="bi bi-arrow-left"></i>
-                    </a>
-                </div>
-            </div>
 
-            <div class="col-lg-8">
-                <div class="card h-100">
-                    <div class="card-header">
-                        <h3 class="card-title"><i class="bi bi-bar-chart me-2"></i>المرفوعات آخر 7 أيام</h3>
-                        <div class="card-tools">
-                            <a href="#" class="btn btn-sm btn-outline-secondary">تصدير</a>
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        @{
-                            var bars = new (string Day, int Count)[]
-                            {
-                                ("الثلاثاء", 8), ("الأربعاء", 14), ("الخميس", 9), ("الجمعة", 4),
-                                ("السبت", 17), ("الأحد", 12), ("الاثنين", 14)
-                            };
-                            var max = bars.Max(b => b.Count);
-                        }
-                        <div class="d-flex align-items-end justify-content-between gap-3" style="height: 190px">
-                            @foreach (var bar in bars)
-                            {
-                                var height = Math.Max(8, bar.Count * 100 / max);
-                                <div class="flex-fill d-flex flex-column align-items-center justify-content-end gap-1 h-100">
-                                    <small class="text-secondary">@bar.Count</small>
-                                    <div class="bg-primary rounded-top w-100" style="height: @(height)%; min-height: 6px" title="@bar.Count ملف"></div>
-                                    <small class="text-secondary text-nowrap">@bar.Day</small>
-                                </div>
-                            }
-                        </div>
+        <!-- Top Info Boxes (AdminLTE index2 style) -->
+        <div class="row">
+            <div class="col-12 col-sm-6 col-md-3">
+                <div class="info-box">
+                    <span class="info-box-icon text-bg-primary shadow-sm">
+                        <i class="bi bi-file-earmark-text-fill"></i>
+                    </span>
+                    <div class="info-box-content">
+                        <span class="info-box-text">إجمالي الملفات بالأرشيف</span>
+                        <span class="info-box-number">
+                            @Model.TotalFiles
+                            <small class="text-success ms-1 fs-7"><i class="bi bi-arrow-up-short"></i>@Model.FilesUploadedToday اليوم</small>
+                        </span>
                     </div>
                 </div>
             </div>
 
-            <div class="col-lg-4">
-                <div class="card h-100">
-                    <div class="card-header">
-                        <h3 class="card-title"><i class="bi bi-pie-chart me-2"></i>التوزيع حسب النوع</h3>
-                    </div>
-                    <div class="card-body">
-                        @{
-                            var types = new (string Name, string Color, int Value)[]
-                            {
-                                ("مستندات رسمية", "primary", 38),
-                                ("عقود", "success", 24),
-                                ("مراسلات", "info", 18),
-                                ("فواتير", "warning", 14),
-                                ("عام", "secondary", 6)
-                            };
-                        }
-                        @foreach (var t in types)
-                        {
-                            <div class="mb-3">
-                                <div class="d-flex justify-content-between small mb-1">
-                                    <span>@t.Name</span>
-                                    <span class="text-secondary">@t.Value%</span>
-                                </div>
-                                <div class="progress" style="height: 7px">
-                                    <div class="progress-bar bg-@t.Color" role="progressbar" style="width: @t.Value%" aria-valuenow="@t.Value" aria-valuemin="0" aria-valuemax="100"></div>
-                                </div>
-                            </div>
-                        }
+            <div class="col-12 col-sm-6 col-md-3">
+                <div class="info-box">
+                    <span class="info-box-icon text-bg-warning shadow-sm">
+                        <i class="bi bi-folder-fill"></i>
+                    </span>
+                    <div class="info-box-content">
+                        <span class="info-box-text">إجمالي المجلدات</span>
+                        <span class="info-box-number">@Model.TotalFolders</span>
                     </div>
                 </div>
             </div>
 
-            <div class="col-lg-7">
-                <div class="card">
-                    <div class="card-header">
-                        <h3 class="card-title"><i class="bi bi-clock-history me-2"></i>أحدث الملفات</h3>
-                        <div class="card-tools">
-                            <a asp-controller="Recent" asp-action="Index" class="btn btn-sm btn-outline-secondary">عرض الكل</a>
-                        </div>
-                    </div>
-                    <div class="card-body p-0">
-                        <div class="table-responsive">
-                            <table class="table table-striped align-middle mb-0">
-                                <thead>
-                                    <tr>
-                                        <th>الملف</th>
-                                        <th>التصنيف</th>
-                                        <th>الحجم</th>
-                                        <th>تاريخ الرفع</th>
-                                        <th></th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td><i class="bi bi-file-earmark-pdf-fill text-danger me-2"></i>design-review.pdf</td>
-                                        <td><span class="badge text-bg-secondary">التصميم</span></td>
-                                        <td>1.4 MB</td>
-                                        <td>اليوم 10:42 ص</td>
-                                        <td class="text-end"><a href="#" class="btn btn-sm btn-outline-secondary" title="تنزيل"><i class="bi bi-download"></i></a></td>
-                                    </tr>
-                                    <tr>
-                                        <td><i class="bi bi-file-earmark-word-fill text-info me-2"></i>roadmap.docx</td>
-                                        <td><span class="badge text-bg-secondary">الإدارة</span></td>
-                                        <td>47 KB</td>
-                                        <td>أمس 04:15 م</td>
-                                        <td class="text-end"><a href="#" class="btn btn-sm btn-outline-secondary" title="تنزيل"><i class="bi bi-download"></i></a></td>
-                                    </tr>
-                                    <tr>
-                                        <td><i class="bi bi-file-earmark-spreadsheet-fill text-success me-2"></i>analytics-may.xlsx</td>
-                                        <td><span class="badge text-bg-secondary">التقارير</span></td>
-                                        <td>92 KB</td>
-                                        <td>16 مايو 2026</td>
-                                        <td class="text-end"><a href="#" class="btn btn-sm btn-outline-secondary" title="تنزيل"><i class="bi bi-download"></i></a></td>
-                                    </tr>
-                                    <tr>
-                                        <td><i class="bi bi-file-earmark-pdf-fill text-danger me-2"></i>INV-2026-00428.pdf</td>
-                                        <td><span class="badge text-bg-secondary">المالية</span></td>
-                                        <td>184 KB</td>
-                                        <td>15 مايو 2026</td>
-                                        <td class="text-end"><a href="#" class="btn btn-sm btn-outline-secondary" title="تنزيل"><i class="bi bi-download"></i></a></td>
-                                    </tr>
-                                    <tr>
-                                        <td><i class="bi bi-file-earmark-zip-fill text-secondary me-2"></i>site-export-2026-05.zip</td>
-                                        <td><span class="badge text-bg-secondary">أرشيف</span></td>
-                                        <td>12.3 MB</td>
-                                        <td>14 مايو 2026</td>
-                                        <td class="text-end"><a href="#" class="btn btn-sm btn-outline-secondary" title="تنزيل"><i class="bi bi-download"></i></a></td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
+            <div class="col-12 col-sm-6 col-md-3">
+                <div class="info-box">
+                    <span class="info-box-icon text-bg-success shadow-sm">
+                        <i class="bi bi-hdd-network-fill"></i>
+                    </span>
+                    <div class="info-box-content">
+                        <span class="info-box-text">استهلاك التخزين</span>
+                        <span class="info-box-number">
+                            @Math.Round(Model.StorageUsedBytes / (1024.0 * 1024 * 1024), 2)
+                            <small>GB (@Model.StoragePercentage%)</small>
+                        </span>
                     </div>
                 </div>
             </div>
 
-            <div class="col-lg-5">
-                <div class="card border-warning mb-3">
-                    <div class="card-header text-bg-warning">
-                        <h3 class="card-title"><i class="bi bi-exclamation-triangle me-2"></i>تنبيهات انتهاء العقود</h3>
-                    </div>
-                    <div class="list-group list-group-flush">
-                        <a href="#" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-                            <span><i class="bi bi-file-earmark-text me-2 text-warning"></i>عقد الصيانة السنوي</span>
-                            <span class="badge text-bg-danger">ينتهي بعد 5 أيام</span>
-                        </a>
-                        <a href="#" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-                            <span><i class="bi bi-file-earmark-text me-2 text-warning"></i>عقد توريد المعدات</span>
-                            <span class="badge text-bg-warning text-dark">ينتهي بعد 12 يوماً</span>
-                        </a>
-                        <a href="#" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-                            <span><i class="bi bi-file-earmark-text me-2 text-warning"></i>اتفاقية الدعم الفني</span>
-                            <span class="badge text-bg-warning text-dark">ينتهي بعد 20 يوماً</span>
-                        </a>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="card-header">
-                        <h3 class="card-title"><i class="bi bi-lightning-charge me-2"></i>اختصارات سريعة</h3>
-                    </div>
-                    <div class="card-body d-grid gap-2">
-                        <a asp-controller="Archive" asp-action="Index" class="btn btn-primary"><i class="bi bi-cloud-upload me-1"></i> رفع ملف</a>
-                        <a asp-controller="Archive" asp-action="Index" class="btn btn-outline-secondary"><i class="bi bi-folder-plus me-1"></i> مجلد جديد</a>
-                        <a asp-controller="Search" asp-action="Index" class="btn btn-outline-secondary"><i class="bi bi-search me-1"></i> بحث متقدم</a>
+            <div class="col-12 col-sm-6 col-md-3">
+                <div class="info-box">
+                    <span class="info-box-icon text-bg-info shadow-sm">
+                        <i class="bi bi-cloud-arrow-up-fill"></i>
+                    </span>
+                    <div class="info-box-content">
+                        <span class="info-box-text">مرفوع هذا الأسبوع</span>
+                        <span class="info-box-number">@Model.FilesUploadedThisWeek</span>
                     </div>
                 </div>
             </div>
         </div>
+
+        <!-- Expiring Contracts Alert if any -->
+        @if (Model.ExpiringContracts.Count > 0)
+        {
+            <div class="alert alert-warning alert-dismissible fade show d-flex align-items-center mb-4 shadow-sm" role="alert">
+                <i class="bi bi-exclamation-triangle-fill fs-3 me-3 text-warning"></i>
+                <div class="flex-grow-1">
+                    <h6 class="alert-heading fw-bold mb-1">تنبيهات العقود القادمة على الانتهاء (@Model.ExpiringContracts.Count عقود خلال 30 يوم)</h6>
+                    <div class="d-flex flex-wrap gap-3 small">
+                        @foreach (var c in Model.ExpiringContracts)
+                        {
+                            <span>
+                                <strong>@c.Name</strong> (ينتهي: @c.ExpiryDate?.ToString("yyyy-MM-dd")) — @(c.Department?.Name ?? "بدون قسم")
+                            </span>
+                        }
+                    </div>
+                </div>
+                <a asp-controller="Archive" asp-action="Index" asp-route-type="Contract" class="btn btn-sm btn-outline-dark fw-bold me-2">عرض العقود</a>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="إغلاق"></button>
+            </div>
+        }
+
+        <!-- Master Recap Card (AdminLTE index2 style) -->
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="card-title fw-bold"><i class="bi bi-pie-chart-fill me-2 text-primary"></i>التقرير الشامل لتوزيع مستندات الأرشيف</h5>
+
+                        <div class="card-tools">
+                            <button type="button" class="btn btn-tool" data-lte-toggle="card-collapse" aria-label="Collapse card">
+                                <i data-lte-icon="expand" class="bi bi-plus-lg"></i>
+                                <i data-lte-icon="collapse" class="bi bi-dash-lg"></i>
+                            </button>
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-tool dropdown-toggle" data-bs-toggle="dropdown" aria-label="خيارات">
+                                    <i class="bi bi-wrench"></i>
+                                </button>
+                                <div class="dropdown-menu dropdown-menu-end" role="menu">
+                                    <a asp-controller="Archive" asp-action="Index" class="dropdown-item">فتح مدير الملفات</a>
+                                    <a asp-controller="Reports" asp-action="Statistics" class="dropdown-item">تقرير الإحصائيات التفصيلي</a>
+                                    <a asp-controller="Reports" asp-action="Storage" class="dropdown-item">تقرير التخزين</a>
+                                    <div class="dropdown-divider"></div>
+                                    <a asp-controller="Reports" asp-action="ExportCsv" class="dropdown-item">تصدير CSV</a>
+                                </div>
+                            </div>
+                            <button type="button" class="btn btn-tool" data-lte-toggle="card-remove" aria-label="Remove card">
+                                <i class="bi bi-x-lg"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <!-- /.card-header -->
+                    <div class="card-body">
+                        <div class="row">
+                            <!-- Department overview -->
+                            <div class="col-md-7">
+                                <p class="text-center fw-bold mb-3">
+                                    <i class="bi bi-building me-1 text-primary"></i> نسبة المستندات والملفات موزعة حسب الأقسام
+                                </p>
+
+                                @if (Model.DepartmentDistribution.Count == 0)
+                                {
+                                    <p class="text-center text-muted py-4">لا توجد ملفات مرتبطة بأقسام حتى الآن.</p>
+                                }
+                                else
+                                {
+                                    @foreach (var dept in Model.DepartmentDistribution)
+                                    {
+                                        var pct = Model.TotalFiles > 0 ? Math.Round(((double)dept.Value / Model.TotalFiles) * 100, 1) : 0;
+                                        <div class="progress-group mb-3">
+                                            <span class="progress-text fw-semibold">@dept.Key</span>
+                                            <span class="float-end"><b>@dept.Value</b> / @Model.TotalFiles ملف (@pct%)</span>
+                                            <div class="progress progress-sm mt-1">
+                                                <div class="progress-bar text-bg-primary" style="width: @pct%"></div>
+                                            </div>
+                                        </div>
+                                    }
+                                }
+                            </div>
+                            <!-- /.col -->
+
+                            <!-- Right: Document Types Breakdown (Progress groups) -->
+                            <div class="col-md-5">
+                                <p class="text-center fw-bold mb-3">
+                                    <i class="bi bi-tags-fill me-1 text-success"></i> تصنيف المستندات حسب النوع
+                                </p>
+
+                                @{
+                                    var typeDetails = new Dictionary<HR.Models.DocumentType, (string Name, string ColorClass, string Icon)>
+                                    {
+                                        { HR.Models.DocumentType.General, ("عام (General)", "text-bg-secondary", "bi-file-earmark") },
+                                        { HR.Models.DocumentType.Official, ("مستندات رسمية (Official)", "text-bg-primary", "bi-file-earmark-check") },
+                                        { HR.Models.DocumentType.Contract, ("عقود واتفاقيات (Contract)", "text-bg-success", "bi-pen") },
+                                        { HR.Models.DocumentType.Correspondence, ("مراسلات وخطابات (Correspondence)", "text-bg-info", "bi-envelope-paper") },
+                                        { HR.Models.DocumentType.Invoice, ("فواتير ومطالبات (Invoice)", "text-bg-warning", "bi-receipt") }
+                                    };
+                                }
+
+                                @foreach (var kvp in Model.DocumentTypeDistribution)
+                                {
+                                    if (!typeDetails.TryGetValue(kvp.Key, out var info))
+                                    {
+                                        info = ("عام", "text-bg-secondary", "bi-file-earmark");
+                                    }
+                                    var pct = Model.TotalFiles > 0 ? Math.Round(((double)kvp.Value / Model.TotalFiles) * 100, 1) : 0;
+                                    <div class="progress-group mb-2">
+                                        <span class="progress-text small"><i class="bi @info.Icon me-1"></i> @info.Name</span>
+                                        <span class="float-end small"><b>@kvp.Value</b> (@pct%)</span>
+                                        <div class="progress progress-sm mt-1">
+                                            <div class="progress-bar @info.ColorClass" style="width: @pct%"></div>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                            <!-- /.col -->
+                        </div>
+                    </div>
+                    <!-- ./card-body -->
+
+                    <!-- Card Footer: Stats columns (AdminLTE index2 style) -->
+                    <div class="card-footer bg-body">
+                        <div class="row">
+                            <div class="col-md-3 col-6">
+                                <div class="text-center">
+                                    <span class="text-primary-emphasis"><i class="bi bi-file-earmark-text"></i> المستندات</span>
+                                    <h4 class="fw-bold mb-0 text-primary">@Model.TotalFiles</h4>
+                                    <span class="text-uppercase text-secondary fs-8">إجمالي الملفات</span>
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-6">
+                                <div class="text-center">
+                                    <span class="text-warning-emphasis"><i class="bi bi-folder"></i> المجلدات</span>
+                                    <h4 class="fw-bold mb-0 text-warning">@Model.TotalFolders</h4>
+                                    <span class="text-uppercase text-secondary fs-8">مجلدات الأرشيف</span>
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-6">
+                                <div class="text-center">
+                                    <span class="text-success-emphasis"><i class="bi bi-hdd"></i> التخزين</span>
+                                    <h4 class="fw-bold mb-0 text-success">@Math.Round(Model.StorageUsedBytes / (1024.0 * 1024 * 1024), 2) GB</h4>
+                                    <span class="text-uppercase text-secondary fs-8">المساحة المستخدمة (@Model.StoragePercentage%)</span>
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-6">
+                                <div class="text-center">
+                                    <span class="text-info-emphasis"><i class="bi bi-building"></i> الأقسام النشطة</span>
+                                    <h4 class="fw-bold mb-0 text-info">@Model.TotalDepartments</h4>
+                                    <span class="text-uppercase text-secondary fs-8">الأقسام المرتبطة</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /.card-footer -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Lower Row: Latest Files Table Card & Right-Side Colored Info-Boxes + Activity Logs -->
+        <div class="row">
+            <!-- Left: Latest Files (Table Card style) -->
+            <div class="col-md-8">
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h3 class="card-title fw-bold"><i class="bi bi-clock-history me-2 text-primary"></i>أحدث الملفات المرفوعة للأرشيف</h3>
+
+                        <div class="card-tools">
+                            <button type="button" class="btn btn-tool" data-lte-toggle="card-collapse" aria-label="Collapse card">
+                                <i data-lte-icon="expand" class="bi bi-plus-lg"></i>
+                                <i data-lte-icon="collapse" class="bi bi-dash-lg"></i>
+                            </button>
+                            <button type="button" class="btn btn-tool" data-lte-toggle="card-remove" aria-label="Remove card">
+                                <i class="bi bi-x-lg"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <!-- /.card-header -->
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table align-middle m-0 table-hover small">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>اسم الملف</th>
+                                        <th>نوع المستند</th>
+                                        <th>القسم</th>
+                                        <th>الحجم</th>
+                                        <th>تاريخ الرفع</th>
+                                        <th class="text-end">تحميل</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if (Model.RecentFiles.Count == 0)
+                                    {
+                                        <tr>
+                                            <td colspan="6" class="text-center py-4 text-muted">لا توجد ملفات مضافة مؤخراً.</td>
+                                        </tr>
+                                    }
+                                    @foreach (var file in Model.RecentFiles)
+                                    {
+                                        var badgeColor = file.DocumentType switch
+                                        {
+                                            HR.Models.DocumentType.Official => "text-bg-primary",
+                                            HR.Models.DocumentType.Contract => "text-bg-success",
+                                            HR.Models.DocumentType.Correspondence => "text-bg-info",
+                                            HR.Models.DocumentType.Invoice => "text-bg-warning",
+                                            _ => "text-bg-secondary"
+                                        };
+
+                                        <tr>
+                                            <td>
+                                                <a asp-controller="Archive" asp-action="DownloadFile" asp-route-id="@file.Id" class="fw-bold text-decoration-none">
+                                                    <i class="bi bi-file-earmark-text text-primary me-1"></i>@file.Name
+                                                </a>
+                                            </td>
+                                            <td><span class="badge @badgeColor">@file.DocumentType</span></td>
+                                            <td>@(file.Department?.Name ?? "عام")</td>
+                                            <td>@Math.Round(file.SizeBytes / 1024.0, 1) KB</td>
+                                            <td class="text-muted">@file.CreatedAt.ToString("MM/dd HH:mm")</td>
+                                            <td class="text-end">
+                                                <a asp-controller="Archive" asp-action="DownloadFile" asp-route-id="@file.Id" class="btn btn-sm btn-outline-primary py-0 px-2">
+                                                    <i class="bi bi-download"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <!-- /.card-body -->
+                    <div class="card-footer bg-body clearfix">
+                        <a asp-controller="Archive" asp-action="Index" class="btn btn-sm btn-primary float-start">
+                            <i class="bi bi-cloud-upload me-1"></i> رفع ملفات جديدة
+                        </a>
+                        <a asp-controller="Recent" asp-action="Index" class="btn btn-sm btn-secondary float-end">
+                            عرض جميع الملفات الأخيرة
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <!-- /.col -->
+
+            <!-- Right Column: Info Boxes Style 2 (Full background) + Activity Logs Card -->
+            <div class="col-md-4">
+                <!-- Info Boxes Style 2 (from index2.html) -->
+                <div class="info-box mb-3 text-bg-warning">
+                    <span class="info-box-icon"><i class="bi bi-tags-fill"></i></span>
+                    <div class="info-box-content">
+                        <span class="info-box-text">التصنيفات المعتمدة</span>
+                        <span class="info-box-number">@Model.TotalCategories تصنيف</span>
+                    </div>
+                </div>
+
+                <div class="info-box mb-3 text-bg-success">
+                    <span class="info-box-icon"><i class="bi bi-pen-fill"></i></span>
+                    <div class="info-box-content">
+                        <span class="info-box-text">العقود والاتفاقيات</span>
+                        <span class="info-box-number">@(Model.DocumentTypeDistribution.ContainsKey(HR.Models.DocumentType.Contract) ? Model.DocumentTypeDistribution[HR.Models.DocumentType.Contract] : 0) عقد</span>
+                    </div>
+                </div>
+
+                <div class="info-box mb-3 text-bg-info">
+                    <span class="info-box-icon"><i class="bi bi-receipt-cutoff"></i></span>
+                    <div class="info-box-content">
+                        <span class="info-box-text">الفواتير والمطالبات</span>
+                        <span class="info-box-number">@(Model.DocumentTypeDistribution.ContainsKey(HR.Models.DocumentType.Invoice) ? Model.DocumentTypeDistribution[HR.Models.DocumentType.Invoice] : 0) فاتورة</span>
+                    </div>
+                </div>
+
+                <!-- Activity Log Card -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h3 class="card-title fw-bold"><i class="bi bi-journal-text me-1 text-primary"></i>سجل العمليات الأخير</h3>
+
+                        <div class="card-tools">
+                            <button type="button" class="btn btn-tool" data-lte-toggle="card-collapse" aria-label="Collapse card">
+                                <i data-lte-icon="expand" class="bi bi-plus-lg"></i>
+                                <i data-lte-icon="collapse" class="bi bi-dash-lg"></i>
+                            </button>
+                            <button type="button" class="btn btn-tool" data-lte-toggle="card-remove" aria-label="Remove card">
+                                <i class="bi bi-x-lg"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="list-group list-group-flush small">
+                            @if (Model.RecentActivityLogs.Count == 0)
+                            {
+                                <div class="text-center py-4 text-muted">لا توجد أنشطة مسجلة بعد.</div>
+                            }
+                            @foreach (var log in Model.RecentActivityLogs)
+                            {
+                                <div class="list-group-item d-flex justify-content-between align-items-start py-2">
+                                    <div>
+                                        <span class="fw-bold">@log.UserName</span>:
+                                        <span class="badge text-bg-primary me-1">@log.Action</span>
+                                        <span class="text-secondary">@log.ItemName</span>
+                                    </div>
+                                    <small class="text-muted ms-2 text-nowrap">@log.CreatedAt.ToString("HH:mm")</small>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                    <div class="card-footer bg-body text-center">
+                        <a asp-controller="Reports" asp-action="AuditLogs" class="link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover small fw-bold">
+                            عرض سجل التدقيق الكامل
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <!-- /.col -->
+        </div>
+
     </div>
 </div>

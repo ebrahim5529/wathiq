@@ -120,9 +120,29 @@
 .app-sidebar .sidebar-brand {
   background: #fff;
   border-bottom: 3px solid var(--wathiq-orange);
+  height: auto;
+  min-height: 3.5rem;
+  padding: 0;
 }
 .app-sidebar .brand-link {
   background: #fff;
+}
+.app-sidebar .brand-link.wathiq-brand-link {
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: 0;
+}
+.wathiq-brand-logo {
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+}
+.sidebar-mini.sidebar-collapse .app-sidebar:not(:hover) .wathiq-brand-logo {
+  object-fit: cover;
+  object-position: left center;
+  height: 2.5rem;
 }
 .sidebar-wrapper .nav-header {
   color: var(--wathiq-orange-light) !important;

@@ -1,200 +1,255 @@
+@model IEnumerable<HR.Models.AppUser>
 @{
-    ViewData["Title"] = "المستخدمون";
-    ViewData["Nav"] = "users";
+    ViewData["Title"] = "إدارة المستخدمين";
+    var departments = ViewBag.Departments as List<HR.Models.Department> ?? new();
+    var roles = ViewBag.Roles as List<HR.Models.AppRole> ?? new();
 }
-@await Html.PartialAsync("_PageHeader", "المستخدمون")
+
+<div class="app-content-header">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-6">
+                <h1 class="mb-0 fs-3 fw-bold">إدارة مستخدمي النظام</h1>
+            </div>
+            <div class="col-sm-6">
+                <div class="float-sm-end">
+                    <button class="btn btn-primary btn-sm" type="button" data-bs-toggle="modal" data-bs-target="#newUserModal">
+                        <i class="bi bi-person-plus me-1"></i> إضافة مستخدم جديد
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 <div class="app-content">
     <div class="container-fluid">
-        <div class="card">
-            <div class="card-header d-flex flex-wrap gap-2 justify-content-between align-items-center">
-                <h3 class="card-title"><i class="bi bi-people me-2"></i>حسابات المستخدمين</h3>
-                <div class="d-flex gap-2">
-                    <div class="input-group input-group-sm" style="width: 14rem">
-                        <span class="input-group-text"><i class="bi bi-search"></i></span>
-                        <input type="search" class="form-control" placeholder="بحث عن مستخدم…" aria-label="بحث" />
-                    </div>
-                    <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#user-modal">
-                        <i class="bi bi-person-plus me-1"></i> مستخدم جديد
+        <div class="card mb-4">
+            <div class="card-header">
+                <h3 class="card-title fw-bold"><i class="bi bi-people-fill me-2 text-primary"></i>قائمة المستخدمين وصلاحياتهم</h3>
+
+                <div class="card-tools">
+                    <span class="badge text-bg-primary me-2">@Model.Count() مستخدم</span>
+                    <button type="button" class="btn btn-tool" data-lte-toggle="card-collapse" aria-label="Collapse card">
+                        <i data-lte-icon="expand" class="bi bi-plus-lg"></i>
+                        <i data-lte-icon="collapse" class="bi bi-dash-lg"></i>
+                    </button>
+                    <button type="button" class="btn btn-tool" data-lte-toggle="card-remove" aria-label="Remove card">
+                        <i class="bi bi-x-lg"></i>
                     </button>
                 </div>
             </div>
             <div class="card-body p-0">
                 <div class="table-responsive">
-                    <table class="table table-striped align-middle mb-0">
-                        <thead>
+                    <table class="table table-hover align-middle m-0 small">
+                        <thead class="table-light">
                             <tr>
                                 <th>الاسم الكامل</th>
-                                <th>البريد / اسم الدخول</th>
+                                <th>اسم الدخول</th>
+                                <th>البريد الإلكتروني</th>
+                                <th>الدور الوظيفي</th>
                                 <th>القسم</th>
-                                <th>الأدوار</th>
                                 <th>الحالة</th>
-                                <th>آخر دخول</th>
-                                <th class="text-end">إجراءات</th>
+                                <th>تاريخ التسجيل</th>
+                                <th class="text-end">الإجراءات</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td>
-                                    <div class="d-flex align-items-center gap-2">
-                                        <span class="badge rounded-circle text-bg-primary p-2">أ</span>
-                                        أحمد العلي
-                                    </div>
-                                </td>
-                                <td>ahmed@hr.local</td>
-                                <td>المشتريات</td>
-                                <td><span class="badge text-bg-danger">مدير النظام</span></td>
-                                <td><span class="badge text-bg-success">نشط</span></td>
-                                <td>اليوم 10:42 ص</td>
-                                <td class="text-end">
-                                    <div class="d-inline-flex gap-1">
-                                        <button class="btn btn-sm btn-outline-secondary" title="تعديل" data-bs-toggle="modal" data-bs-target="#user-modal"><i class="bi bi-pencil"></i></button>
-                                        <button class="btn btn-sm btn-outline-warning" title="إعادة تعيين كلمة المرور"><i class="bi bi-key"></i></button>
-                                        <button class="btn btn-sm btn-outline-danger" title="تعطيل"><i class="bi bi-lock"></i></button>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <div class="d-flex align-items-center gap-2">
-                                        <span class="badge rounded-circle text-bg-success p-2">س</span>
-                                        سارة محمد
-                                    </div>
-                                </td>
-                                <td>sara@hr.local</td>
-                                <td>الموارد البشرية</td>
-                                <td><span class="badge text-bg-primary">أمين الأرشيف</span></td>
-                                <td><span class="badge text-bg-success">نشط</span></td>
-                                <td>اليوم 10:38 ص</td>
-                                <td class="text-end">
-                                    <div class="d-inline-flex gap-1">
-                                        <button class="btn btn-sm btn-outline-secondary" title="تعديل" data-bs-toggle="modal" data-bs-target="#user-modal"><i class="bi bi-pencil"></i></button>
-                                        <button class="btn btn-sm btn-outline-warning" title="إعادة تعيين كلمة المرور"><i class="bi bi-key"></i></button>
-                                        <button class="btn btn-sm btn-outline-danger" title="تعطيل"><i class="bi bi-lock"></i></button>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <div class="d-flex align-items-center gap-2">
-                                        <span class="badge rounded-circle text-bg-info p-2">خ</span>
-                                        خالد يوسف
-                                    </div>
-                                </td>
-                                <td>khaled@hr.local</td>
-                                <td>المالية</td>
-                                <td><span class="badge text-bg-info">مشرف قسم</span></td>
-                                <td><span class="badge text-bg-success">نشط</span></td>
-                                <td>اليوم 09:55 ص</td>
-                                <td class="text-end">
-                                    <div class="d-inline-flex gap-1">
-                                        <button class="btn btn-sm btn-outline-secondary" title="تعديل" data-bs-toggle="modal" data-bs-target="#user-modal"><i class="bi bi-pencil"></i></button>
-                                        <button class="btn btn-sm btn-outline-warning" title="إعادة تعيين كلمة المرور"><i class="bi bi-key"></i></button>
-                                        <button class="btn btn-sm btn-outline-danger" title="تعطيل"><i class="bi bi-lock"></i></button>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <div class="d-flex align-items-center gap-2">
-                                        <span class="badge rounded-circle text-bg-warning p-2">ل</span>
-                                        ليلى حسن
-                                    </div>
-                                </td>
-                                <td>laila@hr.local</td>
-                                <td>تقنية المعلومات</td>
-                                <td><span class="badge text-bg-secondary">مستخدم</span></td>
-                                <td><span class="badge text-bg-success">نشط</span></td>
-                                <td>أمس 04:20 م</td>
-                                <td class="text-end">
-                                    <div class="d-inline-flex gap-1">
-                                        <button class="btn btn-sm btn-outline-secondary" title="تعديل" data-bs-toggle="modal" data-bs-target="#user-modal"><i class="bi bi-pencil"></i></button>
-                                        <button class="btn btn-sm btn-outline-warning" title="إعادة تعيين كلمة المرور"><i class="bi bi-key"></i></button>
-                                        <button class="btn btn-sm btn-outline-danger" title="تعطيل"><i class="bi bi-lock"></i></button>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <div class="d-flex align-items-center gap-2">
-                                        <span class="badge rounded-circle text-bg-secondary p-2">ع</span>
-                                        عمر سالم
-                                    </div>
-                                </td>
-                                <td>omar@hr.local</td>
-                                <td>الإدارة العليا</td>
-                                <td><span class="badge text-bg-dark">ضيف / قراءة فقط</span></td>
-                                <td><span class="badge text-bg-secondary">معطّل</span></td>
-                                <td>2026/10/12</td>
-                                <td class="text-end">
-                                    <div class="d-inline-flex gap-1">
-                                        <button class="btn btn-sm btn-outline-secondary" title="تعديل" data-bs-toggle="modal" data-bs-target="#user-modal"><i class="bi bi-pencil"></i></button>
-                                        <button class="btn btn-sm btn-outline-success" title="تفعيل"><i class="bi bi-unlock"></i></button>
-                                    </div>
-                                </td>
-                            </tr>
+                            @foreach (var user in Model)
+                            {
+                                var roleBadge = user.Role switch
+                                {
+                                    "Admin" => "text-bg-danger",
+                                    "Archivist" => "text-bg-primary",
+                                    "DeptSupervisor" => "text-bg-warning",
+                                    "Employee" => "text-bg-info",
+                                    _ => "text-bg-secondary"
+                                };
+
+                                var roleName = user.Role switch
+                                {
+                                    "Admin" => "مدير النظام",
+                                    "Archivist" => "أمين الأرشيف",
+                                    "DeptSupervisor" => "مشرف قسم",
+                                    "Employee" => "موظف",
+                                    "Guest" => "زائر / قراءة فقط",
+                                    _ => user.Role
+                                };
+
+                                <tr>
+                                    <td class="fw-bold">
+                                        <i class="bi bi-person-circle text-secondary me-2 fs-5"></i>@user.FullName
+                                    </td>
+                                    <td><code>@user.Username</code></td>
+                                    <td>@user.Email</td>
+                                    <td><span class="badge @roleBadge">@roleName</span></td>
+                                    <td>@(user.Department?.Name ?? "—")</td>
+                                    <td>
+                                        @if (user.IsActive)
+                                        {
+                                            <span class="badge text-bg-success">نشط</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge text-bg-danger">معطل</span>
+                                        }
+                                    </td>
+                                    <td class="text-muted">@user.CreatedAt.ToString("yyyy-MM-dd")</td>
+                                    <td class="text-end">
+                                        <div class="btn-group btn-group-sm">
+                                            <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#editUserModal"
+                                                    data-id="@user.Id" data-name="@user.FullName" data-email="@user.Email" data-role="@user.Role" data-dept="@user.DepartmentId" data-active="@user.IsActive.ToString().ToLower()">
+                                                <i class="bi bi-pencil"></i>
+                                            </button>
+                                            <form method="post" asp-action="ToggleStatus" asp-route-id="@user.Id" class="d-inline">
+                                                @Html.AntiForgeryToken()
+                                                <button type="submit" class="btn btn-outline-warning" title="@(user.IsActive ? "تعطيل الحساب" : "تفعيل الحساب")">
+                                                    <i class="bi @(user.IsActive ? "bi-person-x" : "bi-person-check")"></i>
+                                                </button>
+                                            </form>
+                                            <form method="post" asp-action="Delete" asp-route-id="@user.Id" onsubmit="return confirm('هل تريد حذف هذا المستخدم؟');" class="d-inline">
+                                                @Html.AntiForgeryToken()
+                                                <button type="submit" class="btn btn-outline-danger" title="حذف">
+                                                    <i class="bi bi-trash"></i>
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
                         </tbody>
                     </table>
                 </div>
             </div>
-            <div class="card-footer text-secondary small">5 مستخدمين · آخر تحديث للقائمة اليوم</div>
+            <div class="card-footer bg-body clearfix">
+                <span class="text-secondary small">إجمالي حسابات المستخدمين: @Model.Count()</span>
+            </div>
         </div>
     </div>
 </div>
 
-<div class="modal fade" id="user-modal" tabindex="-1" aria-labelledby="user-modal-title" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-centered">
-        <div class="modal-content">
+<!-- Modal: New User -->
+<div class="modal fade" id="newUserModal" tabindex="-1" aria-labelledby="newUserModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <form method="post" asp-action="Create" class="modal-content">
+            @Html.AntiForgeryToken()
             <div class="modal-header">
-                <h5 class="modal-title" id="user-modal-title"><i class="bi bi-person-gear me-2"></i>بيانات المستخدم</h5>
+                <h5 class="modal-title" id="newUserModalLabel"><i class="bi bi-person-plus text-primary me-2"></i>إضافة مستخدم جديد</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="إغلاق"></button>
             </div>
             <div class="modal-body">
-                <div class="row g-3">
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">الاسم الكامل <span class="text-danger">*</span></label>
+                    <input type="text" name="FullName" class="form-control" required />
+                </div>
+                <div class="row g-2 mb-3">
                     <div class="col-md-6">
-                        <label class="form-label" for="user-name">الاسم الكامل <span class="text-danger">*</span></label>
-                        <input type="text" class="form-control" id="user-name" placeholder="الاسم الكامل" />
+                        <label class="form-label fw-semibold">اسم الدخول (Username) <span class="text-danger">*</span></label>
+                        <input type="text" name="Username" class="form-control" required />
                     </div>
                     <div class="col-md-6">
-                        <label class="form-label" for="user-email">البريد / اسم الدخول <span class="text-danger">*</span></label>
-                        <input type="email" class="form-control" id="user-email" placeholder="name@hr.local" />
+                        <label class="form-label fw-semibold">البريد الإلكتروني <span class="text-danger">*</span></label>
+                        <input type="email" name="Email" class="form-control" required />
                     </div>
+                </div>
+                <div class="row g-2 mb-3">
                     <div class="col-md-6">
-                        <label class="form-label" for="user-dept">القسم</label>
-                        <select class="form-select" id="user-dept">
-                            <option value="">بدون قسم</option>
-                            <option>الموارد البشرية</option>
-                            <option>المالية</option>
-                            <option>المشتريات</option>
-                            <option>تقنية المعلومات</option>
+                        <label class="form-label fw-semibold">الدور والصلاحية <span class="text-danger">*</span></label>
+                        <select name="Role" class="form-select" required>
+                            <option value="Admin">مدير النظام (Admin)</option>
+                            <option value="Archivist">أمين الأرشيف (Archivist)</option>
+                            <option value="DeptSupervisor">مشرف قسم (DeptSupervisor)</option>
+                            <option value="Employee" selected>موظف (Employee)</option>
+                            <option value="Guest">زائر (Guest)</option>
                         </select>
                     </div>
                     <div class="col-md-6">
-                        <label class="form-label" for="user-role">الأدوار</label>
-                        <select class="form-select" id="user-role" multiple size="4">
-                            <option>مدير النظام</option>
-                            <option>أمين الأرشيف</option>
-                            <option>مشرف قسم</option>
-                            <option selected>مستخدم</option>
-                            <option>ضيف / قراءة فقط</option>
+                        <label class="form-label">القسم</label>
+                        <select name="DepartmentId" class="form-select">
+                            <option value="">-- اختياري --</option>
+                            @foreach (var dept in departments)
+                            {
+                                <option value="@dept.Id">@dept.Name</option>
+                            }
                         </select>
-                    </div>
-                    <div class="col-md-6">
-                        <label class="form-label" for="user-pass">كلمة المرور</label>
-                        <input type="password" class="form-control" id="user-pass" placeholder="اتركها فارغة عند عدم التغيير" />
-                    </div>
-                    <div class="col-md-6 d-flex align-items-center">
-                        <div class="form-check form-switch mt-4">
-                            <input class="form-check-input" type="checkbox" role="switch" id="user-active" checked />
-                            <label class="form-check-label" for="user-active">الحساب نشط</label>
-                        </div>
                     </div>
                 </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
-                <button type="button" class="btn btn-primary"><i class="bi bi-check-lg me-1"></i> حفظ</button>
+                <button type="submit" class="btn btn-primary"><i class="bi bi-check2 me-1"></i> حفظ المستخدم</button>
             </div>
-        </div>
+        </form>
     </div>
 </div>
+
+<!-- Modal: Edit User -->
+<div class="modal fade" id="editUserModal" tabindex="-1" aria-labelledby="editUserModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <form method="post" asp-action="Edit" class="modal-content">
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="Id" id="editUserId" />
+            <div class="modal-header">
+                <h5 class="modal-title" id="editUserModalLabel"><i class="bi bi-pencil text-primary me-2"></i>تعديل بيانات المستخدم</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="إغلاق"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">الاسم الكامل <span class="text-danger">*</span></label>
+                    <input type="text" name="FullName" id="editUserFullName" class="form-control" required />
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">البريد الإلكتروني <span class="text-danger">*</span></label>
+                    <input type="email" name="Email" id="editUserEmail" class="form-control" required />
+                </div>
+                <div class="row g-2 mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">الدور والصلاحية</label>
+                        <select name="Role" id="editUserRole" class="form-select" required>
+                            <option value="Admin">مدير النظام (Admin)</option>
+                            <option value="Archivist">أمين الأرشيف (Archivist)</option>
+                            <option value="DeptSupervisor">مشرف قسم (DeptSupervisor)</option>
+                            <option value="Employee">موظف (Employee)</option>
+                            <option value="Guest">زائر (Guest)</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">القسم</label>
+                        <select name="DepartmentId" id="editUserDept" class="form-select">
+                            <option value="">-- اختياري --</option>
+                            @foreach (var dept in departments)
+                            {
+                                <option value="@dept.Id">@dept.Name</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" name="IsActive" value="true" id="editUserActive" />
+                    <label class="form-check-label" for="editUserActive">حساب نشط ومفعّل</label>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
+                <button type="submit" class="btn btn-primary"><i class="bi bi-check2 me-1"></i> حفظ التعديلات</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        const editUserModal = document.getElementById('editUserModal');
+        if (editUserModal) {
+            editUserModal.addEventListener('show.bs.modal', function (event) {
+                const btn = event.relatedTarget;
+                document.getElementById('editUserId').value = btn.getAttribute('data-id');
+                document.getElementById('editUserFullName').value = btn.getAttribute('data-name');
+                document.getElementById('editUserEmail').value = btn.getAttribute('data-email');
+                document.getElementById('editUserRole').value = btn.getAttribute('data-role');
+                document.getElementById('editUserDept').value = btn.getAttribute('data-dept') || '';
+                document.getElementById('editUserActive').checked = btn.getAttribute('data-active') === 'true';
+            });
+        }
+    </script>
+}

@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace HR.Models;
 
@@ -37,6 +38,24 @@ public class ArchiveFile
     [MaxLength(1000)]
     public string? Description { get; set; }
 
+    [MaxLength(255)]
+    public string? Party { get; set; }
+
+    public DateTime? DocumentDate { get; set; }
+
+    public DateTime? ExpiryDate { get; set; }
+
+    [Column(TypeName = "decimal(18,2)")]
+    public decimal? Amount { get; set; }
+
+    [MaxLength(20)]
+    public string? Currency { get; set; } = "SAR";
+
+    [MaxLength(255)]
+    public string? Tags { get; set; }
+
+    public bool IsFavorite { get; set; }
+
     [MaxLength(100)]
     public string? CreatedBy { get; set; }
 
@@ -45,4 +64,6 @@ public class ArchiveFile
 
     public bool IsDeleted { get; set; }
     public DateTime? DeletedAt { get; set; }
+
+    public ICollection<ArchiveShare> Shares { get; set; } = new List<ArchiveShare>();
 }
