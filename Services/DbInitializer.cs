@@ -13,11 +13,13 @@ public class DbInitializer : IDbInitializer
 {
     private readonly ApplicationDbContext _db;
     private readonly ILogger<DbInitializer> _logger;
+    private readonly IPasswordHasher _passwordHasher;
 
-    public DbInitializer(ApplicationDbContext db, ILogger<DbInitializer> logger)
+    public DbInitializer(ApplicationDbContext db, ILogger<DbInitializer> logger, IPasswordHasher passwordHasher)
     {
         _db = db;
         _logger = logger;
+        _passwordHasher = passwordHasher;
     }
 
     public async Task SeedAsync()
@@ -65,11 +67,32 @@ public class DbInitializer : IDbInitializer
                 if (!await _db.AppUsers.AnyAsync())
                 {
                     _db.AppUsers.AddRange(
-                        new AppUser { Username = "admin", FullName = "عبدالرحمن الماجد (مدير النظام)", Email = "admin@wathiq.local", Role = "Admin", DepartmentId = it.Id, IsActive = true },
-                        new AppUser { Username = "archivist", FullName = "سارة السليمان (أمينة الأرشيف)", Email = "sarah@wathiq.local", Role = "Archivist", DepartmentId = hr.Id, IsActive = true },
-                        new AppUser { Username = "legal_head", FullName = "خالد العتيبي (مستشار قانوني)", Email = "khaled@wathiq.local", Role = "DeptSupervisor", DepartmentId = legal.Id, IsActive = true },
-                        new AppUser { Username = "finance_user", FullName = "محمد الشمري (محاسب)", Email = "mohammed@wathiq.local", Role = "Employee", DepartmentId = finance.Id, IsActive = true }
+                        new AppUser { Username = "admin", FullName = "عبدالرحمن الماجد (مدير النظام)", Email = "admin@wathiq.local", PasswordHash = _passwordHasher.HashPassword("admin123"), Role = "Admin", DepartmentId = it.Id, IsActive = true },
+                        new AppUser { Username = "archivist", FullName = "سارة السليمان (أمينة الأرشيف)", Email = "sarah@wathiq.local", PasswordHash = _passwordHasher.HashPassword("archivist123"), Role = "Archivist", DepartmentId = hr.Id, IsActive = true },
+                        new AppUser { Username = "legal_head", FullName = "خالد العتيبي (مستشار قانوني)", Email = "khaled@wathiq.local", PasswordHash = _passwordHasher.HashPassword("legal123"), Role = "DeptSupervisor", DepartmentId = legal.Id, IsActive = true },
+                        new AppUser { Username = "finance_user", FullName = "محمد الشمري (محاسب)", Email = "mohammed@wathiq.local", PasswordHash = _passwordHasher.HashPassword("finance123"), Role = "Employee", DepartmentId = finance.Id, IsActive = true }
                     );
+                }
+                else
+                {
+                    // Ensure existing users without password have passwords set
+                    var usersWithoutPassword = await _db.AppUsers.Where(u => string.IsNullOrEmpty(u.PasswordHash)).ToListAsync();
+                    foreach (var u in usersWithoutPassword)
+                    {
+                        var defaultPass = u.Username switch
+                        {
+                            "admin" => "admin123",
+                            "archivist" => "archivist123",
+                            "legal_head" => "legal123",
+                            "finance_user" => "finance123",
+                            _ => $"{u.Username}123"
+                        };
+                        u.PasswordHash = _passwordHasher.HashPassword(defaultPass);
+                    }
+                    if (usersWithoutPassword.Any())
+                    {
+                        await _db.SaveChangesAsync();
+                    }
                 }
 
                 // Seed Categories

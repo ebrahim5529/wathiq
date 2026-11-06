@@ -10,11 +10,13 @@ public class UsersController : Controller
 {
     private readonly ApplicationDbContext _db;
     private readonly IAuditLogService _audit;
+    private readonly IPasswordHasher _passwordHasher;
 
-    public UsersController(ApplicationDbContext db, IAuditLogService audit)
+    public UsersController(ApplicationDbContext db, IAuditLogService audit, IPasswordHasher passwordHasher)
     {
         _db = db;
         _audit = audit;
+        _passwordHasher = passwordHasher;
     }
 
     // GET: /Users
@@ -34,11 +36,17 @@ public class UsersController : Controller
     // POST: /Users/Create
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create(AppUser user)
+    public async Task<IActionResult> Create(AppUser user, string? password)
     {
         if (string.IsNullOrWhiteSpace(user.Username) || string.IsNullOrWhiteSpace(user.FullName) || string.IsNullOrWhiteSpace(user.Email))
         {
             TempData["Error"] = "جميع الحقول الأساسية مطلوبة.";
+            return RedirectToAction(nameof(Index));
+        }
+
+        if (string.IsNullOrWhiteSpace(password) || password.Length < 6)
+        {
+            TempData["Error"] = "كلمة المرور مطلوبة ويجب ألا تقل عن 6 أحرف.";
             return RedirectToAction(nameof(Index));
         }
 
@@ -57,19 +65,20 @@ public class UsersController : Controller
             return RedirectToAction(nameof(Index));
         }
 
+        user.PasswordHash = _passwordHasher.HashPassword(password);
         user.CreatedAt = DateTime.UtcNow;
         _db.AppUsers.Add(user);
         await _db.SaveChangesAsync();
 
         await _audit.LogAsync("إنشاء مستخدم", "User", user.Id, user.FullName, $"تم إنشاء حساب المستخدم {user.Username} بدور {user.Role}");
-        TempData["Success"] = $"تم إنشاء حساب المستخدم '{user.FullName}' بنجاح.";
+        TempData["Success"] = $"تم إنشاء حساب المستخدم '{user.FullName}' بنجاح مع تعيين كلمة المرور.";
         return RedirectToAction(nameof(Index));
     }
 
     // POST: /Users/Edit
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Edit(AppUser user)
+    public async Task<IActionResult> Edit(AppUser user, string? newPassword)
     {
         var existing = await _db.AppUsers.FindAsync(user.Id);
         if (existing == null)
@@ -84,9 +93,45 @@ public class UsersController : Controller
         existing.DepartmentId = user.DepartmentId;
         existing.IsActive = user.IsActive;
 
+        if (!string.IsNullOrWhiteSpace(newPassword))
+        {
+            if (newPassword.Length < 6)
+            {
+                TempData["Error"] = "كلمة المرور الجديدة يجب ألا تقل عن 6 أحرف.";
+                return RedirectToAction(nameof(Index));
+            }
+            existing.PasswordHash = _passwordHasher.HashPassword(newPassword);
+        }
+
         await _db.SaveChangesAsync();
         await _audit.LogAsync("تعديل مستخدم", "User", existing.Id, existing.FullName, $"تم تحديث بيانات المستخدم {existing.Username}");
         TempData["Success"] = $"تم تحديث بيانات المستخدم '{existing.FullName}' بنجاح.";
+        return RedirectToAction(nameof(Index));
+    }
+
+    // POST: /Users/ResetPassword
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> ResetPassword(int id, string newPassword)
+    {
+        if (string.IsNullOrWhiteSpace(newPassword) || newPassword.Length < 6)
+        {
+            TempData["Error"] = "كلمة المرور يجب ألا تقل عن 6 أحرف.";
+            return RedirectToAction(nameof(Index));
+        }
+
+        var user = await _db.AppUsers.FindAsync(id);
+        if (user == null)
+        {
+            TempData["Error"] = "المستخدم غير موجود.";
+            return RedirectToAction(nameof(Index));
+        }
+
+        user.PasswordHash = _passwordHasher.HashPassword(newPassword);
+        await _db.SaveChangesAsync();
+
+        await _audit.LogAsync("إعادة تعيين كلمة مرور", "User", user.Id, user.FullName, $"تمت إعادة تعيين كلمة مرور المستخدم {user.Username}");
+        TempData["Success"] = $"تمت إعادة تعيين كلمة مرور المستخدم '{user.FullName}' بنجاح.";
         return RedirectToAction(nameof(Index));
     }
 

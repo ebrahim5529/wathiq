@@ -1,0 +1,31 @@
+@{
+    ViewData["Title"] = "غير مصرح بالدخول";
+}
+
+<div class="app-content-header">
+    <div class="container-fluid">
+        <h1 class="mb-0 fs-3 fw-bold text-danger"><i class="bi bi-shield-x me-2"></i>غير مصرح بالدخول</h1>
+    </div>
+</div>
+
+<div class="app-content">
+    <div class="container-fluid">
+        <div class="card shadow-sm border-0 text-center py-5">
+            <div class="card-body">
+                <i class="bi bi-shield-lock display-1 text-danger mb-3"></i>
+                <h4 class="fw-bold">ليس لديك صلاحية للوصول إلى هذه الصفحة</h4>
+                <p class="text-secondary small mb-4">
+                    حسابك الحالي لا يمتلك الصلاحيات الكافية لتنفيذ هذا الإجراء أو عرض هذا المحتوى.
+                </p>
+                <div class="d-flex justify-content-center gap-2">
+                    <a asp-controller="Dashboard" asp-action="Index" class="btn btn-primary">
+                        <i class="bi bi-speedometer2 me-1"></i> العودة للوحة المؤشرات
+                    </a>
+                    <a asp-controller="Archive" asp-action="Index" class="btn btn-outline-secondary">
+                        <i class="bi bi-folder2-open me-1"></i> مدير الملفات
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

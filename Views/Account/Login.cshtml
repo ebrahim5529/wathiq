@@ -1,0 +1,199 @@
+@model HR.ViewModels.LoginViewModel
+@{
+    ViewData["Title"] = "تسجيل الدخول";
+    Layout = null;
+}
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="utf-8" />
+    <title>تسجيل الدخول - نظام وثيق للأرشفة الإلكترونية</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+    <meta name="color-scheme" content="light dark" />
+
+    <script>
+        (() => {
+            'use strict';
+            const root = document.documentElement;
+            const STORAGE_KEY = 'lte-theme';
+            let stored = null;
+            try { stored = localStorage.getItem(STORAGE_KEY); } catch { }
+            const authored = root.getAttribute('data-bs-theme');
+            let resolved = 'light';
+            if (stored === 'dark' || stored === 'light') resolved = stored;
+            else if (authored === 'dark' || authored === 'light') resolved = authored;
+            else if (globalThis.matchMedia('(prefers-color-scheme: dark)').matches) resolved = 'dark';
+            root.setAttribute('data-bs-theme', resolved);
+            root.style.colorScheme = resolved;
+        })();
+    </script>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@@fontsource/source-sans-3@5.3.0/index.css" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.17.2/dist/sweetalert2.min.css" crossorigin="anonymous" />
+    <link rel="stylesheet" href="~/adminite/css/adminlte.rtl.min.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/wathiq-theme.css" asp-append-version="true" />
+
+    <style>
+        body.login-page {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: radial-gradient(circle at 10% 20%, rgba(0, 114, 206, 0.08) 0%, rgba(245, 124, 32, 0.05) 90%), var(--bs-body-bg);
+            padding: 1.5rem 1rem;
+        }
+        .login-box {
+            width: 100%;
+            max-width: 440px;
+        }
+        .login-logo-img {
+            max-height: 64px;
+            object-fit: contain;
+            background: #fff;
+            padding: 4px 8px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }
+        .input-group-text {
+            background-color: var(--bs-tertiary-bg);
+        }
+        .demo-account-badge {
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .demo-account-badge:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.12);
+        }
+    </style>
+</head>
+<body class="login-page">
+    <main class="login-box">
+        <div class="card card-outline card-primary shadow-lg border-0">
+            <!-- Card Header with Brand Logo -->
+            <div class="card-header text-center bg-transparent pt-4 pb-2 border-bottom-0">
+                <div class="mb-2">
+                    <img src="~/adminite/assets/img/wathiq-logo.jpg" alt="وثيق - WATHIQ" class="login-logo-img" />
+                </div>
+                <h4 class="fw-bold mb-0 text-primary">نظام وثيق للأرشفة</h4>
+                <p class="text-secondary small mb-0">بوابة تسجيل الدخول الآمن لإدارة المستندات</p>
+            </div>
+
+            <!-- Card Body -->
+            <div class="card-body login-card-body p-4">
+                @if (!ViewData.ModelState.IsValid && ViewData.ModelState[string.Empty]?.Errors.Count > 0)
+                {
+                    <div class="alert alert-danger py-2 px-3 small d-flex align-items-center mb-3" role="alert">
+                        <i class="bi bi-exclamation-triangle-fill me-2 fs-5 flex-shrink-0"></i>
+                        <div>
+                            @foreach (var error in ViewData.ModelState[string.Empty]!.Errors)
+                            {
+                                <div>@error.ErrorMessage</div>
+                            }
+                        </div>
+                    </div>
+                }
+
+                @if (TempData["Success"] != null)
+                {
+                    <div class="alert alert-success py-2 px-3 small d-flex align-items-center mb-3" role="alert">
+                        <i class="bi bi-check-circle-fill me-2 fs-5 flex-shrink-0"></i>
+                        <div>@TempData["Success"]</div>
+                    </div>
+                }
+
+                <form method="post" asp-action="Login" asp-route-returnUrl="@Model.ReturnUrl">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" asp-for="ReturnUrl" />
+
+                    <!-- Username or Email -->
+                    <div class="mb-3">
+                        <label asp-for="UsernameOrEmail" class="form-label small fw-semibold">اسم المستخدم أو البريد الإلكتروني</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-person-fill text-secondary"></i></span>
+                            <input asp-for="UsernameOrEmail" class="form-control" id="inputUsername" placeholder="مثال: admin أو admin@wathiq.local" autofocus required />
+                        </div>
+                        <span asp-validation-for="UsernameOrEmail" class="text-danger small"></span>
+                    </div>
+
+                    <!-- Password with Eye Toggle -->
+                    <div class="mb-3">
+                        <label asp-for="Password" class="form-label small fw-semibold">كلمة المرور</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-lock-fill text-secondary"></i></span>
+                            <input asp-for="Password" type="password" class="form-control" id="inputPassword" placeholder="••••••••" required />
+                            <button class="btn btn-outline-secondary" type="button" id="togglePasswordBtn" title="إظهار / إخفاء كلمة المرور">
+                                <i class="bi bi-eye" id="togglePasswordIcon"></i>
+                            </button>
+                        </div>
+                        <span asp-validation-for="Password" class="text-danger small"></span>
+                    </div>
+
+                    <!-- Remember Me & Submit -->
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <div class="form-check">
+                            <input asp-for="RememberMe" class="form-check-input" id="rememberMeCheck" />
+                            <label class="form-check-label small user-select-none" for="rememberMeCheck">
+                                تذكرني على هذا الجهاز
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary btn-lg shadow-sm fw-semibold">
+                            <i class="bi bi-box-arrow-in-left me-2"></i> دخول إلى النظام
+                        </button>
+                    </div>
+                </form>
+
+                <!-- Demo Accounts Quick Fill (Accordion / Box) -->
+                <div class="mt-4 pt-3 border-top">
+                    <p class="text-secondary small fw-semibold mb-2 text-center">
+                        <i class="bi bi-key-fill text-warning me-1"></i> حسابات تجريبية سريعة (انقر للتعبئة الفورية):
+                    </p>
+                    <div class="d-flex flex-wrap gap-2 justify-content-center">
+                        <button type="button" class="btn btn-sm btn-outline-primary demo-account-badge" onclick="fillDemo('admin', 'admin123')">
+                            <strong>مدير النظام</strong> (admin)
+                        </button>
+                        <button type="button" class="btn btn-sm btn-outline-success demo-account-badge" onclick="fillDemo('archivist', 'archivist123')">
+                            <strong>أمينة الأرشيف</strong> (archivist)
+                        </button>
+                        <button type="button" class="btn btn-sm btn-outline-info demo-account-badge" onclick="fillDemo('legal_head', 'legal123')">
+                            <strong>الشؤون القانونية</strong> (legal_head)
+                        </button>
+                        <button type="button" class="btn btn-sm btn-outline-warning demo-account-badge" onclick="fillDemo('finance_user', 'finance123')">
+                            <strong>المالية</strong> (finance_user)
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <div class="card-footer bg-transparent text-center py-3 border-top-0 small text-secondary">
+                <span>وثيق &copy; @DateTime.UtcNow.Year — جميع الحقوق محفوظة</span>
+            </div>
+        </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.min.js" crossorigin="anonymous"></script>
+    <script>
+        function fillDemo(username, password) {
+            document.getElementById('inputUsername').value = username;
+            document.getElementById('inputPassword').value = password;
+        }
+
+        document.getElementById('togglePasswordBtn').addEventListener('click', function () {
+            const passInput = document.getElementById('inputPassword');
+            const icon = document.getElementById('togglePasswordIcon');
+            if (passInput.type === 'password') {
+                passInput.type = 'text';
+                icon.className = 'bi bi-eye-slash';
+            } else {
+                passInput.type = 'password';
+                icon.className = 'bi bi-eye';
+            }
+        });
+    </script>
+</body>
+</html>

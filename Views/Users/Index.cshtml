@@ -50,6 +50,7 @@
                                 <th>الدور الوظيفي</th>
                                 <th>القسم</th>
                                 <th>الحالة</th>
+                                <th>كلمة المرور</th>
                                 <th>تاريخ التسجيل</th>
                                 <th class="text-end">الإجراءات</th>
                             </tr>
@@ -76,6 +77,8 @@
                                     _ => user.Role
                                 };
 
+                                var hasPassword = !string.IsNullOrEmpty(user.PasswordHash);
+
                                 <tr>
                                     <td class="fw-bold">
                                         <i class="bi bi-person-circle text-secondary me-2 fs-5"></i>@user.FullName
@@ -94,9 +97,23 @@
                                             <span class="badge text-bg-danger">معطل</span>
                                         }
                                     </td>
+                                    <td>
+                                        @if (hasPassword)
+                                        {
+                                            <span class="badge bg-success-subtle text-success border border-success-subtle"><i class="bi bi-shield-check me-1"></i>مفعلة</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-warning-subtle text-warning-emphasis border border-warning-subtle"><i class="bi bi-shield-exclamation me-1"></i>غير معينة</span>
+                                        }
+                                    </td>
                                     <td class="text-muted">@user.CreatedAt.ToString("yyyy-MM-dd")</td>
                                     <td class="text-end">
                                         <div class="btn-group btn-group-sm">
+                                            <button type="button" class="btn btn-outline-info" data-bs-toggle="modal" data-bs-target="#resetPasswordModal"
+                                                    data-id="@user.Id" data-name="@user.FullName" title="تعيين / إعادة تعيين كلمة المرور">
+                                                <i class="bi bi-key"></i>
+                                            </button>
                                             <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#editUserModal"
                                                     data-id="@user.Id" data-name="@user.FullName" data-email="@user.Email" data-role="@user.Role" data-dept="@user.DepartmentId" data-active="@user.IsActive.ToString().ToLower()">
                                                 <i class="bi bi-pencil"></i>
@@ -178,6 +195,17 @@
                         </select>
                     </div>
                 </div>
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">كلمة المرور <span class="text-danger">*</span></label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="bi bi-lock-fill text-secondary"></i></span>
+                        <input type="password" name="password" id="newUserPasswordInput" class="form-control" placeholder="6 أحرف على الأقل" minlength="6" required />
+                        <button class="btn btn-outline-secondary" type="button" onclick="togglePasswordVisibility('newUserPasswordInput', this)">
+                            <i class="bi bi-eye"></i>
+                        </button>
+                    </div>
+                    <div class="form-text small">كلمة المرور المستخدمة لدخول المستخدم إلى بوابة النظام (6 خانات كحد أدنى).</div>
+                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
@@ -228,6 +256,17 @@
                         </select>
                     </div>
                 </div>
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">كلمة المرور الجديدة (اختياري)</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="bi bi-key-fill text-secondary"></i></span>
+                        <input type="password" name="newPassword" id="editUserNewPasswordInput" class="form-control" placeholder="اتركه فارغاً للاحتفاظ بكلمة المرور الحالية" minlength="6" />
+                        <button class="btn btn-outline-secondary" type="button" onclick="togglePasswordVisibility('editUserNewPasswordInput', this)">
+                            <i class="bi bi-eye"></i>
+                        </button>
+                    </div>
+                    <div class="form-text small">املأ هذا الحقل فقط إذا أردت تحديث كلمة مرور هذا المستخدم.</div>
+                </div>
                 <div class="form-check form-switch">
                     <input class="form-check-input" type="checkbox" name="IsActive" value="true" id="editUserActive" />
                     <label class="form-check-label" for="editUserActive">حساب نشط ومفعّل</label>
@@ -241,8 +280,53 @@
     </div>
 </div>
 
+<!-- Modal: Reset Password -->
+<div class="modal fade" id="resetPasswordModal" tabindex="-1" aria-labelledby="resetPasswordModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <form method="post" asp-action="ResetPassword" class="modal-content">
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="id" id="resetPasswordUserId" />
+            <div class="modal-header">
+                <h5 class="modal-title" id="resetPasswordModalLabel"><i class="bi bi-key text-warning me-2"></i>إعادة تعيين كلمة المرور</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="إغلاق"></button>
+            </div>
+            <div class="modal-body">
+                <p class="text-secondary small mb-3">
+                    إعادة تعيين كلمة المرور للمستخدم: <strong id="resetPasswordUserName" class="text-primary"></strong>
+                </p>
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">كلمة المرور الجديدة <span class="text-danger">*</span></label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="bi bi-lock-fill text-secondary"></i></span>
+                        <input type="password" name="newPassword" id="resetPasswordInput" class="form-control" placeholder="6 أحرف على الأقل" minlength="6" required />
+                        <button class="btn btn-outline-secondary" type="button" onclick="togglePasswordVisibility('resetPasswordInput', this)">
+                            <i class="bi bi-eye"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
+                <button type="submit" class="btn btn-warning"><i class="bi bi-check-lg me-1"></i> تعيين كلمة المرور</button>
+            </div>
+        </form>
+    </div>
+</div>
+
 @section Scripts {
     <script>
+        function togglePasswordVisibility(inputId, btn) {
+            const input = document.getElementById(inputId);
+            const icon = btn.querySelector('i');
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.className = 'bi bi-eye-slash';
+            } else {
+                input.type = 'password';
+                icon.className = 'bi bi-eye';
+            }
+        }
+
         const editUserModal = document.getElementById('editUserModal');
         if (editUserModal) {
             editUserModal.addEventListener('show.bs.modal', function (event) {
@@ -253,6 +337,17 @@
                 document.getElementById('editUserRole').value = btn.getAttribute('data-role');
                 document.getElementById('editUserDept').value = btn.getAttribute('data-dept') || '';
                 document.getElementById('editUserActive').checked = btn.getAttribute('data-active') === 'true';
+                document.getElementById('editUserNewPasswordInput').value = '';
+            });
+        }
+
+        const resetPasswordModal = document.getElementById('resetPasswordModal');
+        if (resetPasswordModal) {
+            resetPasswordModal.addEventListener('show.bs.modal', function (event) {
+                const btn = event.relatedTarget;
+                document.getElementById('resetPasswordUserId').value = btn.getAttribute('data-id');
+                document.getElementById('resetPasswordUserName').textContent = btn.getAttribute('data-name');
+                document.getElementById('resetPasswordInput').value = '';
             });
         }
     </script>

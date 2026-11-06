@@ -1,5 +1,6 @@
 using HR.Data;
 using HR.Services;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.EntityFrameworkCore;
 
@@ -24,6 +25,19 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddScoped<IStorageService, LocalStorageService>();
 builder.Services.AddScoped<IAuditLogService, AuditLogService>();
 builder.Services.AddScoped<IDbInitializer, DbInitializer>();
+builder.Services.AddSingleton<IPasswordHasher, PasswordHasher>();
+
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
+    {
+        options.LoginPath = "/Account/Login";
+        options.LogoutPath = "/Account/Logout";
+        options.AccessDeniedPath = "/Account/AccessDenied";
+        options.ExpireTimeSpan = TimeSpan.FromDays(7);
+        options.SlidingExpiration = true;
+        options.Cookie.Name = "Wathiq.Auth";
+        options.Cookie.HttpOnly = true;
+    });
 
 var app = builder.Build();
 
@@ -62,6 +76,7 @@ if (!string.Equals(Environment.GetEnvironmentVariable("DISABLE_HTTPS_REDIRECTION
 
 app.UseStaticFiles();
 app.UseRouting();
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(

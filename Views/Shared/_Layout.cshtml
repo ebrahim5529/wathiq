@@ -88,16 +88,80 @@
                             </li>
                         </ul>
                     </li>
+
+                    <!-- User Profile Dropdown Menu -->
+                    @if (User.Identity?.IsAuthenticated == true)
+                    {
+                        var displayName = User.FindFirst(System.Security.Claims.ClaimTypes.GivenName)?.Value 
+                            ?? User.Identity.Name 
+                            ?? "المستخدم";
+                        var userRole = User.FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value ?? "Employee";
+                        var userInitial = displayName.Length > 0 ? displayName.Substring(0, 1).ToUpper() : "U";
+
+                        <li class="nav-item dropdown user-menu ms-2">
+                            <a href="#" class="nav-link dropdown-toggle d-flex align-items-center gap-2 p-1" data-bs-toggle="dropdown" aria-expanded="false">
+                                <span class="bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center shadow-sm" style="width: 32px; height: 32px; font-weight: 600; font-size: 0.9rem;">
+                                    @userInitial
+                                </span>
+                                <span class="d-none d-md-inline fw-semibold small text-truncate" style="max-width: 140px;">@displayName</span>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-end shadow-lg border-0">
+                                <!-- User Header -->
+                                <li class="user-header bg-primary text-white p-3 text-center rounded-top">
+                                    <span class="bg-white text-primary rounded-circle d-inline-flex align-items-center justify-content-center shadow mb-2" style="width: 54px; height: 54px; font-weight: bold; font-size: 1.5rem;">
+                                        @userInitial
+                                    </span>
+                                    <p class="mb-0 fw-bold">@displayName</p>
+                                    <small class="opacity-75">@@@User.Identity.Name • @userRole</small>
+                                </li>
+                                <!-- Menu Body -->
+                                <li class="p-2">
+                                    <a asp-controller="Account" asp-action="Profile" class="dropdown-item rounded d-flex align-items-center py-2">
+                                        <i class="bi bi-person-circle text-primary me-2 fs-5"></i>
+                                        <span>الملف الشخصي وحسابي</span>
+                                    </a>
+                                    <a asp-controller="Account" asp-action="Profile" class="dropdown-item rounded d-flex align-items-center py-2">
+                                        <i class="bi bi-shield-lock text-warning me-2 fs-5"></i>
+                                        <span>تغيير كلمة المرور</span>
+                                    </a>
+                                </li>
+                                <li><hr class="dropdown-divider my-1"></li>
+                                <!-- Menu Footer-->
+                                <li class="p-2">
+                                    <form method="post" asp-controller="Account" asp-action="Logout"
+                                          data-confirm="هل تريد بالتأكيد تسجيل الخروج من نظام وثيق؟"
+                                          data-confirm-title="تأكيد تسجيل الخروج"
+                                          data-confirm-btn="تسجيل الخروج">
+                                        @Html.AntiForgeryToken()
+                                        <button type="submit" class="dropdown-item text-danger rounded d-flex align-items-center py-2">
+                                            <i class="bi bi-box-arrow-right me-2 fs-5"></i>
+                                            <span>تسجيل الخروج</span>
+                                        </button>
+                                    </form>
+                                </li>
+                            </ul>
+                        </li>
+                    }
+                    else
+                    {
+                        <li class="nav-item ms-2">
+                            <a asp-controller="Account" asp-action="Login" class="btn btn-sm btn-primary d-inline-flex align-items-center gap-1 shadow-sm px-3">
+                                <i class="bi bi-box-arrow-in-left"></i>
+                                <span>تسجيل الدخول</span>
+                            </a>
+                        </li>
+                    }
                 </ul>
             </div>
         </nav>
 
-        <aside class="app-sidebar bg-body-secondary shadow" data-bs-theme="dark">
+        <aside class="app-sidebar shadow" data-bs-theme="dark">
             <div class="sidebar-brand">
-                <a asp-controller="Dashboard" asp-action="Index" class="brand-link wathiq-brand-link">
+                <a asp-controller="Dashboard" asp-action="Index" class="brand-link justify-content-center py-3 px-2">
                     <img src="~/adminite/assets/img/wathiq-logo.jpg" asp-append-version="true"
                          alt="وثيق - WATHIQ"
-                         class="wathiq-brand-logo" />
+                         class="brand-image-xl opacity-100 shadow-none"
+                         style="max-height: 72px; width: auto; max-width: 92%; object-fit: contain; background: #fff; border-radius: .5rem;" />
                 </a>
             </div>
             <div class="sidebar-wrapper">
