@@ -47,14 +47,6 @@
             width: 100%;
             max-width: 440px;
         }
-        .login-logo-img {
-            max-height: 64px;
-            object-fit: contain;
-            background: #fff;
-            padding: 4px 8px;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-        }
         .input-group-text {
             background-color: var(--bs-tertiary-bg);
         }
@@ -71,13 +63,15 @@
 <body class="login-page">
     <main class="login-box">
         <div class="card card-outline card-primary shadow-lg border-0">
-            <!-- Card Header with Brand Logo -->
+            <!-- Card Header with Brand Text (No Image Logo) -->
             <div class="card-header text-center bg-transparent pt-4 pb-2 border-bottom-0">
-                <div class="mb-2">
-                    <img src="~/adminite/assets/img/wathiq-logo.jpg" alt="وثيق - WATHIQ" class="login-logo-img" />
+                <div class="mb-1">
+                    <h2 class="fw-bolder mb-1 text-primary">
+                        <i class="bi bi-folder2-open text-warning me-1"></i><b>وثيق</b> <span class="fw-normal text-secondary fs-4">WATHIQ</span>
+                    </h2>
                 </div>
-                <h4 class="fw-bold mb-0 text-primary">نظام وثيق للأرشفة</h4>
-                <p class="text-secondary small mb-0">بوابة تسجيل الدخول الآمن لإدارة المستندات</p>
+                <h5 class="fw-bold mb-1 text-body-emphasis">نظام الأرشفة الإلكتروني</h5>
+                <p class="text-secondary small mb-0">بوابة تسجيل الدخول الآمن لإدارة المستندات والملفات</p>
             </div>
 
             <!-- Card Body -->
